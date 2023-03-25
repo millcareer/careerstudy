@@ -1,10 +1,27 @@
 function onSubmit(){
-    const text1 = document.getElementById('form_answer01').value;
-    const text2 = document.getElementById('form_answer02').value;
-    const text3 = document.getElementById('form_answer03').value;
-    const text4 = document.getElementById('form_answer04').value;
+    let text_list = [];
+    text_list.push(document.getElementById('form_answer01').value);
+    text_list.push(document.getElementById('form_answer02').value);
+    text_list.push(document.getElementById('form_answer03').value);
+    text_list.push(document.getElementById('form_answer04').value);
+    text_list.push(document.getElementById('form_answer05').value);
+    text_list.push(document.getElementById('form_answer06').value);
+    text_list.push(document.getElementById('form_answer07').value);
+    text_list.push(document.getElementById('form_answer08').value);
+    text_list.push(document.getElementById('form_answer09').value);
+    text_list.push(document.getElementById('form_answer10').value);
+    text_list.push(document.getElementById('form_answer11').value);
+    text_list.push(document.getElementById('form_answer12').value);
+    text_list.push(document.getElementById('form_answer13').value);
+    text_list.push(document.getElementById('form_answer14').value);
+    text_list.push(document.getElementById('form_answer15').value);
+    text_list.push(document.getElementById('form_answer16').value);
+    text_list.push(document.getElementById('form_answer17').value);
     
-    const msg = "【送信内容】\n" + text1 + "\n" + text2 + "\n" + text3+ "\n" + text4;
+    let msg = "【送信内容】";
+    for (let i = 0; i < text_list.length; i++) {
+        msg = msg + "\n" + text_list[i];
+    }
     console.log(msg);
     sendText(msg);
 
