@@ -1,8 +1,8 @@
 function onSubmit(){
-    const text1 = document.getElementById('answer01').value;
-    const text2 = document.getElementById('answer02').value;
-    const text3 = document.getElementById('answer03').value;
-    const text4 = document.getElementById('answer04').value;
+    const text1 = document.getElementById('form_answer01').value;
+    const text2 = document.getElementById('form_answer02').value;
+    const text3 = document.getElementById('form_answer03').value;
+    const text4 = document.getElementById('form_answer04').value;
     
     const msg = "【送信内容】\n" + text1 + "\n" + text2 + "\n" + text3+ "\n" + text4;
     console.log(msg);
