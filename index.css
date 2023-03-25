@@ -101,3 +101,16 @@ header{
     display: block;
     padding: 12.5px 0px;
 }
+.form-select-wrap{
+  display: flex;
+  max-width: 300px;
+  align-items: center;
+}
+.form-select-wrap > select{
+  padding: 8px 16px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  font-size: 14px;
+}
