@@ -18,16 +18,36 @@
 <body>
     <header>
         <div class="header-block">
-            <p class="logo">NUTFES LINE</p>
+            <p class="logo">Mill Career</p>
         </div>
     </header>
     <div class="contents">
         <div class="title">
-            <p>アイデア＆意見募集<br>アンケート</p>
+            <p>LINEアカウント登録<br>フォーム</p>
             <hr>
         </div>
         <div class="form">
-            <p class="form-text">NUTFES LINEについて、アイデアや意見があればお書きください</p>
+            <p class="form-text">メールアドレス</p>
+            <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+">
+            <p class="form-text">電話番号</p>
+            <input type="tel" name="telNumber" id="form_answer02"　pattern="\d{1,5}-\d{1,4}-\d{4,5}">
+            <p class="form-text">氏名</p>
+            <input type="name" name="name" id="form_answer03">
+            <p class="form-text">ふりがな</p>
+            <input type="name_read" name="name_read" id="form_answer04">
+            <p class="form-text">生年月日</p>
+            <div class="form-select-wrap">
+                <select class="birthday-year">
+                </select>
+                / 
+                <select class="birthday-month">
+                </select>
+                /
+                <select class="birthday-day">
+                </select>
+            </div>
+            <p class="form-text">フリーライト</p>
+            <input type="tel" name="telNumber" id="form_answer02"　pattern="\d{1,5}-\d{1,4}-\d{4,5}">
             <textarea class="form-textarea" id="answer"></textarea>
         </div>
         <div class="btn-block">
