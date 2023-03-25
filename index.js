@@ -1,7 +1,10 @@
 function onSubmit(){
-    const text = document.getElementById('answer').value;
-
-    const msg = "【送信内容】\n" + text;
+    const text1 = document.getElementById('answer01').value;
+    const text2 = document.getElementById('answer02').value;
+    const text3 = document.getElementById('answer03').value;
+    const text4 = document.getElementById('answer04').value;
+    
+    const msg = "【送信内容】\n" + text1 + "\n" + text2 + "\n" + text3+ "\n" + text4;
     console.log(msg);
     sendText(msg);
 
@@ -29,7 +32,7 @@ function createOptionForElements(elem, val) {
 }
 
 //年の生成
-for(let i = 1920; i <= 2020; i++) {
+for(let i = 1990; i <= 2020; i++) {
   createOptionForElements(userBirthdayYear, i);
 }
 //月の生成
