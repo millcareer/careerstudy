@@ -28,26 +28,26 @@
         </div>
         <div class="form">
             <p class="form-text">メールアドレス</p>
-            <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+">
+            <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required">
             <p class="form-text">電話番号</p>
-            <input type="tel" name="telNumber" id="form_answer02"　pattern="\d{1,5}-\d{1,4}-\d{4,5}">
+            <input type="tel" name="telNumber" id="form_answer02"　pattern="\d{1,5}-\d{1,4}-\d{4,5}" required="required">
             <p class="form-text">氏名</p>
-            <input type="name" name="name" id="form_answer03">
+            <input type="name" name="name" id="form_answer03" required="required">
             <p class="form-text">ふりがな</p>
-            <input type="name_read" name="name_read" id="form_answer04">
+            <input type="name_read" name="name_read" id="form_answer04" required="required">
             <p class="form-text">生年月日</p>
             <div class="form-select-wrap">
-                <select class="birthday-year" id="form_answer05">
+                <select class="birthday-year" id="form_answer05" required="required">
                 </select>
                 / 
-                <select class="birthday-month" id="form_answer06">
+                <select class="birthday-month" id="form_answer06" required="required">
                 </select>
                 /
-                <select class="birthday-day" id="form_answer07">
+                <select class="birthday-day" id="form_answer07" required="required">
                 </select>
             </div>
             <p class="form-text">大学名</p>
-            <select name="university-name" id="form_answer08">
+            <select name="university-name" id="form_answer08" required="required">
                 <option>慶應義塾大学</option>
                 <option>青山学院大学</option>
                 <option>筑波大学</option>
@@ -72,7 +72,7 @@
                 <option>松山大学</option>
             </select>
             <p class="form-text">部活名</p>
-            <select name="club-name" id="form_answer09">
+            <select name="club-name" id="form_answer09" required="required">
                 <option>サッカー部</option>
                 <option>テニス部</option>
                 <option>ラクロス部</option>
@@ -100,7 +100,7 @@
                 <option>応援団</option>
             </select>
             <p class="form-text">学年</p>
-            <select name="grade" id="form_answer10">
+            <select name="grade" id="form_answer10" required="required">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -109,12 +109,12 @@
                 <option>院2</option>
             </select>
             <p class="form-text">性別</p>
-            <select name="sex" id="form_answer11">
+            <select name="sex" id="form_answer11" required="required">
                 <option>男性</option>
                 <option>女性</option>
             </select>
             <p class="form-text">出身地</p>
-            <select name="from_area" id="form_answer12">
+            <select name="from_area" id="form_answer12" required="required">
                 <option value="日本国外">日本国外</option>
                 <option value="北海道">北海道</option>
                 <option value="青森県">青森県</option>
@@ -166,7 +166,7 @@
                 </select>
             </select>
             <p class="form-text">役職</p>
-            <select name="role" id="form_answer13">
+            <select name="role" id="form_answer13" required="required">
                 <option>部長/代表</option>
                 <option>幹部</option>
                 <option>会計</option>
@@ -175,16 +175,16 @@
                 <option>その他</option>
             </select>
             <p class="form-text">学部</p>
-            <input type="text" name="faculty" id="form_answer14">
+            <input type="text" name="faculty" id="form_answer14" required="required">
             <p class="form-text">学科</p>
-            <input type="text" name="faculty" id="form_answer15">
+            <input type="text" name="faculty" id="form_answer15" required="required">
             <p class="form-text">学業種別</p>
-            <select name="role" id="form_answer16">
+            <select name="role" id="form_answer16" required="required">
                 <option>理系</option>
                 <option>文系</option>
             </select>
             <p class="form-text">個人情報同意</p>
-            <input type="checkbox" name="agreement" id="form_answer17">
+            <input type="checkbox" name="agreement" id="form_answer17" required="required">
         <div class="btn-block">
             <button class="btn" onclick="onSubmit()">送信</button>
         </div>
