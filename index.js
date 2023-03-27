@@ -19,12 +19,18 @@ function onSubmit(){
     text_list.push(document.getElementById('form_answer17').value);
     
     let msg = "【送信内容】";
+    let form_check_flag = 1;
     for (let i = 0; i < text_list.length; i++) {
+        if ( text_list[i] == "") {
+            form_check_flag = 0;
+            window . alert( '入力項目に漏れがあります。全ての項目への入力をお願い致します。' );
+            break;
+        }
         msg = msg + "\n" + text_list[i];
     }
-    console.log(msg);
-    sendText(msg);
-
+    if (form_check_flag == 1) {
+        sendText(msg);
+    }
     return false;
 }
 
