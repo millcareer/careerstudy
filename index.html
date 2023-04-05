@@ -47,16 +47,17 @@
         <select class="birthday-day" id="form_answer07" required="required">
         </select>
     </div>
-</div>
 
 <script>
-const form = document.querySelector('.form');
-form.addEventListener('submit', (event) => {
-    const telNumberInput = form.querySelector('input[name="telNumber"]');
-    const telNumber = telNumberInput.value;
-    telNumberInput.value = '"' + telNumber + '"';
-});
+  const form = document.querySelector('form');
+  form.addEventListener('submit', event => {
+    const telNumberInput = document.querySelector('input[name=telNumber]');
+    const telNumberValue = telNumberInput.value;
+    telNumberInput.value = `"${telNumberValue}"`;
+  });
 </script>
+    
+    </div>
             </div>
             <p class="form-text">大学名</p>
             <select name="university-name" id="form_answer08" required="required">
