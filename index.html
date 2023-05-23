@@ -48,10 +48,14 @@
             <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required">
             <p class="form-text">電話番号</p>
             <input type="text" name="telNumber" id="form_answer02" pattern="\d{1,5}-\d{1,4}-\d{4,5}" required="required">
-            <p class="form-text">氏名</p>
-            <input type="name" name="name" id="form_answer03" required="required">
-            <p class="form-text">ふりがな</p>
-            <input type="name_read" name="name_read" id="form_answer04" required="required">
+            <!-- 性 -->
+            <input type="text" name="last_name" id="form_answer03_last_name" required="required">
+            <!-- 名 -->
+            <input type="text" name="first_name" id="form_answer03_first_name" required="required">
+            <!-- せい -->
+            <input type="text" name="last_name_read" id="form_answer04_last_name_read" required="required">
+            <!-- めい -->
+            <input type="text" name="first_name_read" id="form_answer04_first_name_read" required="required">
             <p class="form-text">生年月日</p>
             <div class="form-select-wrap">
                 <select class="birthday-year" id="form_answer05" required="required">
