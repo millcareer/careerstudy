@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,34 +38,32 @@
             <hr>
         </div>
     </div>
-    <div class="form">
-        <p class="form-text">メールアドレス</p>
-        <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required" placeholder="例：example@example.com">
-        <p class="form-text">電話番号</p>
-        <input type="text" name="telNumber" id="form_answer02" pattern="\d{1,5}-\d{1,4}-\d{4,5}" required="required" placeholder="例：000-0000-0000">
-        <p class="form-text">氏名</p>
-        <div class="form-name">
-            <input type="text" name="last_name" id="form_answer03" required="required" placeholder="苗字">
-            <input type="text" name="first_name" id="form_answer04" required="required" placeholder="名前">
-        </div>
-        <p class="form-text">ふりがな</p>
-        <div class="form-name">
-            <input type="text" name="last_name_read" id="form_answer05" required="required" placeholder="みょうじ">
-            <input type="text" name="first_name_read" id="form_answer06" required="required" placeholder="なまえ">
-        </div>
-        <p class="form-text">生年月日</p>
-        <div class="form-select-wrap">
-            <select class="birthday-year" id="form_answer07" required="required">
-            </select>
-            / 
-            <select class="birthday-month" id="form_answer08" required="required">
-            </select>
-            /
-            <select class="birthday-day" id="form_answer09" required="required">
-            </select>
-        </div>
-        <p class="form-text">大学名</p>
-        <select name="university-name" id="form_answer10" required="required">
+</body>
+
+</html>
+    </div>
+     <div class="form">
+            <p class="form-text">メールアドレス</p>
+            <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required">
+            <p class="form-text">電話番号</p>
+            <input type="text" name="telNumber" id="form_answer02" pattern="\d{1,5}-\d{1,4}-\d{4,5}" required="required">
+            <p class="form-text">氏名</p>
+            <input type="name" name="name" id="form_answer03" required="required">
+            <p class="form-text">ふりがな</p>
+            <input type="name_read" name="name_read" id="form_answer04" required="required">
+            <p class="form-text">生年月日</p>
+            <div class="form-select-wrap">
+                <select class="birthday-year" id="form_answer05" required="required">
+                </select>
+                / 
+                <select class="birthday-month" id="form_answer06" required="required">
+                </select>
+                /
+                <select class="birthday-day" id="form_answer07" required="required">
+                </select>
+            </div>
+            <p class="form-text">大学名</p>
+            <select name="university-name" id="form_answer08" required="required">
                 <optgroup label="北海道・東北">
                     <option>東北大学</option>
                 <optgroup label="関東">
@@ -108,7 +105,7 @@
 
             </select>
             <p class="form-text">部活名</p>
-            <select name="club-name" id="form_answer11" required="required">
+            <select name="club-name" id="form_answer09" required="required">
                 <optgroup label="球技">
                     <option>アイスホッケー</option>
                     <option>アメリカンフットボール</option>
@@ -202,7 +199,7 @@
 
             </select>
             <p class="form-text">学年</p>
-            <select name="grade" id="form_answer12" required="required">
+            <select name="grade" id="form_answer10" required="required">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -211,14 +208,14 @@
                 <option>院2</option>
             </select>
             <p class="form-text">性別</p>
-            <select name="sex" id="form_answer13" required="required">
+            <select name="sex" id="form_answer11" required="required">
                 <option>男性</option>
                 <option>女性</option>
                 <option>その他</option>
                 <option>回答しない</option>
             </select>
             <p class="form-text">出身地</p>
-            <select name="from_area" id="form_answer14" required="required">
+            <select name="from_area" id="form_answer12" required="required">
                 <optgroup label="北海道・東北">
                     <option value="北海道">北海道</option>
                     <option value="青森県">青森県</option>
@@ -277,7 +274,7 @@
                 </select>
             </select>
             <p class="form-text">役職</p>
-            <select name="role" id="form_answer15" required="required">
+            <select name="role" id="form_answer13" required="required">
                 <option>主将/代表</option>
                 <option>副将</option>
                 <option>主務</option>
@@ -289,17 +286,18 @@
                 <option>特になし</option>
             </select>
             <p class="form-text">学部</p>
-            <input type="text" name="faculty" id="form_answer16" required="required">
+            <input type="text" name="faculty" id="form_answer14" required="required">
             <p class="form-text">学科</p>
-            <input type="text" name="faculty" id="form_answer17" required="required">
+            <input type="text" name="faculty" id="form_answer15" required="required">
             <p class="form-text">学業種別</p>
-            <select name="role" id="form_answer18" required="required">
+            <select name="role" id="form_answer16" required="required">
                 <option>文系</option>
                 <option>理系</option>
+
             </select>
 <p class="form-text">個人情報同意</p>
 <div style="height: 150px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
-    <p style="text-align: left;">
+  <p style="text-align: left;">
   個人情報保護方針<br>
 【1】個人情報取り扱いに関する基本方針<br>
 株式会社Mill Career（以下「当社」という）は、以下のとおり個人情報保護方針を定め、個人情報保護の仕組みを構築し、全従業員に個人情報保護の重要性の認識と取組みを徹底させることにより、個人情報の保護を推進することを宣言いたします。<br>
@@ -384,8 +382,9 @@
 </div>
 <p>
   <input type="checkbox" name="agreement" id="form_answer17" value="同意する" required="required">
-  <label for="form_answer19">同意する</label>
+  <label for="form_answer17">同意する</label>
 </p>
+
         <div class="btn-block">
             <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
         </div>
