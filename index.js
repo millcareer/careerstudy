@@ -17,6 +17,8 @@ function onSubmit(){
     text_list.push(document.getElementById('form_answer15').value);
     text_list.push(document.getElementById('form_answer16').value);
     text_list.push(document.getElementById('form_answer17').value);
+    text_list.push(document.getElementById('form_answer18').value);
+    text_list.push(document.getElementById('form_answer19').value);
     
     let msg = "【送信内容】";
     let form_check_flag = 1;
