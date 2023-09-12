@@ -1,3 +1,31 @@
+document.addEventListener('DOMContentLoaded', (event) => {
+    let yearSelect = document.getElementById('form_answer07');
+    let monthSelect = document.getElementById('form_answer08');
+    let daySelect = document.getElementById('form_answer09');
+
+    for(let i = 1900; i <= new Date().getFullYear(); i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        yearSelect.add(option);
+    }
+
+    for(let i = 1; i <= 12; i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        monthSelect.add(option);
+    }
+
+    for(let i = 1; i <= 31; i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        daySelect.add(option);
+    }
+});
+
+
 let formInputValues = [];  // 名前を変更して、何を格納しているかを明確に示します。
 let isFormValid = true;    // 名前を変更して、目的をより明確に示します。
 
