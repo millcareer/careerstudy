@@ -1,40 +1,32 @@
-function onSubmit(){
-    let text_list = [];
-    text_list.push(document.getElementById('form_answer01').value);
-    text_list.push(document.getElementById('form_answer02').value);
-    text_list.push(document.getElementById('form_answer03').value);
-    text_list.push(document.getElementById('form_answer04').value);
-    text_list.push(document.getElementById('form_answer05').value);
-    text_list.push(document.getElementById('form_answer06').value);
-    text_list.push(document.getElementById('form_answer07').value);
-    text_list.push(document.getElementById('form_answer08').value);
-    text_list.push(document.getElementById('form_answer09').value);
-    text_list.push(document.getElementById('form_answer10').value);
-    text_list.push(document.getElementById('form_answer11').value);
-    text_list.push(document.getElementById('form_answer12').value);
-    text_list.push(document.getElementById('form_answer13').value);
-    text_list.push(document.getElementById('form_answer14').value);
-    text_list.push(document.getElementById('form_answer15').value);
-    text_list.push(document.getElementById('form_answer16').value);
-    text_list.push(document.getElementById('form_answer17').value);
-    text_list.push(document.getElementById('form_answer18').value);
-    text_list.push(document.getElementById('form_answer19').value);
-    
-    let msg = "【送信内容】";
-    let form_check_flag = 1;
-    for (let i = 0; i < text_list.length; i++) {
-        if ( text_list[i] == "") {
-            form_check_flag = 0;
-            window . alert( '入力項目に漏れがあります。全ての項目への入力をお願い致します。' );
-            break;
-        }
-        msg = msg + "\n" + text_list[i];
+let formInputValues = [];  // 名前を変更して、何を格納しているかを明確に示します。
+let isFormValid = true;    // 名前を変更して、目的をより明確に示します。
+
+function collectFormValues() {
+    formInputValues = [];  // 関数が呼ばれるたびに配列をリセットします。
+    for(let i = 1; i <= 19; i++) {
+        formInputValues.push(document.getElementById(`form_answer${i.toString().padStart(2, '0')}`).value);
     }
-    if (form_check_flag == 1) {
-        sendText(msg);
-    }
-    return false;
 }
+
+function checkFormValidity() {
+    // ここでフォームの検証を行います。
+    // 例: 空の入力値がある場合、isFormValidをfalseに設定します。
+    isFormValid = formInputValues.every(value => value.trim() !== '');
+}
+
+function onSubmit() {
+    collectFormValues();
+    checkFormValidity();
+    
+    if (isFormValid) {
+        // 全ての入力が有効な場合、メッセージを送信します。
+        // ここでメッセージ送信の関数を呼び出します（例: sendMessageToLine()）
+    } else {
+        window.alert("フォームに無効な入力があります。");
+    }
+}
+
+document.getElementById('submit-button').addEventListener('click', onSubmit);
 
 /**
  * ここから下は生年月日のためのjs
