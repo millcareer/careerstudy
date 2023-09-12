@@ -38,14 +38,6 @@ function handleLiffInitializationFailure(err) {
     window.alert('アプリケーションの初期化に失敗しました。後ほど再試行してください。');
 }
 
-function sendMessageToLine(text) {
-    if (!liff.isInClient()) {
-        openShareTargetPicker(text);
-    } else {
-        sendTextMessage(text);
-    }
-}
-
 function sendTextMessage(text) {
     console.log('Sending message...');
     liff.sendMessages([{ type: 'text', text }])
