@@ -1,6 +1,7 @@
 $(document).ready(function () {
     // liffId: LIFF URL "https://liff.line.me/xxx"のxxxに該当する箇所
     // LINE DevelopersのLIFF画面より確認可能
+    initializeLiff(LIFF_ID); // LIFF初期化関数を呼び出し、LIFF_IDをパラメータとして渡します。
     const LIFF_ID = "YOUR_LIFF_ID_HERE"; // 環境変数をブラウザ環境で安全に使用する方法を見つけるまでの一時的な解決策として直接IDを指定します。
 
 function initializeLiff(liffId) {
