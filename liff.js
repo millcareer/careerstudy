@@ -10,7 +10,7 @@ window.sendMessageToLine = sendMessageToLine;
 $(document).ready(function () {
     // liffId: LIFF URL "https://liff.line.me/xxx"のxxxに該当する箇所
     // LINE DevelopersのLIFF画面より確認可能
-    const LIFF_ID = "YOUR_LIFF_ID_HERE"; 
+    const LIFF_ID = "1660795452-nYx391B8";
     initializeLiff(LIFF_ID);
 
 function initializeLiff(liffId) {
