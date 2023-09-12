@@ -1,70 +1,37 @@
-let formInputValues = [];  
-let isFormValid = true;    
+document.addEventListener('DOMContentLoaded', (event) => {
+    let yearSelect = document.getElementById('form_answer07');
+    let monthSelect = document.getElementById('form_answer08');
+    let daySelect = document.getElementById('form_answer09');
 
-function collectFormValues() {
-    formInputValues = [];  
-    for(let i = 1; i <= 19; i++) {
-        formInputValues.push(document.getElementById(`form_answer${i.toString().padStart(2, '0')}`).value);
+    for(let i = 1900; i <= new Date().getFullYear(); i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        yearSelect.add(option);
     }
-}
 
-function checkFormValidity() {
-    isFormValid = formInputValues.every(value => value.trim() !== '');
-}
+    for(let i = 1; i <= 12; i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        monthSelect.add(option);
+    }
 
-function onSubmit() {
-    collectFormValues();
-    checkFormValidity();
+    function setDayOptions() {
+        daySelect.innerHTML = '';
+        let year = yearSelect.value;
+        let month = monthSelect.value;
+        let lastDay = new Date(year, month, 0).getDate();
+        for(let i = 1; i <= lastDay; i++) {
+            let option = document.createElement('option');
+            option.value = i;
+            option.text = i;
+            daySelect.add(option);
+        }
+    }
+
+    yearSelect.addEventListener('change', setDayOptions);
+    monthSelect.addEventListener('change', setDayOptions);
     
-    if (isFormValid) {
-        window.sendMessageToLine(formInputValues.join(', ')); 
-    } else {
-        window.alert("フォームに無効な入力があります。");
-    }
-}
-
-document.getElementById('submit-button').addEventListener('click', onSubmit);
-
-/**
- * ここから下は生年月日のためのjs
-*/
-
-let userBirthdayYear = document.getElementById('form_answer07');
-let userBirthdayMonth = document.getElementById('form_answer08');
-let userBirthdayDay = document.getElementById('form_answer09');
-
-function createOptionForElements(elem, val) {
-  let option = document.createElement('option');
-  option.text = val;
-  option.value = val;
-  elem.appendChild(option);
-}
-
-//年の生成
-for(let i = 1990; i <= 2020; i++) {
-  createOptionForElements(userBirthdayYear, i);
-}
-//月の生成
-for(let i = 1; i <= 12; i++) {
-  createOptionForElements(userBirthdayMonth, i);
-}
-//日の生成
-for(let i = 1; i <= 31; i++) {
-  createOptionForElements(userBirthdayDay, i);
-}
-
-function changeTheDay() {
-  userBirthdayDay.innerHTML = '';
-  let lastDayOfTheMonth = new Date(userBirthdayYear.value, userBirthdayMonth.value, 0).getDate();
-  for(let i = 1; i <= lastDayOfTheMonth; i++) {
-    createOptionForElements(userBirthdayDay, i);
-  }
-}
-
-userBirthdayYear.addEventListener('change', function() {
-  changeTheDay();
-});
-
-userBirthdayMonth.addEventListener('change', function() {
-  changeTheDay();
+    setDayOptions();  // Initial call to populate the day select options based on the current year and month
 });
