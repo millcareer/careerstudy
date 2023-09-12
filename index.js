@@ -19,8 +19,7 @@ function onSubmit() {
     checkFormValidity();
     
     if (isFormValid) {
-        // 全ての入力が有効な場合、メッセージを送信します。
-    sendMessageToLine(formInputValues.join(', ')); // formInputValuesをカンマで結合して送信します
+        window.sendMessageToLine(formInputValues.join(', ')); // formInputValuesをカンマで結合して送信します
     } else {
         window.alert("フォームに無効な入力があります。");
     }
