@@ -20,7 +20,7 @@ function onSubmit() {
     
     if (isFormValid) {
         // 全ての入力が有効な場合、メッセージを送信します。
-        // ここでメッセージ送信の関数を呼び出します（例: sendMessageToLine()）
+    sendMessageToLine(formInputValues.join(', ')); // formInputValuesをカンマで結合して送信します
     } else {
         window.alert("フォームに無効な入力があります。");
     }
