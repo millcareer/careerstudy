@@ -35,3 +35,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     
     setDayOptions();  // Initial call to populate the day select options based on the current year and month
 });
+
+function onSubmit() {
+    // Your existing onSubmit function here
+}
