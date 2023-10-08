@@ -70,9 +70,9 @@ function onSubmit() {
         msg = msg + "\n" + text_list[i];
     }
     if (form_check_flag == 1) {
-        // 231008 別のLINE送信関数が存在していたのでLINEメッセージ送信で利用する関数を変更
-        // sendText(msg);
-        sendMessageToLine(msg);
+        // 231008 別のLINE送信関数が存在していたが、元のLINEメッセージ送信で利用する関数に変更
+        sendText(msg);
+        // sendMessageToLine(msg);
     }
     return false;
 }
