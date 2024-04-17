@@ -57,7 +57,11 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer16').value);
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
+    //自己分析CAMPの選択肢を form_answer19とform_answer20 に　同意のチェックボックスを form_answer21に定義
     text_list.push(document.getElementById('form_answer19').value);
+    text_list.push(document.getElementById('form_answer20').value);
+    text_list.push(document.getElementById('form_answer21').value);
+    
     
     let msg = "【送信内容】";
     let form_check_flag = 1;
