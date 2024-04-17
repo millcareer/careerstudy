@@ -81,7 +81,7 @@ function onSubmit() {
     return false;
 }
 
-//スプレッドシートから選択肢を取得(2024年4月17日追加)
+//スプレッドシートから選択肢を取得し動的にテキストボックスへ追加(2024年4月17日追加)
 document.addEventListener('DOMContentLoaded', function() {
   fetch('https://script.google.com/macros/s/AKfycbw0Acx8yG34MevCFa47wqXFHLOvA6xOgDCzv8py4mQI26bijOr-4sLG6s6HwvPX-PuVkg/exec')
     .then(response => response.json())
