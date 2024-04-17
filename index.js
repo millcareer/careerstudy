@@ -89,8 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      const selectDay1 = document.getElementById('form_answer19');
-      const selectDay2 = document.getElementById('form_answer20');
+      const selectDay1 = document.getElementById('form_answer20');
+      const selectDay2 = document.getElementById('form_answer21');
 
       // DAY1の選択肢を追加
       data.day1.forEach(option => {
