@@ -119,3 +119,27 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error loading the data:', error));
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('myForm');
+  const errorMessage = document.getElementById('error-message');
+  const selectDay1 = document.getElementById('form_answer20');
+  const selectDay2 = document.getElementById('form_answer21');
+
+  form.addEventListener('submit', function(event) {
+    // デフォルトのフォーム送信を防止
+    event.preventDefault();
+
+    // 選択肢のバリデーション
+    if (selectDay1.value === "" || selectDay2.value === "") {
+      // エラーメッセージを表示
+      errorMessage.style.display = 'block';
+    } else {
+      // エラーメッセージを非表示
+      errorMessage.style.display = 'none';
+      // フォーム送信など、次のステップを実行
+      console.log("フォームが正常に送信されました");
+      // form.submit(); // 実際にフォームを送信する場合はこれをアンコメント
+    }
+  });
+});
