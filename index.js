@@ -83,7 +83,8 @@ function onSubmit() {
 
 //スプレッドシートから選択肢を取得し動的にテキストボックスへ追加(2024年4月17日追加)
 document.addEventListener('DOMContentLoaded', function() {
-  const url = 'https://script.google.com/macros/s/AKfycbyiPXSL7S8YiUM5ZYSZBdigPsK8mOZ0DrKtXsznbkPyHNpVbvnZ4ASOlT98gjn6oEdZlQ/exec';
+  const url = 'http://localhost:3000/api'; // ローカルのプロキシサーバーを指定
+
 
   fetch(url)
     .then(response => response.json())
