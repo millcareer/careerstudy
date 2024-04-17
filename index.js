@@ -83,10 +83,15 @@ function onSubmit() {
 
 //スプレッドシートから選択肢を取得し動的にテキストボックスへ追加(2024年4月17日追加)
 document.addEventListener('DOMContentLoaded', function() {
-  fetch('https://script.google.com/macros/s/AKfycbw0Acx8yG34MevCFa47wqXFHLOvA6xOgDCzv8py4mQI26bijOr-4sLG6s6HwvPX-PuVkg/exec')
+  const url = 'https://script.google.com/macros/s/YOUR_DEPLOYED_WEB_APP_URL/exec';
+
+  fetch(url)
     .then(response => response.json())
     .then(data => {
       const selectDay1 = document.getElementById('form_answer19');
+      const selectDay2 = document.getElementById('form_answer20');
+
+      // DAY1の選択肢を追加
       data.day1.forEach(option => {
         const opt = document.createElement('option');
         opt.value = option;
@@ -94,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectDay1.appendChild(opt);
       });
 
-      const selectDay2 = document.getElementById('form_answer20');
+      // DAY2の選択肢を追加
       data.day2.forEach(option => {
         const opt = document.createElement('option');
         opt.value = option;
@@ -104,3 +109,4 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error loading the data:', error));
 });
+
