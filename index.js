@@ -76,3 +76,27 @@ function onSubmit() {
     }
     return false;
 }
+
+//スプレッドシートから選択肢を取得(2024年4月17日追加)
+document.addEventListener('DOMContentLoaded', function() {
+  fetch('https://script.google.com/macros/s/YOUR_DEPLOYED_WEB_APP_URL/exec')
+    .then(response => response.json())
+    .then(data => {
+      const selectDay1 = document.getElementById('form_answer19');
+      data.day1.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectDay1.appendChild(opt);
+      });
+
+      const selectDay2 = document.getElementById('form_answer20');
+      data.day2.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectDay2.appendChild(opt);
+      });
+    })
+    .catch(error => console.error('Error loading the data:', error));
+});
