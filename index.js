@@ -83,44 +83,57 @@ function onSubmit() {
 
 //スプレッドシートから選択肢を取得し動的にradiobuttonへ追加(2024年4月17日追加)
 document.addEventListener('DOMContentLoaded', function() {
-  const url = 'https://script.google.com/macros/s/AKfycbw7QpLXfctwu4ZmDNDckXkGWr2VnvsKlCKTF-ikM17hPF-N5mtaHkPmKGWxrGCt2yhZuA/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbw7QpLXfctwu4ZmDNDckXkGWr2VnvsKlCKTF-ikM17hPF-N5mtaHkPmKGWxrGCt2yhZuA/exec';
 
-  fetch(url)
+    fetch(url)
     .then(response => response.json())
     .then(data => {
-      const radioGroupDay1 = document.getElementById('radio_group_day1');
-      const radioGroupDay2 = document.getElementById('radio_group_day2');
+        const radioGroupDay1 = document.getElementById('radio_group_day1');
+        const radioGroupDay2 = document.getElementById('radio_group_day2');
+
+        // 既存の「日程が合わない…」ラジオボタンを取得
+        const existingOptionDay1 = radioGroupDay1.querySelector('label');
+        const existingOptionDay2 = radioGroupDay2.querySelector('label');
+
+        // 既存のラジオボタンを一時的に除去
+        radioGroupDay1.removeChild(existingOptionDay1);
+        radioGroupDay2.removeChild(existingOptionDay2);
         
-// DAY1の選択肢を追加
-data.day1.forEach(option => {
-    const container = document.createElement('div');
-    container.className = 'radio-container';  // CSSクラスを追加
-    const label = document.createElement('label');
-    const radio = document.createElement('input');
-    radio.type = 'radio';
-    radio.name = 'day1';
-    radio.value = option;
-    label.appendChild(radio); // ラジオボタンを追加
-    label.appendChild(document.createTextNode(option)); // テキストを追加
-    container.appendChild(label);
-    radioGroupDay1.appendChild(container);
-});
+        // DAY1の選択肢を追加
+        data.day1.forEach(option => {
+            const container = document.createElement('div');
+            container.className = 'radio-container';
+            const label = document.createElement('label');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'day1';
+            radio.value = option;
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(option));
+            container.appendChild(label);
+            radioGroupDay1.appendChild(container);
+        });
 
-// DAY2の選択肢を追加
-data.day2.forEach(option => {
-    const container = document.createElement('div');
-    container.className = 'radio-container';  // CSSクラスを追加
-    const label = document.createElement('label');
-    const radio = document.createElement('input');
-    radio.type = 'radio';
-    radio.name = 'day2';
-    radio.value = option;
-    label.appendChild(radio); // ラジオボタンを追加
-    label.appendChild(document.createTextNode(option)); // テキストを追加
-    container.appendChild(label);
-    radioGroupDay2.appendChild(container);
-});
+        // 最後に「日程が合わない…」を追加
+        radioGroupDay1.appendChild(existingOptionDay1);
 
+        // DAY2の選択肢を追加
+        data.day2.forEach(option => {
+            const container = document.createElement('div');
+            container.className = 'radio-container';
+            const label = document.createElement('label');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'day2';
+            radio.value = option;
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(option));
+            container.appendChild(label);
+            radioGroupDay2.appendChild(container);
+        });
+
+        // 最後に「日程が合わない…」を追加
+        radioGroupDay2.appendChild(existingOptionDay2);
     })
     .catch(error => console.error('Error loading the data:', error));
 });
