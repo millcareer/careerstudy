@@ -122,14 +122,19 @@ input{
   border-radius: 4px;
   font-size: 14px;
 }
-
-.radio-label {
-    display: block;  /* label要素がブロック要素として振る舞うように設定 */
+<style>
+/* ラジオボタンとラベルのスタイル */
+.radio-container {
+    margin-bottom: 10px;
 }
 
-label {
-    display: flex;  /* ラベルをフレックスボックスとして扱う */
-    align-items: center;  /* ラジオボタンとテキストを中央揃えにする */
-    margin-bottom: 5px;  /* 各ラジオボタンの下に余白を追加 */
+.radio-container label {
+    display: flex;
+    align-items: center;
 }
+
+.radio-container input[type="radio"] {
+    margin-right: 10px;
+}
+</style>
 
