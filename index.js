@@ -100,8 +100,8 @@ data.day1.forEach(option => {
     radio.type = 'radio';
     radio.name = 'day1';
     radio.value = option;
-    label.appendChild(radio);
-    label.appendChild(document.createTextNode(option));
+    label.appendChild(radio); // ラジオボタンを追加
+    label.appendChild(document.createTextNode(option)); // テキストを追加
     container.appendChild(label);
     radioGroupDay1.appendChild(container);
 });
@@ -115,8 +115,8 @@ data.day2.forEach(option => {
     radio.type = 'radio';
     radio.name = 'day2';
     radio.value = option;
-    label.appendChild(radio);
-    label.appendChild(document.createTextNode(option));
+    label.appendChild(radio); // ラジオボタンを追加
+    label.appendChild(document.createTextNode(option)); // テキストを追加
     container.appendChild(label);
     radioGroupDay2.appendChild(container);
 });
