@@ -123,18 +123,22 @@ input{
   font-size: 14px;
 }
 
-    /* ラジオボタンとラベルのスタイル */
-.radio-container {
-    margin-bottom: 10px;
-}
-    
-.radio-container label {
-    display: flex;
-    align-items: center;
-}
-    
-.radio-container input[type="radio"] {
-    margin-right: 10px;
-}
+<head>
+    <style>
+    .radio-container {
+        margin-bottom: 10px; /* 選択肢間の間隔を調整 */
+    }
+
+    .radio-container label {
+        display: flex;
+        align-items: center; /* テキストとラジオボタンが中央揃えになるように */
+    }
+
+    .radio-container input[type="radio"] {
+        margin-right: 10px; /* テキストとの間に余白を設定 */
+    }
+    </style>
+</head>
+
 
 
