@@ -123,21 +123,18 @@ input{
   font-size: 14px;
 }
 
-<head>
-    <style>
     /* ラジオボタンとラベルのスタイル */
-    .radio-container {
-        margin-bottom: 10px;
-    }
+.radio-container {
+    margin-bottom: 10px;
+}
     
-    .radio-container label {
-        display: flex;
-        align-items: center;
-    }
+.radio-container label {
+    display: flex;
+    align-items: center;
+}
     
-    .radio-container input[type="radio"] {
-        margin-right: 10px;
-    }
-    </style>
-</head>
+.radio-container input[type="radio"] {
+    margin-right: 10px;
+}
+
 
