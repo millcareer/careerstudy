@@ -81,41 +81,39 @@ function onSubmit() {
     return false;
 }
 
-//スプレッドシートから選択肢を取得し動的にテキストボックスへ追加(2024年4月17日追加)
+//スプレッドシートから選択肢を取得し動的にradiobuttonへ追加(2024年4月17日追加)
 document.addEventListener('DOMContentLoaded', function() {
   const url = 'https://script.google.com/macros/s/AKfycbw7QpLXfctwu4ZmDNDckXkGWr2VnvsKlCKTF-ikM17hPF-N5mtaHkPmKGWxrGCt2yhZuA/exec';
 
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      const selectDay1 = document.getElementById('form_answer20');
-      const selectDay2 = document.getElementById('form_answer21');
-
-      // 最後の選択肢 "日程が合わない..." を一時的に取り除く
-      const lastOptionDay1 = selectDay1.lastElementChild;
-      const lastOptionDay2 = selectDay2.lastElementChild;
-      selectDay1.removeChild(lastOptionDay1);
-      selectDay2.removeChild(lastOptionDay2);
+      const radioGroupDay1 = document.getElementById('radio_group_day1');
+      const radioGroupDay2 = document.getElementById('radio_group_day2');
 
       // DAY1の選択肢を追加
       data.day1.forEach(option => {
-        const opt = document.createElement('option');
-        opt.value = option;
-        opt.textContent = option;
-        selectDay1.appendChild(opt);
+        const label = document.createElement('label');
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'day1';
+        radio.value = option;
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(option));
+        radioGroupDay1.appendChild(label);
       });
 
       // DAY2の選択肢を追加
       data.day2.forEach(option => {
-        const opt = document.createElement('option');
-        opt.value = option;
-        opt.textContent = option;
-        selectDay2.appendChild(opt);
+        const label = document.createElement('label');
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'day2';
+        radio.value = option;
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(option));
+        radioGroupDay2.appendChild(label);
       });
-
-      // "日程が合わない..." を最後に追加
-      selectDay1.appendChild(lastOptionDay1);
-      selectDay2.appendChild(lastOptionDay2);
     })
     .catch(error => console.error('Error loading the data:', error));
 });
