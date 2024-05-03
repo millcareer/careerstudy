@@ -123,6 +123,11 @@ input{
   font-size: 14px;
 }
 
+/* ラジオボタンとチェックボックスのスタイルをリセット */
+input[type="radio"], input[type="checkbox"] {
+    width: auto;  /* デフォルトの幅に戻す */
+}
+
 .radio-container {
     margin-bottom: 10px; /* 選択肢間の間隔を調整 */
 }
