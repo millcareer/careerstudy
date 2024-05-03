@@ -92,30 +92,32 @@ document.addEventListener('DOMContentLoaded', function() {
       const radioGroupDay2 = document.getElementById('radio_group_day2');
 
       // DAY1の選択肢を追加
-      data.day1.forEach(option => {
-        const label = document.createElement('label');
-        label.className = 'radio-label';  // クラスを追加
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = 'day1';
-        radio.value = option;
-        label.appendChild(radio);
-        label.appendChild(document.createTextNode(option));
-        radioGroupDay1.appendChild(label);
-      });
+data.day1.forEach(option => {
+  const container = document.createElement('div');
+  const label = document.createElement('label');
+  const radio = document.createElement('input');
+  radio.type = 'radio';
+  radio.name = 'day1';
+  radio.value = option;
+  label.appendChild(radio);  // ラジオボタンを追加
+  label.appendChild(document.createTextNode(option));  // テキストを追加
+  container.appendChild(label);
+  radioGroupDay1.appendChild(container);
+});
 
-      // DAY2の選択肢を追加
-      data.day2.forEach(option => {
-        const label = document.createElement('label');
-        label.className = 'radio-label';  // クラスを追加
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = 'day2';
-        radio.value = option;
-        label.appendChild(radio);
-        label.appendChild(document.createTextNode(option));
-        radioGroupDay2.appendChild(label);
-      });
-    })
+// DAY2の選択肢を追加
+data.day2.forEach(option => {
+  const container = document.createElement('div');
+  const label = document.createElement('label');
+  const radio = document.createElement('input');
+  radio.type = 'radio';
+  radio.name = 'day2';
+  radio.value = option;
+  label.appendChild(radio);  // ラジオボタンを追加
+  label.appendChild(document.createTextNode(option));  // テキストを追加
+  container.appendChild(label);
+  radioGroupDay2.appendChild(container);
+});
+
     .catch(error => console.error('Error loading the data:', error));
 });
