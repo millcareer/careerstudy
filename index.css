@@ -122,6 +122,8 @@ input{
   border-radius: 4px;
   font-size: 14px;
 }
+
+<head>
 <style>
 /* ラジオボタンとラベルのスタイル */
 .radio-container {
@@ -137,4 +139,5 @@ input{
     margin-right: 10px;
 }
 </style>
+</head>
 
