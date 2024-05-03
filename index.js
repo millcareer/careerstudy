@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // DAY1の選択肢を追加
       data.day1.forEach(option => {
         const label = document.createElement('label');
+        label.className = 'radio-label';  // クラスを追加
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'day1';
@@ -106,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // DAY2の選択肢を追加
       data.day2.forEach(option => {
         const label = document.createElement('label');
+        label.className = 'radio-label';  // クラスを追加
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = 'day2';
