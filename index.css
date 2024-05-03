@@ -125,6 +125,11 @@ input{
 
 .radio-label {
     display: block;  /* label要素がブロック要素として振る舞うように設定 */
-  }
+}
 
+label {
+    display: flex;  /* ラベルをフレックスボックスとして扱う */
+    align-items: center;  /* ラジオボタンとテキストを中央揃えにする */
+    margin-bottom: 5px;  /* 各ラジオボタンの下に余白を追加 */
+}
 
