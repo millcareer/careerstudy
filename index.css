@@ -129,7 +129,7 @@ input{
 
 .radio-container label {
     display: flex;
-    align-items: center; /* テキストとラジオボタンが中央揃えになるように */
+    align-items: left; /* テキストとラジオボタンが中央揃えになるように */
 }
 
 .radio-container input[type="radio"] {
