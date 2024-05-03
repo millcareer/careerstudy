@@ -117,6 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
       label.appendChild(document.createTextNode(option));
       container.appendChild(label);
       radioGroupDay2.appendChild(container);
-    });
+    })
     .catch(error => console.error('Error loading the data:', error));
 });
