@@ -83,7 +83,7 @@ function onSubmit() {
 
 //スプレッドシートから選択肢を取得し動的にradiobuttonへ追加(2024年4月17日追加)
 document.addEventListener('DOMContentLoaded', function() {
-    const url = 'https://script.google.com/macros/s/AKfycbxNHLXkm2Io4HVA6Mp9FjQ5Khr6MCrKWpLaebi-GoyU9D939AEziWqGOn1IRLGzAGQhGw/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbxqukZttg6TwSwpbCXxjIYs92AzG-27DrxZ13Kou8DySSnhXEzZL31BvLH3jxneNdwSJg/exec';
 
     fetch(url)
     .then(response => response.json())
