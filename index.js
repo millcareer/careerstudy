@@ -82,7 +82,7 @@ function onSubmit() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const url = 'https://script.google.com/macros/s/AKfycby9At_6GoBDsjla2boTY6vzt7u7a2aA4tNKHQsj7mID_zPpylnbKlm5JsR83b06I1IQqQ/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbwoW8CcTQyku4UgnmBk56lJTOD2gM8200KyzYPBD1yqva0y7_MKJvX0AtY1kLMSKEvx-A/exec';
 
     fetch(url)
     .then(response => response.json())
