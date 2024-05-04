@@ -81,7 +81,6 @@ function onSubmit() {
     return false;
 }
 
-//スプレッドシートから選択肢を取得し動的にradiobuttonへ追加(2024年4月17日追加)
 document.addEventListener('DOMContentLoaded', function() {
     const url = 'https://script.google.com/macros/s/AKfycbxqukZttg6TwSwpbCXxjIYs92AzG-27DrxZ13Kou8DySSnhXEzZL31BvLH3jxneNdwSJg/exec';
 
@@ -109,7 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.name = 'day1';
             radio.value = option;
 
-            if (index === data.day1.length - 1) {
+            // 「※満員」が含まれている選択肢を無効化
+            if (option.includes('※満員')) {
                 radio.disabled = true;
                 label.style.color = 'grey';
             }
@@ -133,7 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.name = 'day2';
             radio.value = option;
 
-            if (index === data.day2.length - 1) {
+            // 「※満員」が含まれている選択肢を無効化
+            if (option.includes('※満員')) {
                 radio.disabled = true;
                 label.style.color = 'grey';
             }
