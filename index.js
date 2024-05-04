@@ -91,6 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const radioGroupDay1 = document.getElementById('radio_group_day1');
         const radioGroupDay2 = document.getElementById('radio_group_day2');
 
+        // 既存の「日程が合わない...」ラジオボタンを取得
+        const existingOptionDay1 = radioGroupDay1.querySelector('label');
+        const existingOptionDay2 = radioGroupDay2.querySelector('label');
+
+        // 既存のラジオボタンを一時的に除去
+        radioGroupDay1.removeChild(existingOptionDay1);
+        radioGroupDay2.removeChild(existingOptionDay2);
+
         // DAY1の選択肢を追加
         data.day1.forEach((option, index) => {
             const container = document.createElement('div');
@@ -112,6 +120,9 @@ document.addEventListener('DOMContentLoaded', function() {
             radioGroupDay1.appendChild(container);
         });
 
+        // 最後に「日程が合わない...」を追加
+        radioGroupDay1.appendChild(existingOptionDay1);
+
         // DAY2の選択肢を追加
         data.day2.forEach((option, index) => {
             const container = document.createElement('div');
@@ -132,6 +143,9 @@ document.addEventListener('DOMContentLoaded', function() {
             container.appendChild(label);
             radioGroupDay2.appendChild(container);
         });
+
+        // 最後に「日程が合わない...」を追加
+        radioGroupDay2.appendChild(existingOptionDay2);
     })
     .catch(error => console.error('Error loading the data:', error));
 });
