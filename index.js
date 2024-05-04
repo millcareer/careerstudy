@@ -91,16 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const radioGroupDay1 = document.getElementById('radio_group_day1');
         const radioGroupDay2 = document.getElementById('radio_group_day2');
 
-        // 既存の「日程が合わない…」ラジオボタンを取得
-        const existingOptionDay1 = radioGroupDay1.querySelector('label');
-        const existingOptionDay2 = radioGroupDay2.querySelector('label');
-
-        // 既存のラジオボタンを一時的に除去
-        radioGroupDay1.removeChild(existingOptionDay1);
-        radioGroupDay2.removeChild(existingOptionDay2);
-        
         // DAY1の選択肢を追加
-        data.day1.forEach(option => {
+        data.day1.forEach((option, index) => {
             const container = document.createElement('div');
             container.className = 'radio-container';
             const label = document.createElement('label');
@@ -108,17 +100,20 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.type = 'radio';
             radio.name = 'day1';
             radio.value = option;
+
+            if (index === data.day1.length - 1) {
+                radio.disabled = true;
+                label.style.color = 'grey';
+            }
+
             label.appendChild(radio);
             label.appendChild(document.createTextNode(option));
             container.appendChild(label);
             radioGroupDay1.appendChild(container);
         });
 
-        // 最後に「日程が合わない…」を追加
-        radioGroupDay1.appendChild(existingOptionDay1);
-
         // DAY2の選択肢を追加
-        data.day2.forEach(option => {
+        data.day2.forEach((option, index) => {
             const container = document.createElement('div');
             container.className = 'radio-container';
             const label = document.createElement('label');
@@ -126,14 +121,17 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.type = 'radio';
             radio.name = 'day2';
             radio.value = option;
+
+            if (index === data.day2.length - 1) {
+                radio.disabled = true;
+                label.style.color = 'grey';
+            }
+
             label.appendChild(radio);
             label.appendChild(document.createTextNode(option));
             container.appendChild(label);
             radioGroupDay2.appendChild(container);
         });
-
-        // 最後に「日程が合わない…」を追加
-        radioGroupDay2.appendChild(existingOptionDay2);
     })
     .catch(error => console.error('Error loading the data:', error));
 });
