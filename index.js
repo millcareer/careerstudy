@@ -84,12 +84,27 @@ function onSubmit() {
 document.addEventListener('DOMContentLoaded', function() {
     const url = 'https://script.google.com/macros/s/AKfycbwoW8CcTQyku4UgnmBk56lJTOD2gM8200KyzYPBD1yqva0y7_MKJvX0AtY1kLMSKEvx-A/exec';
 
+    const radioGroupDay1 = document.getElementById('radio_group_day1');
+    const radioGroupDay2 = document.getElementById('radio_group_day2');
+
+    // ラジオボタンの選択変更時にIDを動的に割り当てる関数
+    function handleRadioChange(event) {
+        const selectedRadio = event.target;
+        const dayGroup = selectedRadio.name === 'day1' ? radioGroupDay1 : radioGroupDay2;
+        const idSuffix = selectedRadio.name === 'day1' ? '20' : '21';
+
+        // 他のラジオボタンからIDを削除
+        dayGroup.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.removeAttribute('id');
+        });
+
+        // 選択されたラジオボタンにIDを設定
+        selectedRadio.id = `form_answer${idSuffix}`;
+    }
+
     fetch(url)
     .then(response => response.json())
     .then(data => {
-        const radioGroupDay1 = document.getElementById('radio_group_day1');
-        const radioGroupDay2 = document.getElementById('radio_group_day2');
-
         // 既存の「日程が合わない...」オプションを一時的に除去
         const existingOptionDay1 = radioGroupDay1.querySelector('label');
         const existingOptionDay2 = radioGroupDay2.querySelector('label');
@@ -149,19 +164,4 @@ document.addEventListener('DOMContentLoaded', function() {
         radioGroupDay2.appendChild(existingOptionDay2);
     })
     .catch(error => console.error('Error loading the data:', error));
-
-    // ラジオボタンの選択変更時にIDを動的に割り当てる関数
-    function handleRadioChange(event) {
-        const selectedRadio = event.target;
-        const dayGroup = selectedRadio.name === 'day1' ? radioGroupDay1 : radioGroupDay2;
-        const idSuffix = selectedRadio.name === 'day1' ? '20' : '21';
-
-        // すべてのラジオボタンからIDを削除
-        dayGroup.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.removeAttribute('id');
-        });
-
-        // 選択されたラジオボタンにIDを設定
-        selectedRadio.id = `form_answer${idSuffix}`;
-    }
 });
