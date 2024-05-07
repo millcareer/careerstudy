@@ -90,11 +90,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const radioGroupDay1 = document.getElementById('radio_group_day1');
         const radioGroupDay2 = document.getElementById('radio_group_day2');
 
-        // 既存の「日程が合わない...」ラジオボタンを取得
+        // 既存の「日程が合わない...」オプションを一時的に除去
         const existingOptionDay1 = radioGroupDay1.querySelector('label');
         const existingOptionDay2 = radioGroupDay2.querySelector('label');
-
-        // 既存のラジオボタンを一時的に除去
         radioGroupDay1.removeChild(existingOptionDay1);
         radioGroupDay2.removeChild(existingOptionDay2);
 
@@ -107,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.type = 'radio';
             radio.name = 'day1';
             radio.value = option;
+            radio.addEventListener('change', handleRadioChange);
 
             // 「※満員」が含まれている選択肢を無効化
             if (option.includes('※満員')) {
@@ -132,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.type = 'radio';
             radio.name = 'day2';
             radio.value = option;
+            radio.addEventListener('change', handleRadioChange);
 
             // 「※満員」が含まれている選択肢を無効化
             if (option.includes('※満員')) {
@@ -149,4 +149,19 @@ document.addEventListener('DOMContentLoaded', function() {
         radioGroupDay2.appendChild(existingOptionDay2);
     })
     .catch(error => console.error('Error loading the data:', error));
+
+    // ラジオボタンの選択変更時にIDを動的に割り当てる関数
+    function handleRadioChange(event) {
+        const selectedRadio = event.target;
+        const dayGroup = selectedRadio.name === 'day1' ? radioGroupDay1 : radioGroupDay2;
+        const idSuffix = selectedRadio.name === 'day1' ? '20' : '21';
+
+        // すべてのラジオボタンからIDを削除
+        dayGroup.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.removeAttribute('id');
+        });
+
+        // 選択されたラジオボタンにIDを設定
+        selectedRadio.id = `form_answer${idSuffix}`;
+    }
 });
