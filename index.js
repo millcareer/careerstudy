@@ -82,7 +82,7 @@ function onSubmit() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const url = 'https://script.google.com/macros/s/AKfycbwoW8CcTQyku4UgnmBk56lJTOD2gM8200KyzYPBD1yqva0y7_MKJvX0AtY1kLMSKEvx-A/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbxHkvpoNRJjOg6XfIF2MZC4HGPDmef8meRA06iF6lPx1uOblPu0ZW6YAJAv7hS4iJPjXA/exec';
 
     const radioGroupDay1 = document.getElementById('radio_group_day1');
     const radioGroupDay2 = document.getElementById('radio_group_day2');
