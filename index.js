@@ -81,6 +81,7 @@ function onSubmit() {
     return false;
 }
 
+/**
 document.addEventListener('DOMContentLoaded', function() {
     const url = 'https://script.google.com/macros/s/AKfycbxHkvpoNRJjOg6XfIF2MZC4HGPDmef8meRA06iF6lPx1uOblPu0ZW6YAJAv7hS4iJPjXA/exec';
 
@@ -165,3 +166,4 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error loading the data:', error));
 });
+*/
