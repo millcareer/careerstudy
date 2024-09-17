@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         noOptionRadio.value = ' 日程が合わない';
         noOptionRadio.addEventListener('change', handleRadioChange);
         noOptionLabel.appendChild(noOptionRadio);
-        noOptionLabel.appendChild(document.createTextNode('日程が合わない'));
+        noOptionLabel.appendChild(document.createTextNode(' 日程が合わない'));
         radioGroup.appendChild(noOptionLabel);
     })
     .catch(error => console.error('Error loading the data:', error));
