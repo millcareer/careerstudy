@@ -82,7 +82,7 @@ function onSubmit() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const url = 'https://script.google.com/macros/s/AKfycbwPyGgy-Vk9TB0cOe2s-rIWjElj9q5K3pO-pKNPndcA09ecYmmFhpa2Kog6OF3WHkug8g/exec'; // 日程取得用のウェブアプリURL
+    const url = 'https://script.google.com/macros/s/AKfycbze0vBfKEmpZq8vKtnrRtl8U1DWNgjQeQM8fwhhVYUTHqdy4ALG74x8eumT622MD5X7bQ/exec'; // 日程取得用のウェブアプリURL
 
     const radioGroup = document.getElementById('radio_group'); // 1つのラジオグループを使用
 
