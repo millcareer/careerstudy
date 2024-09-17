@@ -84,7 +84,7 @@ function onSubmit() {
 document.addEventListener('DOMContentLoaded', function() {
     const url = 'https://script.google.com/macros/s/AKfycbze0vBfKEmpZq8vKtnrRtl8U1DWNgjQeQM8fwhhVYUTHqdy4ALG74x8eumT622MD5X7bQ/exec'; // 日程取得用のウェブアプリURL
 
-    const radioGroup = document.getElementById('radio_group'); // 1つのラジオグループを使用
+   const radioGroup = document.getElementById('radio_group'); // ラジオグループのDIV
 
     // ラジオボタンの選択変更時にIDを動的に割り当てる関数
     function handleRadioChange(event) {
@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data.forEach((option, index) => {
             const container = document.createElement('div');
             container.className = 'radio-container';
+            container.style.marginBottom = '10px';
             const label = document.createElement('label');
             const radio = document.createElement('input');
             radio.type = 'radio';
@@ -122,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 label.style.color = 'grey';
             }
 
+            label.style.display = 'block';
             label.appendChild(radio);
             label.appendChild(document.createTextNode(option));
             container.appendChild(label);
@@ -130,13 +132,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 最後に「日程が合わない...」を追加
         const noOptionLabel = document.createElement('label');
+        noOptionLabel.style.display = 'block';
+        noOptionLabel.style.marginBottom = '10px';
         const noOptionRadio = document.createElement('input');
         noOptionRadio.type = 'radio';
         noOptionRadio.name = 'day';
-        noOptionRadio.value = '日程が合わない';
+        noOptionRadio.value = '日程が合わない…';
+        noOptionRadio.id = 'form_answer20'; // こちらにも ID を設定
         noOptionRadio.addEventListener('change', handleRadioChange);
+
+        // テキストの冒頭にノンブレーキングスペース（&nbsp;）を追加
         noOptionLabel.appendChild(noOptionRadio);
-        noOptionLabel.appendChild(document.createTextNode(' 日程が合わない'));
+        noOptionLabel.innerHTML += '&nbsp;日程が合わない…'; // 先頭にノンブレーキングスペースを追加
         radioGroup.appendChild(noOptionLabel);
     })
     .catch(error => console.error('Error loading the data:', error));
