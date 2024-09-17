@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const noOptionRadio = document.createElement('input');
         noOptionRadio.type = 'radio';
         noOptionRadio.name = 'day';
-        noOptionRadio.value = ' 日程が合わない';
+        noOptionRadio.value = '日程が合わない';
         noOptionRadio.addEventListener('change', handleRadioChange);
         noOptionLabel.appendChild(noOptionRadio);
         noOptionLabel.appendChild(document.createTextNode(' 日程が合わない'));
