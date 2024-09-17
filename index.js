@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // テキストの冒頭にノンブレーキングスペース（&nbsp;）を追加
         noOptionLabel.appendChild(noOptionRadio);
-        noOptionLabel.innerHTML += '&nbsp;日程が合わない…'; // 先頭にノンブレーキングスペースを追加
+        noOptionLabel.innerHTML += '&nbsp;&nbsp;日程が合わない…'; // 先頭にノンブレーキングスペースを追加
         radioGroup.appendChild(noOptionLabel);
     })
     .catch(error => console.error('Error loading the data:', error));
