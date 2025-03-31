@@ -41,6 +41,15 @@
     <div class="form">
         <p class="form-text">メールアドレス</p>
         <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required" placeholder="例：example@example.com">
+	<div class="form-group">
+	    <label for="form_answer20" class="form-text">パスワード設定</label>
+	    <input type="password" name="password" id="form_answer20" required="required" minlength="8" placeholder="8文字以上で入力してください">
+	    <p class="password-hint">※英字・数字を含む8文字以上で設定してください</p>
+	</div>
+	<div class="form-group">
+	    <label for="form_answer21" class="form-text">パスワード確認</label>
+	    <input type="password" name="password_confirm" id="form_answer21" required="required" minlength="8" placeholder="確認のため再入力してください">
+	</div>
         <p class="form-text">電話番号</p>
         <input type="text" name="telNumber" id="form_answer02" pattern="\d{1,5}-\d{1,4}-\d{4,5}" required="required" placeholder="例：000-0000-0000">
         <p class="form-text">氏名</p>
