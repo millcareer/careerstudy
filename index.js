@@ -58,9 +58,8 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-     //自己分析CAMPの選択肢を form_answer20とform_answer21 に定義
-    //text_list.push(document.getElementById('form_answer20').value);
-    //text_list.push(document.getElementById('form_answer21').value);
+    text_list.push(document.getElementById('form_answer20').value);
+    text_list.push(document.getElementById('form_answer21').value);
     
     
     let msg = "【送信内容】";
@@ -81,6 +80,7 @@ function onSubmit() {
     return false;
 }
 
+/**
 document.addEventListener('DOMContentLoaded', function() {
     const url = 'https://script.google.com/macros/s/AKfycbze0vBfKEmpZq8vKtnrRtl8U1DWNgjQeQM8fwhhVYUTHqdy4ALG74x8eumT622MD5X7bQ/exec'; // 日程取得用のウェブアプリURL
 
@@ -148,3 +148,4 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error loading the data:', error));
 });
+*/
