@@ -251,3 +251,52 @@ input[type="password"]:focus {
     outline: none;
     box-shadow: 0 0 3px rgba(252, 172, 4, 0.5);
 }
+
+/* 同意セクション全体のスタイル */
+.agreement-section {
+  margin: 40px 0;
+  text-align: center;
+}
+
+/* 同意ボックスのスタイル */
+.agreement-box {
+  height: 150px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin: 0 auto 20px auto;
+  width: 90%;
+  background-color: #f9f9f9;
+  text-align: left;
+}
+
+/* チェックボックスのコンテナ */
+.agreement-checkbox-container {
+  display: inline-block;
+  padding: 10px 25px;
+  background-color: #f0f0f0;
+  border-radius: 30px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* チェックボックスとラベルのスタイル */
+.agreement-checkbox-container input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.agreement-checkbox-container label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  vertical-align: middle;
+}
+
+/* フォーカス時のスタイル */
+.agreement-checkbox-container input[type="checkbox"]:focus + label {
+  text-decoration: underline;
+}
