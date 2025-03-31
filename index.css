@@ -1,4 +1,9 @@
-/* Base styles and resets */
+/* 
+ * キャリアスタディ - フォーム登録スタイル
+ * 整理済みCSS
+ */
+
+/* ===== 変数定義 ===== */
 :root {
   --primary-color: #fcac04;
   --primary-dark: #e69c00;
@@ -10,8 +15,12 @@
   --focus-color: rgba(252, 172, 4, 0.25);
   --shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+  --gray-light: #f0f0f0;
+  --gray-mid: #6c757d;
+  --gray-dark: #777777;
 }
 
+/* ===== ベーススタイルとリセット ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,7 +35,7 @@ body {
   line-height: 1.6;
 }
 
-/* Header styles */
+/* ===== ヘッダースタイル ===== */
 header {
   background-color: var(--background-dark);
   padding: 15px 0;
@@ -52,7 +61,7 @@ header {
   color: var(--primary-color);
 }
 
-/* Main content container */
+/* ===== メインコンテンツコンテナ ===== */
 .contents {
   width: 90%;
   max-width: 1000px;
@@ -60,7 +69,7 @@ header {
   padding: 0 20px;
 }
 
-/* Title section */
+/* ===== タイトルセクション ===== */
 .title {
   margin-bottom: 30px;
 }
@@ -80,7 +89,7 @@ header {
   border-radius: 2px;
 }
 
-/* Form styles */
+/* ===== フォームスタイル ===== */
 .form {
   width: 100%;
   max-width: 800px;
@@ -98,8 +107,14 @@ header {
   color: var(--text-dark);
 }
 
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* ===== フォーム入力フィールド ===== */
 .form input[type="text"],
 .form input[type="email"],
+.form input[type="password"],
 .form select,
 .form textarea {
   width: 100%;
@@ -114,6 +129,7 @@ header {
 
 .form input[type="text"]:focus,
 .form input[type="email"]:focus,
+.form input[type="password"]:focus,
 .form select:focus,
 .form textarea:focus {
   outline: none;
@@ -122,10 +138,17 @@ header {
 }
 
 .form input::placeholder {
-  color: #adb5bd;
+  color: var(--gray-mid);
 }
 
-/* Name input pairs */
+/* パスワードフィールド特有のスタイル */
+.password-hint {
+  font-size: 12px;
+  color: var(--gray-dark);
+  margin-top: 5px;
+}
+
+/* 名前入力ペア */
 .form-name {
   display: flex;
   gap: 15px;
@@ -135,7 +158,7 @@ header {
   flex: 1;
 }
 
-/* Date selector */
+/* 日付セレクタ */
 .form-select-wrap {
   display: flex;
   align-items: center;
@@ -146,7 +169,7 @@ header {
   flex: 1;
 }
 
-/* Radio and checkbox styles */
+/* ===== ラジオボタンとチェックボックス ===== */
 input[type="radio"],
 input[type="checkbox"] {
   width: 18px;
@@ -168,20 +191,55 @@ label {
   user-select: none;
 }
 
-/* Agreement box */
+/* ===== 同意セクション ===== */
+.agreement-section {
+  margin: 40px 0;
+  text-align: center;
+}
+
 .agreement-box {
-  max-height: 150px;
+  height: 150px;
   overflow-y: auto;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 15px;
-  margin: 10px 0;
+  margin: 0 auto 20px auto;
+  width: 90%;
   font-size: 14px;
   line-height: 1.5;
   background-color: var(--background-light);
+  text-align: left;
 }
 
-/* Button styles */
+.agreement-checkbox-container {
+  display: inline-block;
+  padding: 10px 25px;
+  background-color: var(--gray-light);
+  border-radius: 30px;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.agreement-checkbox-container input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.agreement-checkbox-container label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-dark);
+  vertical-align: middle;
+}
+
+.agreement-checkbox-container input[type="checkbox"]:focus + label {
+  text-decoration: underline;
+}
+
+/* ===== ボタンスタイル ===== */
 .btn-block {
   margin: 30px auto 10px;
   text-align: center;
@@ -210,13 +268,13 @@ label {
   transform: translateY(0);
 }
 
-/* Font size adjustment */
+/* ===== ユーティリティクラス ===== */
 font[size="1"] {
   font-size: 12px;
-  color: #6c757d;
+  color: var(--gray-mid);
 }
 
-/* Responsive adjustments */
+/* ===== レスポンシブ調整 ===== */
 @media (max-width: 768px) {
   .form-name {
     flex-direction: column;
@@ -231,72 +289,9 @@ font[size="1"] {
     width: 95%;
     padding: 0 10px;
   }
-}
-
-.password-hint {
-    font-size: 12px;
-    color: #777;
-    margin-top: 5px;
-}
-
-input[type="password"] {
+  
+  .agreement-checkbox-container {
     width: 90%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-input[type="password"]:focus {
-    border-color: #fcac04;
-    outline: none;
-    box-shadow: 0 0 3px rgba(252, 172, 4, 0.5);
-}
-
-/* 同意セクション全体のスタイル */
-.agreement-section {
-  margin: 40px 0;
-  text-align: center;
-}
-
-/* 同意ボックスのスタイル */
-.agreement-box {
-  height: 150px;
-  overflow-y: scroll;
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin: 0 auto 20px auto;
-  width: 90%;
-  background-color: #f9f9f9;
-  text-align: left;
-}
-
-/* チェックボックスのコンテナ */
-.agreement-checkbox-container {
-  display: inline-block;
-  padding: 10px 25px;
-  background-color: #f0f0f0;
-  border-radius: 30px;
-  margin: 0 auto;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-/* チェックボックスとラベルのスタイル */
-.agreement-checkbox-container input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-.agreement-checkbox-container label {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-  vertical-align: middle;
-}
-
-/* フォーカス時のスタイル */
-.agreement-checkbox-container input[type="checkbox"]:focus + label {
-  text-decoration: underline;
+    padding: 8px 16px;
+  }
 }
