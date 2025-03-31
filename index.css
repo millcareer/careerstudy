@@ -1,146 +1,234 @@
-body{
-    margin: 0;
-    background-color: #F2F2F2;
+/* Base styles and resets */
+:root {
+  --primary-color: #fcac04;
+  --primary-dark: #e69c00;
+  --text-dark: #333333;
+  --text-light: #ffffff;
+  --background-light: #f8f9fa;
+  --background-dark: #212529;
+  --border-color: #dee2e6;
+  --focus-color: rgba(252, 172, 4, 0.25);
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
 }
 
-header{
-    height: 75px;
-    background-color: #181818;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-input{
-    width: 90%;
+body {
+  margin: 0;
+  background-color: var(--background-light);
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-dark);
+  line-height: 1.6;
 }
 
-.header-block{
-    width: 95%;
-    height: 100%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 32px;
+/* Header styles */
+header {
+  background-color: var(--background-dark);
+  padding: 15px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-block {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .logo {
-    font-family: 'Roboto', sans-serif;
-    font-size: 32px;
-    margin: 0;
-    color: #5CB8E4;
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary-color);
 }
 
-.navi {
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    color: #5CB8E4;
+/* Main content container */
+.contents {
+  width: 90%;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-.contents{
-    width: 80%;
-    margin: 50px auto;
-    font-family: 'Noto Sans JP', sans-serif;
+/* Title section */
+.title {
+  margin-bottom: 30px;
 }
 
-.title{
-    width: 100%;
+.title p {
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--text-dark);
+  margin-bottom: 10px;
 }
 
-.title p{
-    margin: 0;
-    font-weight: 900;
-    font-size: 32px;
-    color: #181818;
+.title hr {
+  border: none;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 0;
+  border-radius: 2px;
 }
 
-.title hr{
-    border-top: 16px solid #8758FF;
-}
-
+/* Form styles */
 .form {
-    width: 90%;
-    margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
 }
 
-.form-text{
-     margin-top: 2em;
+.form-text {
+  font-weight: 500;
+  font-size: 16px;
+  margin: 20px 0 8px 0;
+  color: var(--text-dark);
 }
 
-.form textarea{
-    width: 100%;
-    height: 250px
-}
-
-.form-textarea{
-    display: block;
-    width: 100%;
-    border-radius: 4px;
-    border: none;
-    box-shadow: 0 0 0 1px #ccc inset;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    resize: vertical;
-}
-
-.form-textarea:focus{
-    outline: 0;
-    box-shadow: 0 0 0 2px #8758FF inset;
-}
-
-.btn-block {
-    width:  120px;
-    height: 50px;
-    text-align: center;
-    margin: 16px auto;
-    background-color: #8758FF;
-    border-radius: 25px;
-}
-
-.btn-block a {
-    display: block;
-}
-
-.btn {
-    width: 100%;
-    color: #F2F2F2;
-    text-decoration: none;
-    display: block;
-    padding: 12.5px 0px;
-}
-.form-select-wrap{
-  display: flex;
-  max-width: 300px;
-  align-items: center;
-}
-.form-select-wrap > select{
-  padding: 8px 16px;
-  margin-left: 10px;
-  margin-right: 10px;
-  border: 1px solid gray;
+.form input[type="text"],
+.form input[type="email"],
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 16px;
+  transition: var(--transition);
+  color: var(--text-dark);
+  background-color: white;
 }
 
-/* ラジオボタンとチェックボックスのスタイルをリセット */
-input[type="radio"], input[type="checkbox"] {
-    width: auto;  /* デフォルトの幅に戻す */
+.form input[type="text"]:focus,
+.form input[type="email"]:focus,
+.form select:focus,
+.form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--focus-color);
+}
+
+.form input::placeholder {
+  color: #adb5bd;
+}
+
+/* Name input pairs */
+.form-name {
+  display: flex;
+  gap: 15px;
+}
+
+.form-name input {
+  flex: 1;
+}
+
+/* Date selector */
+.form-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-select-wrap select {
+  flex: 1;
+}
+
+/* Radio and checkbox styles */
+input[type="radio"],
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  accent-color: var(--primary-color);
 }
 
 .radio-container {
-    margin-bottom: 10px; /* 選択肢間の間隔を調整 */
+  margin-bottom: 10px;
 }
 
-.radio-container label {
-    display: flex;
-    align-items: center; /* テキストとラジオボタンが中央揃えになるように */
+.radio-container label,
+label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
 }
 
-.radio-container input[type="radio"] {
-    margin-right: 10px; /* テキストとの間に余白を設定 */
- }
+/* Agreement box */
+.agreement-box {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  background-color: var(--background-light);
+}
 
+/* Button styles */
+.btn-block {
+  margin: 30px auto 10px;
+  text-align: center;
+}
 
+.btn {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  border: none;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
 
+.btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
 
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Font size adjustment */
+font[size="1"] {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-name {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form {
+    padding: 20px;
+  }
+  
+  .contents {
+    width: 95%;
+    padding: 0 10px;
+  }
+}
