@@ -93,7 +93,7 @@ function onSubmit() {
                 rawMessage: msg
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbzi0y62GMpKVA2COa7TMN9uxturDe93P1RWoXDe3mZVmo3u-WmSa6u5gSMTTQgbV2R4Ng/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbxvUblHKUrP-CZYgjAqCRntFspvB4xp4Vo84ryHwqyn0XJmdGdRExumbwD0iwUQbLfwSQ/exec", {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
