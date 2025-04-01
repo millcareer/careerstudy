@@ -40,6 +40,7 @@ function onSubmit() {
     // Your existing onSubmit function here
     let text_list = [];
     text_list.push(document.getElementById('form_answer01').value);
+    text_list.push(document.getElementById('form_answer20').value);
     text_list.push(document.getElementById('form_answer02').value);
     text_list.push(document.getElementById('form_answer03').value);
     text_list.push(document.getElementById('form_answer04').value);
@@ -58,8 +59,6 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-    text_list.push(document.getElementById('form_answer20').value);
-    text_list.push(document.getElementById('form_answer21').value);
     
     
     let msg = "【送信内容】";
