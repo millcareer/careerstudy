@@ -1,3 +1,4 @@
+// ✅ LIFFフォーム JavaScript（原型踏襲・明示展開対応）
 document.addEventListener('DOMContentLoaded', (event) => {
     let yearSelect = document.getElementById('form_answer07');
     let monthSelect = document.getElementById('form_answer08');
@@ -32,12 +33,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     yearSelect.addEventListener('change', setDayOptions);
     monthSelect.addEventListener('change', setDayOptions);
-    
-    setDayOptions();  // Initial call to populate the day select options based on the current year and month
+
+    setDayOptions();
 });
 
+function sendText(text) {
+    liff.sendMessages([
+        {
+            type: "text",
+            text: text
+        }
+    ]).then(() => {
+        console.log("送信完了");
+    }).catch((err) => {
+        console.error("送信失敗", err);
+    });
+}
+
 function onSubmit() {
-    // Your existing onSubmit function here
     let text_list = [];
     text_list.push(document.getElementById('form_answer01').value);
     text_list.push(document.getElementById('form_answer20').value);
@@ -59,22 +72,43 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-    
-    
+
     let msg = "【送信内容】";
     let form_check_flag = 1;
     for (let i = 0; i < text_list.length; i++) {
-        if ( text_list[i] == "") {
+        if (text_list[i] == "") {
             form_check_flag = 0;
-            window . alert( '入力項目に漏れがあります。全ての項目への入力をお願い致します。' );
+            window.alert('入力項目に漏れがあります。全ての項目への入力をお願い致します。');
             break;
         }
         msg = msg + "\n" + text_list[i];
     }
+
     if (form_check_flag == 1) {
-        // 231008 別のLINE送信関数が存在していたが、元のLINEメッセージ送信で利用する関数に変更
-        sendText(msg);
-        // sendMessageToLine(msg);
+        liff.getProfile().then(profile => {
+            const payload = {
+                userId: profile.userId,
+                displayName: profile.displayName,
+                answers: text_list,
+                rawMessage: msg
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycbxIC5OiRxsxsE03lsHktyUme26ZFDrLq_5Iv41HJqRmPg6Z18B01BmoEktDBKhXYRs6IQ/exec", {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                sendText(msg); // ユーザー確認用に送信内容を返す
+            }).catch((e) => {
+                alert("送信に失敗しました。" + e);
+            });
+
+        }).catch(err => {
+            alert("LINEプロフィールの取得に失敗しました。" + err);
+        });
     }
     return false;
 }
