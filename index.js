@@ -45,6 +45,7 @@ function sendText(text) {
         }
     ]).then(() => {
         console.log("送信完了");
+        liff.closeWindow(); // ✅ LINEトーク画面へ戻る（LIFFを閉じる）
     }).catch((err) => {
         console.error("送信失敗", err);
     });
