@@ -1,4 +1,4 @@
-// ✅ LIFFフォーム JavaScript（原型踏襲・明示展開対応）
+// ✅ LIFFフォーム JavaScript（原型踏襲・送信後にLIFF閉じる対応）
 document.addEventListener('DOMContentLoaded', (event) => {
     let yearSelect = document.getElementById('form_answer07');
     let monthSelect = document.getElementById('form_answer08');
@@ -45,7 +45,7 @@ function sendText(text) {
         }
     ]).then(() => {
         console.log("送信完了");
-        liff.closeWindow();
+        liff.closeWindow(); // ✅ メッセージ送信後にLIFFを閉じる
     }).catch((err) => {
         console.error("送信失敗", err);
     });
@@ -102,7 +102,7 @@ function onSubmit() {
                 },
                 body: JSON.stringify(payload)
             }).then(() => {
-                sendText(msg); // ユーザー確認用に送信内容を返す
+                sendText(msg); // ✅ 送信成功後に確認メッセージ送信 → LIFFを閉じる
             }).catch((e) => {
                 alert("送信に失敗しました。" + e);
             });
@@ -113,6 +113,7 @@ function onSubmit() {
     }
     return false;
 }
+
 
 /**
 document.addEventListener('DOMContentLoaded', function() {
