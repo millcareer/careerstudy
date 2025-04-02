@@ -1,13 +1,19 @@
-// showLoadingとhideLoading関数を追加
+// DOMが読み込まれたら確実にローディングを非表示にする
+document.addEventListener('DOMContentLoaded', function() {
+    // 初期状態で確実に非表示にする
+    document.getElementById('loading').style.display = 'none';
+});
+
+// showLoadingとhideLoading関数
 function showLoading() {
-    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading').style.display = 'block';
 }
 
 function hideLoading() {
     document.getElementById('loading').style.display = 'none';
 }
 
-// onSubmit関数を修正（既存の関数を置き換えてください）
+// onSubmit関数を修正
 function onSubmit() {
     // フォームの値を配列に格納
     let text_list = [];
@@ -58,7 +64,7 @@ function onSubmit() {
             };
 
             // データ送信を実行
-            fetch("https://script.google.com/macros/s/AKfycbyC4kCz2_ptH_5WEBU5TfcNUXSR66JYb63o2hsIPZQMelt8WVaEpG4UPRUXnYA4CkOZXw/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbwuliim0T6v4mKVUSs7AKbwasGMS6O3tWv-7fyLYvB2SRkaEH7-GYAQ55bslR4O-b13EA/exec", {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
