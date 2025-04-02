@@ -1,57 +1,15 @@
-// ✅ LIFFフォーム JavaScript（原型踏襲・送信後にLIFF閉じる対応）
-document.addEventListener('DOMContentLoaded', (event) => {
-    let yearSelect = document.getElementById('form_answer07');
-    let monthSelect = document.getElementById('form_answer08');
-    let daySelect = document.getElementById('form_answer09');
-
-    for(let i = 1900; i <= new Date().getFullYear(); i++) {
-        let option = document.createElement('option');
-        option.value = i;
-        option.text = i;
-        yearSelect.add(option);
-    }
-
-    for(let i = 1; i <= 12; i++) {
-        let option = document.createElement('option');
-        option.value = i;
-        option.text = i;
-        monthSelect.add(option);
-    }
-
-    function setDayOptions() {
-        daySelect.innerHTML = '';
-        let year = yearSelect.value;
-        let month = monthSelect.value;
-        let lastDay = new Date(year, month, 0).getDate();
-        for(let i = 1; i <= lastDay; i++) {
-            let option = document.createElement('option');
-            option.value = i;
-            option.text = i;
-            daySelect.add(option);
-        }
-    }
-
-    yearSelect.addEventListener('change', setDayOptions);
-    monthSelect.addEventListener('change', setDayOptions);
-
-    setDayOptions();
-});
-
-function sendText(text) {
-    liff.sendMessages([
-        {
-            type: "text",
-            text: text
-        }
-    ]).then(() => {
-        console.log("送信完了");
-        liff.closeWindow(); // ✅ メッセージ送信後にLIFFを閉じる
-    }).catch((err) => {
-        console.error("送信失敗", err);
-    });
+// showLoadingとhideLoading関数を追加
+function showLoading() {
+    document.getElementById('loading').style.display = 'flex';
 }
 
+function hideLoading() {
+    document.getElementById('loading').style.display = 'none';
+}
+
+// onSubmit関数を修正（既存の関数を置き換えてください）
 function onSubmit() {
+    // フォームの値を配列に格納
     let text_list = [];
     text_list.push(document.getElementById('form_answer01').value);
     text_list.push(document.getElementById('form_answer20').value);
@@ -74,6 +32,7 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
 
+    // 入力チェック
     let msg = "【送信内容】";
     let form_check_flag = 1;
     for (let i = 0; i < text_list.length; i++) {
@@ -86,6 +45,10 @@ function onSubmit() {
     }
 
     if (form_check_flag == 1) {
+        // 送信中の表示を開始
+        showLoading();
+
+        // LINEプロフィールを取得
         liff.getProfile().then(profile => {
             const payload = {
                 userId: profile.userId,
@@ -94,6 +57,7 @@ function onSubmit() {
                 rawMessage: msg
             };
 
+            // データ送信を実行
             fetch("https://script.google.com/macros/s/AKfycbzj2Li9WUAU3a0O5_-XmMXwSo_DM3WdKZOxcfQ8wL00B_mkYTd2umqygD2mVJCKykT8kw/exec", {
                 method: "POST",
                 mode: "no-cors",
@@ -102,85 +66,25 @@ function onSubmit() {
                 },
                 body: JSON.stringify(payload)
             }).then(() => {
-                sendText(msg); // ✅ 送信成功後に確認メッセージ送信 → LIFFを閉じる
-            }).catch((e) => {
-                alert("送信に失敗しました。" + e);
+                // データ送信完了後、LINEメッセージを送信
+                return liff.sendMessages([
+                    {
+                        type: "text",
+                        text: msg
+                    }
+                ]);
+            }).then(() => {
+                // メッセージ送信完了後、LIFFを閉じる
+                hideLoading();
+                liff.closeWindow();
+            }).catch((err) => {
+                hideLoading();
+                alert("送信に失敗しました。" + err);
             });
-
         }).catch(err => {
+            hideLoading();
             alert("LINEプロフィールの取得に失敗しました。" + err);
         });
     }
     return false;
 }
-
-
-/**
-document.addEventListener('DOMContentLoaded', function() {
-    const url = 'https://script.google.com/macros/s/AKfycbze0vBfKEmpZq8vKtnrRtl8U1DWNgjQeQM8fwhhVYUTHqdy4ALG74x8eumT622MD5X7bQ/exec'; // 日程取得用のウェブアプリURL
-
-   const radioGroup = document.getElementById('radio_group'); // ラジオグループのDIV
-
-    // ラジオボタンの選択変更時にIDを動的に割り当てる関数
-    function handleRadioChange(event) {
-        const selectedRadio = event.target;
-
-        // 他のラジオボタンからIDを削除
-        radioGroup.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.removeAttribute('id');
-        });
-
-        // 選択されたラジオボタンにIDを設定
-        selectedRadio.id = `form_answer20`; // IDを form_answer20 に設定
-    }
-
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        // ラジオボタンのグループをクリア
-        radioGroup.innerHTML = '';
-
-        // 一意に日程を取得して追加
-        data.forEach((option, index) => {
-            const container = document.createElement('div');
-            container.className = 'radio-container';
-            container.style.marginBottom = '10px';
-            const label = document.createElement('label');
-            const radio = document.createElement('input');
-            radio.type = 'radio';
-            radio.name = 'day';
-            radio.value = option;
-            radio.addEventListener('change', handleRadioChange);
-
-            // 「※満員」が含まれている選択肢を無効化
-            if (option.includes('※満員')) {
-                radio.disabled = true;
-                label.style.color = 'grey';
-            }
-
-            label.style.display = 'block';
-            label.appendChild(radio);
-            label.appendChild(document.createTextNode(option));
-            container.appendChild(label);
-            radioGroup.appendChild(container);
-        });
-
-        // 最後に「日程が合わない...」を追加
-        const noOptionLabel = document.createElement('label');
-        noOptionLabel.style.display = 'block';
-        noOptionLabel.style.marginBottom = '10px';
-        const noOptionRadio = document.createElement('input');
-        noOptionRadio.type = 'radio';
-        noOptionRadio.name = 'day';
-        noOptionRadio.value = '日程が合わない…';
-        noOptionRadio.id = 'form_answer20'; // こちらにも ID を設定
-        noOptionRadio.addEventListener('change', handleRadioChange);
-
-        // テキストの冒頭にノンブレーキングスペース（&nbsp;）を追加
-        noOptionLabel.appendChild(noOptionRadio);
-        noOptionLabel.innerHTML += '&nbsp;&nbsp;日程が合わない…'; // 先頭にノンブレーキングスペースを追加
-        radioGroup.appendChild(noOptionLabel);
-    })
-    .catch(error => console.error('Error loading the data:', error));
-});
-*/
