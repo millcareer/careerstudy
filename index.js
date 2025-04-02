@@ -58,7 +58,7 @@ function onSubmit() {
             };
 
             // データ送信を実行
-            fetch("https://script.google.com/macros/s/AKfycbzj2Li9WUAU3a0O5_-XmMXwSo_DM3WdKZOxcfQ8wL00B_mkYTd2umqygD2mVJCKykT8kw/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbyC4kCz2_ptH_5WEBU5TfcNUXSR66JYb63o2hsIPZQMelt8WVaEpG4UPRUXnYA4CkOZXw/exec", {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
