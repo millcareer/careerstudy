@@ -1,10 +1,52 @@
-// DOMが読み込まれたら確実にローディングを非表示にする
-document.addEventListener('DOMContentLoaded', function() {
-    // 初期状態で確実に非表示にする
+// DOMが読み込まれたら実行される関数
+document.addEventListener('DOMContentLoaded', (event) => {
+    // ローディングを確実に非表示にする
     document.getElementById('loading').style.display = 'none';
+    
+    // 生年月日の選択肢を作成する元の処理を維持
+    let yearSelect = document.getElementById('form_answer07');
+    let monthSelect = document.getElementById('form_answer08');
+    let daySelect = document.getElementById('form_answer09');
+
+    // 年の選択肢を生成
+    for(let i = 1900; i <= new Date().getFullYear(); i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        yearSelect.add(option);
+    }
+
+    // 月の選択肢を生成
+    for(let i = 1; i <= 12; i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        monthSelect.add(option);
+    }
+
+    // 日数を設定する関数
+    function setDayOptions() {
+        daySelect.innerHTML = '';
+        let year = yearSelect.value;
+        let month = monthSelect.value;
+        let lastDay = new Date(year, month, 0).getDate();
+        for(let i = 1; i <= lastDay; i++) {
+            let option = document.createElement('option');
+            option.value = i;
+            option.text = i;
+            daySelect.add(option);
+        }
+    }
+
+    // イベントリスナーを設定
+    yearSelect.addEventListener('change', setDayOptions);
+    monthSelect.addEventListener('change', setDayOptions);
+
+    // 初期設定
+    setDayOptions();
 });
 
-// showLoadingとhideLoading関数
+// ローディングインジケーターの表示・非表示を制御する関数
 function showLoading() {
     document.getElementById('loading').style.display = 'block';
 }
@@ -13,7 +55,7 @@ function hideLoading() {
     document.getElementById('loading').style.display = 'none';
 }
 
-// onSubmit関数を修正
+// フォーム送信関数
 function onSubmit() {
     // フォームの値を配列に格納
     let text_list = [];
@@ -64,7 +106,7 @@ function onSubmit() {
             };
 
             // データ送信を実行
-            fetch("https://script.google.com/macros/s/AKfycbwuliim0T6v4mKVUSs7AKbwasGMS6O3tWv-7fyLYvB2SRkaEH7-GYAQ55bslR4O-b13EA/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbzj2Li9WUAU3a0O5_-XmMXwSo_DM3WdKZOxcfQ8wL00B_mkYTd2umqygD2mVJCKykT8kw/exec", {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
@@ -93,4 +135,18 @@ function onSubmit() {
         });
     }
     return false;
+}
+
+// LINEメッセージ送信関数
+function sendText(text) {
+    liff.sendMessages([
+        {
+            type: "text",
+            text: text
+        }
+    ]).then(() => {
+        liff.closeWindow(); // メッセージ送信後にLIFFを閉じる
+    }).catch((err) => {
+        console.error("送信失敗", err);
+    });
 }
