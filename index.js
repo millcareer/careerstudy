@@ -389,7 +389,6 @@ function updateSelectionCount() {
 function updateHiddenFields() {
     const choice1Input = document.getElementById('form_answer22');
     const choice2Input = document.getElementById('form_answer23');
-    const combinedInput = document.getElementById('form_answer01');
     
     if (!choice1Input || !choice2Input) return;
     
