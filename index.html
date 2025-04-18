@@ -1176,20 +1176,21 @@
 </p>
 
 <div class="form-group">
-  <p class="form-text">イベント予約</p>
-    <p style="font-weight: bold;">INTERN QUEST参加予約</p>
-    <p>下記のイベントから希望する日程を<span style="color: red; font-weight: bold;">2つ</span>選択してください。</p>
+  <p class="form-text">INTERN QUEST参加予約</p>
+  <div style="margin-bottom: 10px;">
+    <p>下記から希望する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
     
-    <p class="form-text">希望イベント日程（2つ選択必須）</p>
-    <select name="event-dates[]" id="event_multiple_select" multiple="multiple" size="5" required="required">
+    <select name="event-dates[]" id="event_multiple_select" multiple="multiple" size="5" required="required" style="width: 100%; border: 1px solid #ccc; border-radius: 4px; padding: 8px; font-size: 14px;">
       <!-- ここにGASからの選択肢が入ります -->
     </select>
-    <p class="selection-count" id="selection_count" style="color: #ff6600; font-weight: bold;">選択数: 0/2</p>
+    <p id="selection_count" style="color: #fcac04; font-size: 14px; margin-top: 5px;">選択数: 0/2</p>
     
     <!-- 隠しフィールドを追加 -->
     <input type="hidden" id="form_answer20" name="event_choice1" value="">
     <input type="hidden" id="form_answer21" name="event_choice2" value="">
+  </div>
 </div>
+	    
 	<br>    
         <div class="btn-block">
         <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
