@@ -106,7 +106,7 @@ function onSubmit() {
             };
 
             // データ送信を実行
-            fetch("https://script.google.com/macros/s/AKfycbwbHhBZCDXDJbI-uHbDbRSzLMv3ygmOO2LqQqQDTJgGWC9_-77eH2lqNqmQQKgncFViPQ/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbwp7FVOokio68xNXEQSJiqE-XGk7e6hfHaZFltEp1nGyjltnqOcIdtWTeheD4wrA1VygA/exec", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
