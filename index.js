@@ -168,6 +168,7 @@ function onSubmit() {
     // フォームの値を配列に格納
     let text_list = [];
     text_list.push(document.getElementById('form_answer01').value);
+    text_list.push(document.getElementById('form_answer20').value);
     text_list.push(document.getElementById('form_answer02').value);
     text_list.push(document.getElementById('form_answer03').value);
     text_list.push(document.getElementById('form_answer04').value);
@@ -186,8 +187,8 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-    text_list.push(document.getElementById('form_answer20').value);
-    text_list.push(document.getElementById('form_answer21').value);
+    text_list.push(document.getElementById('form_answer22').value)
+    text_list.push(document.getElementById('form_answer23').value);
 
     // 入力チェック
     let msg = "【送信内容】";
