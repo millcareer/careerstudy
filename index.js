@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // ローディングを確実に非表示にする
     document.getElementById('loading').style.display = 'none';
     
+    // イベント情報を取得して表示
+    fetchUpcomingEvents();
+    
     // 生年月日の選択肢を作成する元の処理を維持
     let yearSelect = document.getElementById('form_answer07');
     let monthSelect = document.getElementById('form_answer08');
@@ -46,6 +49,241 @@ document.addEventListener('DOMContentLoaded', (event) => {
     setDayOptions();
 });
 
+// イベント情報を取得する関数
+function fetchUpcomingEvents() {
+    // ローディングを表示
+    showLoading();
+    
+    // イベント情報を取得
+    fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsoQ/exec?from=liff")
+        .then(response => response.json())
+        .then(data => {
+            // ローディングを非表示
+            hideLoading();
+            
+            // イベント情報を表示
+            displayEvents(data);
+            
+            // MultiSelectの選択肢として設定
+            setEventChoices(data);
+        })
+        .catch(error => {
+            // ローディングを非表示
+            hideLoading();
+            console.error("イベント情報の取得に失敗しました:", error);
+        });
+}
+
+// イベント情報を表示する関数
+function displayEvents(events) {
+    // イベント情報を表示する要素
+    let eventsContainer = document.getElementById('upcoming-events');
+    
+    // 要素がなければ作成
+    if (!eventsContainer) {
+        eventsContainer = document.createElement('div');
+        eventsContainer.id = 'upcoming-events';
+        eventsContainer.className = 'events-container';
+        
+        // フォームの前に挿入
+        const form = document.querySelector('form');
+        form.parentNode.insertBefore(eventsContainer, form);
+    }
+    
+    // 内容をクリア
+    eventsContainer.innerHTML = '';
+    
+    // 見出しを追加
+    const heading = document.createElement('h3');
+    heading.textContent = '今後のイベント';
+    eventsContainer.appendChild(heading);
+    
+    // イベントがなければメッセージを表示
+    if (events.length === 0) {
+        const noEvents = document.createElement('p');
+        noEvents.textContent = '現在予定されているイベントはありません。';
+        eventsContainer.appendChild(noEvents);
+        return;
+    }
+    
+    // イベント一覧を表示
+    const eventList = document.createElement('ul');
+    eventList.className = 'event-list';
+    
+    events.forEach(event => {
+        const eventItem = document.createElement('li');
+        eventItem.className = 'event-item';
+        
+        const eventTitle = document.createElement('div');
+        eventTitle.className = 'event-title';
+        eventTitle.textContent = event.title;
+        
+        const eventDate = document.createElement('div');
+        eventDate.className = 'event-date';
+        eventDate.textContent = event.choice_text;
+        
+        const eventContents = document.createElement('div');
+        eventContents.className = 'event-contents';
+        eventContents.textContent = event.contents;
+        
+        eventItem.appendChild(eventTitle);
+        eventItem.appendChild(eventDate);
+        eventItem.appendChild(eventContents);
+        
+        eventList.appendChild(eventItem);
+    });
+    
+    eventsContainer.appendChild(eventList);
+    
+    // スタイルを追加
+    const style = document.createElement('style');
+    style.textContent = `
+        .events-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        .events-container h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .event-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .event-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .event-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .event-date {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        .event-contents {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .checkbox-group {
+            margin-top: 20px;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 8px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .checkbox-group label:hover {
+            background-color: #e9e9e9;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// イベントの選択肢をMultiSelectとして設定する関数
+function setEventChoices(events) {
+    // MultiSelect用の要素を取得または作成
+    let eventSelectContainer = document.getElementById('event-select-container');
+    
+    // 要素がなければ作成
+    if (!eventSelectContainer) {
+        eventSelectContainer = document.createElement('div');
+        eventSelectContainer.id = 'event-select-container';
+        eventSelectContainer.className = 'checkbox-group';
+        
+        // 見出し
+        const heading = document.createElement('h4');
+        heading.textContent = '参加希望のイベントを選択してください';
+        eventSelectContainer.appendChild(heading);
+        
+        // form_answer01の前に挿入（適宜調整してください）
+        const targetInput = document.getElementById('form_answer01');
+        const parentElement = targetInput.parentElement;
+        parentElement.insertBefore(eventSelectContainer, targetInput.parentElement.firstChild);
+    }
+    
+    // コンテナの内容をクリア（見出しを残す）
+    while (eventSelectContainer.childNodes.length > 1) {
+        eventSelectContainer.removeChild(eventSelectContainer.lastChild);
+    }
+    
+    // 隠しフィールドを作成（選択したイベントを保存するため）
+    const hiddenInput = document.getElementById('selected_events') || document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.id = 'selected_events';
+    hiddenInput.name = 'selected_events';
+    eventSelectContainer.appendChild(hiddenInput);
+    
+    // 各イベントのチェックボックスを作成
+    events.forEach((event, index) => {
+        const label = document.createElement('label');
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = event.choice_text;
+        checkbox.id = `event_${index}`;
+        checkbox.dataset.date = event.date;
+        checkbox.dataset.title = event.title;
+        
+        // チェックボックスの変更イベント
+        checkbox.addEventListener('change', updateSelectedEvents);
+        
+        const labelText = document.createTextNode(`${event.choice_text} - ${event.title} (${event.contents})`);
+        
+        label.appendChild(checkbox);
+        label.appendChild(labelText);
+        
+        eventSelectContainer.appendChild(label);
+    });
+    
+    // スタイルを更新
+    updateFormLayout();
+}
+
+// 選択されたイベントを更新する関数
+function updateSelectedEvents() {
+    const checkboxes = document.querySelectorAll('#event-select-container input[type="checkbox"]');
+    const hiddenInput = document.getElementById('selected_events');
+    
+    const selectedEvents = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+    
+    hiddenInput.value = selectedEvents.join(', ');
+    
+    // 最初のフォーム要素に選択したイベントを設定（フォーム送信に含める）
+    // form_answer01に設定する場合（適宜調整してください）
+    if (selectedEvents.length > 0) {
+        document.getElementById('form_answer01').value = selectedEvents.join(', ');
+    } else {
+        document.getElementById('form_answer01').value = '';
+    }
+}
+
+// フォームのレイアウトを調整する関数
+function updateFormLayout() {
+    // form_answer01のラベルを更新（非表示または調整）
+    const firstInputLabel = document.querySelector('label[for="form_answer01"]');
+    if (firstInputLabel) {
+        firstInputLabel.textContent = '選択したイベント'; // または非表示にする
+    }
+}
+
 // ローディングインジケーターの表示・非表示を制御する関数
 function showLoading() {
     document.getElementById('loading').style.display = 'block';
@@ -79,6 +317,8 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
+    text_list.push(document.getElementById('form_answer20').value);
+    text_list.push(document.getElementById('form_answer21').value);
 
     // 入力チェック
     let msg = "【送信内容】";
@@ -106,7 +346,7 @@ function onSubmit() {
             };
 
             // データ送信を実行
-            fetch("https://script.google.com/macros/s/AKfycby0JVVEv0J8bxgNdx02KJMc_cNJCb9sABPstTeQ-1bOhs5kiDSFhqlDYSro9fVFz1LJnw/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsoQ/exec?from=liff", {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
