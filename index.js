@@ -132,13 +132,6 @@ function updateSelectedCount() {
     // 選択された値を隠しフィールドに設定
     choice1Input.value = selectedOptions[0] ? selectedOptions[0].value : '';
     choice2Input.value = selectedOptions[1] ? selectedOptions[1].value : '';
-    
-    // 選択肢を第一希望と第二希望としてform_answer01にも設定
-    const firstInput = document.getElementById('form_answer01');
-    if (firstInput) {
-        const selectedValues = selectedOptions.map(opt => opt.value);
-        firstInput.value = selectedValues.join(', ');
-    }
 }
 
 // ローディングインジケーターの表示・非表示を制御する関数
