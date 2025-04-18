@@ -124,7 +124,6 @@ function displayEvents(events) {
     
     // スタイルを追加
     addStyles();
-}
 
 // イベントの選択肢をMultiSelectとして設定する関数
 function setEventChoices(events) {
