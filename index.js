@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         loadingElement.style.display = 'none';
     }
     
-    // カスタムローディングインジケーターを準備
+    // カスタムローディングインジケーターを準備（非表示で）
     createLoadingIndicator();
     
-    // イベント情報を取得して選択肢に設定
+    // イベント情報を取得して選択肢に設定（ローディング表示なし）
     fetchUpcomingEvents();
     
     // 生年月日の選択肢を作成
@@ -24,7 +24,7 @@ function createLoadingIndicator() {
     // ローディングインジケーター要素の作成
     const loadingContainer = document.createElement('div');
     loadingContainer.id = 'custom-loading';
-    loadingContainer.style.display = 'none';
+    loadingContainer.style.display = 'none'; // 初期状態は非表示
     loadingContainer.style.position = 'fixed';
     loadingContainer.style.top = '0';
     loadingContainer.style.left = '0';
@@ -32,7 +32,6 @@ function createLoadingIndicator() {
     loadingContainer.style.height = '100%';
     loadingContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
     loadingContainer.style.zIndex = '9999';
-    loadingContainer.style.display = 'flex';
     loadingContainer.style.flexDirection = 'column';
     loadingContainer.style.justifyContent = 'center';
     loadingContainer.style.alignItems = 'center';
@@ -59,6 +58,7 @@ function createLoadingIndicator() {
     
     // メッセージ要素の作成
     const message = document.createElement('p');
+    message.id = 'loading-message';
     message.textContent = '送信中...';
     message.style.marginTop = '10px';
     message.style.color = '#333';
@@ -71,9 +71,16 @@ function createLoadingIndicator() {
 }
 
 // ローディングインジケーターの表示・非表示を制御する関数
-function showLoading() {
+function showLoading(message = '送信中...') {
     const loadingElement = document.getElementById('custom-loading');
     if (loadingElement) {
+        // メッセージを更新
+        const messageElement = document.getElementById('loading-message');
+        if (messageElement) {
+            messageElement.textContent = message;
+        }
+        
+        // 表示設定
         loadingElement.style.display = 'flex';
     }
 }
@@ -83,6 +90,20 @@ function hideLoading() {
     if (loadingElement) {
         loadingElement.style.display = 'none';
     }
+}
+
+// イベント情報を取得する関数（ローディング表示なし）
+function fetchUpcomingEvents() {
+    // イベント情報を取得
+    fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsoQ/exec?from=liff")
+        .then(response => response.json())
+        .then(data => {
+            // イベント選択UIを作成
+            createEventSelectionUI(data);
+        })
+        .catch(error => {
+            console.error("イベント情報の取得に失敗しました:", error);
+        });
 }
 
 // 生年月日選択セットアップ関数
@@ -129,28 +150,6 @@ function setupBirthdaySelects() {
         // 初期設定
         setDayOptions();
     }
-}
-
-// イベント情報を取得する関数
-function fetchUpcomingEvents() {
-    // ローディングを表示
-    showLoading();
-    
-    // イベント情報を取得
-    fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsoQ/exec?from=liff")
-        .then(response => response.json())
-        .then(data => {
-            // ローディングを非表示
-            hideLoading();
-            
-            // イベント選択UIを作成
-            createEventSelectionUI(data);
-        })
-        .catch(error => {
-            // ローディングを非表示
-            hideLoading();
-            console.error("イベント情報の取得に失敗しました:", error);
-        });
 }
 
 // イベント選択UIを作成する関数
@@ -390,6 +389,7 @@ function updateSelectionCount() {
 function updateHiddenFields() {
     const choice1Input = document.getElementById('form_answer22');
     const choice2Input = document.getElementById('form_answer23');
+    const combinedInput = document.getElementById('form_answer01');
     
     if (!choice1Input || !choice2Input) return;
     
@@ -470,15 +470,8 @@ function onSubmit() {
     }
 
     if (form_check_flag == 1) {
-        // 送信中の表示を開始（メッセージを更新）
-        const loadingElement = document.getElementById('custom-loading');
-        if (loadingElement) {
-            const messageElement = loadingElement.querySelector('p');
-            if (messageElement) {
-                messageElement.textContent = '送信中...しばらくお待ちください';
-            }
-        }
-        showLoading();
+        // 送信中の表示を開始
+        showLoading('送信中...しばらくお待ちください');
 
         // LINEプロフィールを取得
         liff.getProfile().then(profile => {
@@ -499,10 +492,7 @@ function onSubmit() {
                 body: JSON.stringify(payload)
             }).then(() => {
                 // データ送信完了後の処理（ローディングメッセージを更新）
-                const messageElement = document.querySelector('#custom-loading p');
-                if (messageElement) {
-                    messageElement.textContent = '送信完了！';
-                }
+                showLoading('送信完了！');
                 
                 try {
                     // LINEメッセージの送信を試みる
@@ -577,28 +567,4 @@ function onSubmit() {
         });
     }
     return false;
-}
-
-// LINEメッセージ送信関数
-function sendText(text) {
-    // メッセージ送信前にローディングを表示
-    showLoading();
-    
-    liff.sendMessages([
-        {
-            type: "text",
-            text: text
-        }
-    ]).then(() => {
-        // メッセージ送信成功時
-        setTimeout(() => {
-            hideLoading();
-            liff.closeWindow(); // メッセージ送信後にLIFFを閉じる
-        }, 1000);
-    }).catch((err) => {
-        // メッセージ送信失敗時
-        hideLoading();
-        console.error("送信失敗", err);
-        alert("メッセージの送信に失敗しましたが、データは保存されています。");
-    });
 }
