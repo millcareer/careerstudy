@@ -108,7 +108,6 @@ function onSubmit() {
             // データ送信を実行
             fetch("https://script.google.com/macros/s/AKfycbwbHhBZCDXDJbI-uHbDbRSzLMv3ygmOO2LqQqQDTJgGWC9_-77eH2lqNqmQQKgncFViPQ/exec", {
                 method: "POST",
-                mode: "no-cors",
                 headers: {
                     "Content-Type": "application/json"
                 },
