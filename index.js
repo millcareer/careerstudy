@@ -52,12 +52,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         // 初期設定
         setDayOptions();
     }
-    
-    // マルチセレクトの変更を監視
-    const eventMultiSelect = document.getElementById('event_multiple_select');
-    if (eventMultiSelect) {
-        eventMultiSelect.addEventListener('change', updateSelectedCount);
-    }
 });
 
 // イベント情報を取得する関数
@@ -73,7 +67,7 @@ function fetchUpcomingEvents() {
             hideLoading();
             
             // セレクトボックスに選択肢を設定
-            populateEventSelect(data);
+            createDatePickerUI(data);
         })
         .catch(error => {
             // ローディングを非表示
@@ -82,63 +76,372 @@ function fetchUpcomingEvents() {
         });
 }
 
-// セレクトボックスにイベント選択肢を設定する関数
-function populateEventSelect(events) {
-    const selectElement = document.getElementById('event_multiple_select');
-    if (!selectElement) {
-        console.error("セレクトボックスが見つかりません");
+// ドラムロールタイムピッカーUIを作成する関数
+function createDatePickerUI(events) {
+    // イベント選択エリアを取得
+    const selectContainer = document.querySelector('.form-group');
+    if (!selectContainer) {
+        console.error("フォームグループが見つかりません");
         return;
     }
     
-    // 選択肢をクリア
-    selectElement.innerHTML = '';
+    // 既存のselect要素を非表示
+    const originalSelect = document.getElementById('event_multiple_select');
+    if (originalSelect) {
+        originalSelect.style.display = 'none';
+    }
     
-    // イベント選択肢を追加
-    events.forEach((event, index) => {
-        const option = document.createElement('option');
-        option.value = event.choice_text;
-        option.text = `${event.choice_text} - ${event.title}`;
-        option.dataset.date = event.date;
-        option.dataset.title = event.title;
-        selectElement.appendChild(option);
+    // タイムピッカーコンテナを作成
+    const pickerContainer = document.createElement('div');
+    pickerContainer.id = 'date-picker-container';
+    pickerContainer.className = 'date-picker-container';
+    
+    // 選択したイベント表示エリア
+    const selectedEventsContainer = document.createElement('div');
+    selectedEventsContainer.id = 'selected-events';
+    selectedEventsContainer.className = 'selected-events';
+    
+    // 選択済みイベントの見出し
+    const selectedHeading = document.createElement('p');
+    selectedHeading.className = 'selected-heading';
+    selectedHeading.textContent = '選択済みイベント (2つ選択してください)';
+    selectedEventsContainer.appendChild(selectedHeading);
+    
+    // 選択したイベントリストを表示するエリア
+    const selectedList = document.createElement('div');
+    selectedList.id = 'selected-events-list';
+    selectedList.className = 'selected-events-list';
+    selectedEventsContainer.appendChild(selectedList);
+    
+    // ドラムロールピッカーを作成
+    const picker = document.createElement('div');
+    picker.id = 'event-picker';
+    picker.className = 'event-picker';
+    
+    // ピッカーの説明文
+    const pickerHeading = document.createElement('p');
+    pickerHeading.textContent = '下記のピッカーからイベントを選択してください';
+    picker.appendChild(pickerHeading);
+    
+    // イベントピッカーの作成
+    const drumRoll = document.createElement('div');
+    drumRoll.className = 'drum-roll';
+    
+    // イベントを日付でグループ化
+    const eventsByDate = groupEventsByDate(events);
+    
+    // イベントリスト作成
+    for (const date in eventsByDate) {
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-option';
+        eventItem.dataset.date = date;
+        eventItem.dataset.title = eventsByDate[date].title;
+        eventItem.dataset.value = eventsByDate[date].choice_text;
+        eventItem.textContent = `${eventsByDate[date].choice_text} - ${eventsByDate[date].title}`;
+        
+        // クリックイベント
+        eventItem.addEventListener('click', function() {
+            selectEvent(this);
+        });
+        
+        drumRoll.appendChild(eventItem);
+    }
+    
+    picker.appendChild(drumRoll);
+    
+    // 選択ボタン
+    const addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.id = 'add-event-button';
+    addButton.className = 'add-event-button';
+    addButton.textContent = '選択中のイベントを追加';
+    addButton.addEventListener('click', function() {
+        addSelectedEvent();
     });
+    picker.appendChild(addButton);
     
-    // 変更イベントを設定
-    selectElement.addEventListener('change', updateSelectedCount);
-    
-    // 初期状態を設定
-    updateSelectedCount();
-}
-
-// 選択数を更新する関数
-function updateSelectedCount() {
-    const selectElement = document.getElementById('event_multiple_select');
-    const countDisplay = document.getElementById('selection_count');
+    // 隠しフィールドを追加（既存のものを使用）
     const choice1Input = document.getElementById('form_answer20');
     const choice2Input = document.getElementById('form_answer21');
     
-    if (!selectElement || !countDisplay || !choice1Input || !choice2Input) return;
+    if (!choice1Input || !choice2Input) {
+        console.error("隠しフィールドが見つかりません");
+        return;
+    }
     
-    // 選択されたオプションを取得
-    const selectedOptions = Array.from(selectElement.selectedOptions);
-    const selectedCount = selectedOptions.length;
+    // コンテナに追加
+    pickerContainer.appendChild(selectedEventsContainer);
+    pickerContainer.appendChild(picker);
+    
+    // フォームグループの先頭に挿入
+    selectContainer.insertBefore(pickerContainer, selectContainer.firstChild);
+    
+    // スタイルを追加
+    addDatePickerStyles();
+    
+    // 選択中のイベントを追跡するための変数
+    window.selectedEvents = [];
+    window.currentSelectedEvent = null;
+}
+
+// イベントを日付でグループ化する関数
+function groupEventsByDate(events) {
+    const grouped = {};
+    
+    events.forEach(event => {
+        const dateKey = event.date;
+        grouped[dateKey] = event;
+    });
+    
+    return grouped;
+}
+
+// 選択中のイベントを設定する関数
+function selectEvent(eventElement) {
+    // 現在選択されているイベントの選択を解除
+    const currentActive = document.querySelector('.event-option.active');
+    if (currentActive) {
+        currentActive.classList.remove('active');
+    }
+    
+    // 新しいイベントを選択
+    eventElement.classList.add('active');
+    
+    // 現在選択中のイベントを設定
+    window.currentSelectedEvent = {
+        date: eventElement.dataset.date,
+        title: eventElement.dataset.title,
+        value: eventElement.dataset.value,
+        text: eventElement.textContent
+    };
+}
+
+// 選択中のイベントを追加する関数
+function addSelectedEvent() {
+    // 選択中のイベントがなければ何もしない
+    if (!window.currentSelectedEvent) {
+        alert('イベントを選択してください');
+        return;
+    }
+    
+    // 既に選択済みかチェック
+    const isAlreadySelected = window.selectedEvents.some(
+        event => event.date === window.currentSelectedEvent.date
+    );
+    
+    if (isAlreadySelected) {
+        alert('このイベントは既に選択されています');
+        return;
+    }
+    
+    // 選択数が2つを超える場合
+    if (window.selectedEvents.length >= 2) {
+        alert('イベントは最大2つまで選択できます');
+        return;
+    }
+    
+    // 選択したイベントを追加
+    window.selectedEvents.push(window.currentSelectedEvent);
+    
+    // 選択リストを更新
+    updateSelectedEventsList();
+    
+    // 隠しフィールドを更新
+    updateHiddenFields();
+}
+
+// 選択済みイベントリストを更新する関数
+function updateSelectedEventsList() {
+    const selectedList = document.getElementById('selected-events-list');
+    if (!selectedList) return;
+    
+    // リストをクリア
+    selectedList.innerHTML = '';
+    
+    // 選択済みイベントを表示
+    window.selectedEvents.forEach((event, index) => {
+        const eventItem = document.createElement('div');
+        eventItem.className = 'selected-event-item';
+        
+        const eventText = document.createElement('span');
+        eventText.textContent = event.text;
+        eventItem.appendChild(eventText);
+        
+        // 削除ボタン
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'remove-event-button';
+        removeButton.textContent = '削除';
+        removeButton.dataset.index = index;
+        removeButton.addEventListener('click', function() {
+            removeSelectedEvent(parseInt(this.dataset.index));
+        });
+        
+        eventItem.appendChild(removeButton);
+        selectedList.appendChild(eventItem);
+    });
     
     // 選択数を表示
-    countDisplay.textContent = `選択数: ${selectedCount}/2`;
+    const countDisplay = document.getElementById('selection_count');
+    if (countDisplay) {
+        countDisplay.textContent = `選択数: ${window.selectedEvents.length}/2`;
+        countDisplay.style.color = window.selectedEvents.length === 2 ? '#00cc00' : '#fcac04';
+    }
+}
+
+// 選択済みイベントを削除する関数
+function removeSelectedEvent(index) {
+    if (index >= 0 && index < window.selectedEvents.length) {
+        // 指定されたインデックスのイベントを削除
+        window.selectedEvents.splice(index, 1);
+        
+        // 選択リストを更新
+        updateSelectedEventsList();
+        
+        // 隠しフィールドを更新
+        updateHiddenFields();
+    }
+}
+
+// 隠しフィールドを更新する関数
+function updateHiddenFields() {
+    const choice1Input = document.getElementById('form_answer20');
+    const choice2Input = document.getElementById('form_answer21');
+    const firstInput = document.getElementById('form_answer01');
     
-    // 選択数が2より多い場合は警告色に
-    countDisplay.style.color = selectedCount > 2 ? '#ff0000' : '#fcac04';
+    if (!choice1Input || !choice2Input) return;
     
-    // 選択された値を隠しフィールドに設定
-    choice1Input.value = selectedOptions[0] ? selectedOptions[0].value : '';
-    choice2Input.value = selectedOptions[1] ? selectedOptions[1].value : '';
+    // 第一希望と第二希望を設定
+    choice1Input.value = window.selectedEvents[0] ? window.selectedEvents[0].value : '';
+    choice2Input.value = window.selectedEvents[1] ? window.selectedEvents[1].value : '';
+    
+    // form_answer01にも設定（互換性のため）
+    if (firstInput) {
+        const selectedValues = window.selectedEvents.map(event => event.value);
+        firstInput.value = selectedValues.join(', ');
+    }
+}
+
+// スタイルを追加する関数
+function addDatePickerStyles() {
+    // 既存のスタイル要素を探す
+    let styleElem = document.getElementById('date-picker-styles');
+    
+    // なければ作成
+    if (!styleElem) {
+        styleElem = document.createElement('style');
+        styleElem.id = 'date-picker-styles';
+        document.head.appendChild(styleElem);
+    }
+    
+    // スタイルを設定
+    styleElem.textContent = `
+        .date-picker-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .selected-events {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 6px;
+        }
+        
+        .selected-heading {
+            margin-top: 0;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .selected-events-list {
+            min-height: 60px;
+        }
+        
+        .selected-event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .remove-event-button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .event-picker {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .drum-roll {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .event-option {
+            padding: 12px;
+            margin: 5px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .event-option:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .event-option.active {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .add-event-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #fcac04;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .add-event-button:hover {
+            background-color: #e69500;
+        }
+    `;
 }
 
 // ローディングインジケーターの表示・非表示を制御する関数
 function showLoading() {
     const loadingElement = document.getElementById('loading');
     if (loadingElement) {
-        loadingElement.style.display = 'none';
+        loadingElement.style.display = 'block';
     }
 }
 
@@ -152,8 +455,7 @@ function hideLoading() {
 // フォーム送信関数
 function onSubmit() {
     // 選択数をチェック
-    const selectElement = document.getElementById('event_multiple_select');
-    if (selectElement && selectElement.selectedOptions.length !== 2) {
+    if (window.selectedEvents.length !== 2) {
         window.alert('イベントは必ず2つ選択してください。');
         return false;
     }
@@ -162,6 +464,7 @@ function onSubmit() {
     let text_list = [];
     text_list.push(document.getElementById('form_answer01').value);
     text_list.push(document.getElementById('form_answer20').value);
+    text_list.push(document.getElementById('form_answer21').value);
     text_list.push(document.getElementById('form_answer02').value);
     text_list.push(document.getElementById('form_answer03').value);
     text_list.push(document.getElementById('form_answer04').value);
@@ -180,8 +483,8 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-    text_list.push(document.getElementById('form_answer22').value);
-    text_list.push(document.getElementById('form_answer23').value);
+    text_list.push(document.getElementById('form_answer22') ? document.getElementById('form_answer22').value : '');
+    text_list.push(document.getElementById('form_answer23') ? document.getElementById('form_answer23').value : '');
 
     // 入力チェック
     let msg = "【送信内容】";
