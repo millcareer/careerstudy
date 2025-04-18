@@ -457,17 +457,3 @@ function onSubmit() {
     }
     return false;
 }
-
-// LINEメッセージ送信関数
-function sendText(text) {
-    liff.sendMessages([
-        {
-            type: "text",
-            text: text
-        }
-    ]).then(() => {
-        liff.closeWindow(); // メッセージ送信後にLIFFを閉じる
-    }).catch((err) => {
-        console.error("送信失敗", err);
-    });
-}
