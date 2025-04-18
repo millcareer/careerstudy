@@ -6,12 +6,84 @@ document.addEventListener('DOMContentLoaded', (event) => {
         loadingElement.style.display = 'none';
     }
     
+    // カスタムローディングインジケーターを準備
+    createLoadingIndicator();
+    
     // イベント情報を取得して選択肢に設定
     fetchUpcomingEvents();
     
     // 生年月日の選択肢を作成
     setupBirthdaySelects();
 });
+
+// ローディングインジケーターを作成する関数
+function createLoadingIndicator() {
+    // すでに存在する場合は作成しない
+    if (document.getElementById('custom-loading')) return;
+    
+    // ローディングインジケーター要素の作成
+    const loadingContainer = document.createElement('div');
+    loadingContainer.id = 'custom-loading';
+    loadingContainer.style.display = 'none';
+    loadingContainer.style.position = 'fixed';
+    loadingContainer.style.top = '0';
+    loadingContainer.style.left = '0';
+    loadingContainer.style.width = '100%';
+    loadingContainer.style.height = '100%';
+    loadingContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+    loadingContainer.style.zIndex = '9999';
+    loadingContainer.style.display = 'flex';
+    loadingContainer.style.flexDirection = 'column';
+    loadingContainer.style.justifyContent = 'center';
+    loadingContainer.style.alignItems = 'center';
+    
+    // スピナー要素の作成
+    const spinner = document.createElement('div');
+    spinner.className = 'loading-spinner';
+    spinner.style.width = '40px';
+    spinner.style.height = '40px';
+    spinner.style.border = '4px solid #f3f3f3';
+    spinner.style.borderTop = '4px solid #fcac04';
+    spinner.style.borderRadius = '50%';
+    spinner.style.animation = 'spin 1s linear infinite';
+    
+    // スピナーのアニメーションスタイルを追加
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // メッセージ要素の作成
+    const message = document.createElement('p');
+    message.textContent = '送信中...';
+    message.style.marginTop = '10px';
+    message.style.color = '#333';
+    message.style.fontWeight = 'bold';
+    
+    // 要素を組み合わせる
+    loadingContainer.appendChild(spinner);
+    loadingContainer.appendChild(message);
+    document.body.appendChild(loadingContainer);
+}
+
+// ローディングインジケーターの表示・非表示を制御する関数
+function showLoading() {
+    const loadingElement = document.getElementById('custom-loading');
+    if (loadingElement) {
+        loadingElement.style.display = 'flex';
+    }
+}
+
+function hideLoading() {
+    const loadingElement = document.getElementById('custom-loading');
+    if (loadingElement) {
+        loadingElement.style.display = 'none';
+    }
+}
 
 // 生年月日選択セットアップ関数
 function setupBirthdaySelects() {
@@ -339,21 +411,6 @@ function updateHiddenFields() {
     }
 }
 
-// ローディングインジケーターの表示・非表示を制御する関数
-function showLoading() {
-    const loadingElement = document.getElementById('loading');
-    if (loadingElement) {
-        loadingElement.style.display = 'block';
-    }
-}
-
-function hideLoading() {
-    const loadingElement = document.getElementById('loading');
-    if (loadingElement) {
-        loadingElement.style.display = 'none';
-    }
-}
-
 // フォーム送信関数
 function onSubmit() {
     // 「日程が合わない」が選択されているか
@@ -414,7 +471,14 @@ function onSubmit() {
     }
 
     if (form_check_flag == 1) {
-        // 送信中の表示を開始
+        // 送信中の表示を開始（メッセージを更新）
+        const loadingElement = document.getElementById('custom-loading');
+        if (loadingElement) {
+            const messageElement = loadingElement.querySelector('p');
+            if (messageElement) {
+                messageElement.textContent = '送信中...しばらくお待ちください';
+            }
+        }
         showLoading();
 
         // LINEプロフィールを取得
@@ -435,17 +499,75 @@ function onSubmit() {
                 },
                 body: JSON.stringify(payload)
             }).then(() => {
-                // データ送信完了後、LINEメッセージを送信
-                return liff.sendMessages([
-                    {
-                        type: "text",
-                        text: msg
+                // データ送信完了後の処理（ローディングメッセージを更新）
+                const messageElement = document.querySelector('#custom-loading p');
+                if (messageElement) {
+                    messageElement.textContent = '送信完了！';
+                }
+                
+                try {
+                    // LINEメッセージの送信を試みる
+                    if (liff.isApiAvailable('shareTargetPicker')) {
+                        // shareTargetPickerが利用可能な場合
+                        liff.shareTargetPicker([
+                            {
+                                type: "text",
+                                text: msg
+                            }
+                        ]).then(() => {
+                            // 成功時の処理
+                            setTimeout(() => {
+                                hideLoading();
+                                liff.closeWindow();
+                            }, 1000);
+                        }).catch(err => {
+                            // エラー時は送信成功メッセージだけ表示
+                            setTimeout(() => {
+                                hideLoading();
+                                alert("送信が完了しました。");
+                                liff.closeWindow();
+                            }, 1000);
+                        });
+                    } else if (liff.isInClient()) {
+                        // 通常のLIFFブラウザ内
+                        liff.sendMessages([
+                            {
+                                type: "text",
+                                text: msg
+                            }
+                        ]).then(() => {
+                            setTimeout(() => {
+                                hideLoading();
+                                liff.closeWindow();
+                            }, 1000);
+                        }).catch(err => {
+                            // エラー時は送信成功メッセージだけ表示
+                            setTimeout(() => {
+                                hideLoading();
+                                alert("送信が完了しました。");
+                                liff.closeWindow();
+                            }, 1000);
+                        });
+                    } else {
+                        // 外部ブラウザなど
+                        setTimeout(() => {
+                            hideLoading();
+                            alert("送信が完了しました。");
+                            window.close();
+                        }, 1000);
                     }
-                ]);
-            }).then(() => {
-                // メッセージ送信完了後、LIFFを閉じる
-                hideLoading();
-                liff.closeWindow();
+                } catch (e) {
+                    // どのLIFF機能も使えない場合
+                    setTimeout(() => {
+                        hideLoading();
+                        alert("送信が完了しました。");
+                        try {
+                            liff.closeWindow();
+                        } catch (e) {
+                            window.close();
+                        }
+                    }, 1000);
+                }
             }).catch((err) => {
                 hideLoading();
                 alert("送信に失敗しました。" + err);
@@ -456,4 +578,28 @@ function onSubmit() {
         });
     }
     return false;
+}
+
+// LINEメッセージ送信関数
+function sendText(text) {
+    // メッセージ送信前にローディングを表示
+    showLoading();
+    
+    liff.sendMessages([
+        {
+            type: "text",
+            text: text
+        }
+    ]).then(() => {
+        // メッセージ送信成功時
+        setTimeout(() => {
+            hideLoading();
+            liff.closeWindow(); // メッセージ送信後にLIFFを閉じる
+        }, 1000);
+    }).catch((err) => {
+        // メッセージ送信失敗時
+        hideLoading();
+        console.error("送信失敗", err);
+        alert("メッセージの送信に失敗しましたが、データは保存されています。");
+    });
 }
