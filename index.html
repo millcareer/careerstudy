@@ -1207,5 +1207,89 @@
     <script src="index.js"></script>
     <!-- Bootstrap JavaScript (もし使っているなら) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+// Get password input elements
+const passwordInput = document.getElementById('form_answer20');
+const confirmPasswordInput = document.getElementById('form_answer21');
+
+// Password validation function
+function validatePassword() {
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    
+    // Create or get error message elements
+    let passwordError = document.getElementById('password-error');
+    if (!passwordError) {
+        passwordError = document.createElement('p');
+        passwordError.id = 'password-error';
+        passwordError.style.color = 'red';
+        passwordError.style.fontSize = '14px';
+        passwordInput.parentNode.appendChild(passwordError);
+    }
+    
+    let confirmError = document.getElementById('confirm-password-error');
+    if (!confirmError) {
+        confirmError = document.createElement('p');
+        confirmError.id = 'confirm-password-error';
+        confirmError.style.color = 'red';
+        confirmError.style.fontSize = '14px';
+        confirmPasswordInput.parentNode.appendChild(confirmError);
+    }
+    
+    // Reset error messages
+    passwordError.textContent = '';
+    confirmError.textContent = '';
+    
+    // Validate password length
+    if (password.length < 8) {
+        passwordError.textContent = 'パスワードは8文字以上で入力してください';
+        return false;
+    }
+    
+    // Validate password contains both letters and numbers
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    
+    if (!hasLetter || !hasNumber) {
+        passwordError.textContent = 'パスワードは英字と数字を含む必要があります';
+        return false;
+    }
+    
+    // Validate passwords match
+    if (password !== confirmPassword && confirmPassword.length > 0) {
+        confirmError.textContent = 'パスワードが一致しません';
+        return false;
+    }
+    
+    return true;
+}
+
+// Add event listeners
+passwordInput.addEventListener('input', validatePassword);
+confirmPasswordInput.addEventListener('input', validatePassword);
+
+// Update form submission to validate passwords
+const originalSubmitFunction = window.onSubmit || function(){};
+
+window.onSubmit = function(event) {
+    if (!validatePassword()) {
+        // If we're using a real form submission, prevent it
+        if (event) {
+            event.preventDefault();
+        }
+        return false;
+    }
+    
+    // Call the original submit function if validation passes
+    return originalSubmitFunction(event);
+};
+
+// Add this code to the existing button click handler
+document.querySelector('.btn').addEventListener('click', function(event) {
+    if (!validatePassword()) {
+        event.preventDefault();
+    }
+});
+</script>
 </body>
 </html>
