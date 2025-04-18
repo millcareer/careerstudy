@@ -91,18 +91,6 @@ function displayEvents(events) {
     
     // 内容をクリア
     eventsContainer.innerHTML = '';
-    
-    // 見出しを追加
-    const heading = document.createElement('h3');
-    heading.textContent = '今後のイベント';
-    eventsContainer.appendChild(heading);
-    
-    // イベントがなければメッセージを表示
-    if (events.length === 0) {
-        const noEvents = document.createElement('p');
-        noEvents.textContent = '現在予定されているイベントはありません。';
-        eventsContainer.appendChild(noEvents);
-        return;
     }
     
     // イベント一覧を表示
