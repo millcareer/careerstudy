@@ -85,9 +85,8 @@ function displayEvents(events) {
         eventsContainer.id = 'upcoming-events';
         eventsContainer.className = 'events-container';
         
-        // フォームの前に挿入
-        const form = document.querySelector('form');
-        form.parentNode.insertBefore(eventsContainer, form);
+        // body要素に追加（フォームが見つからない場合の対策）
+        document.body.insertBefore(eventsContainer, document.body.firstChild);
     }
     
     // 内容をクリア
@@ -136,8 +135,125 @@ function displayEvents(events) {
     eventsContainer.appendChild(eventList);
     
     // スタイルを追加
-    const style = document.createElement('style');
-    style.textContent = `
+    addStyles();
+}
+
+// イベントの選択肢をMultiSelectとして設定する関数
+function setEventChoices(events) {
+    // form_answer01の要素を取得
+    const firstInput = document.getElementById('form_answer01');
+    if (!firstInput) {
+        console.error("form_answer01要素が見つかりません");
+        return;
+    }
+    
+    // form_answer01の親要素を取得
+    const parentElement = firstInput.parentElement;
+    
+    // MultiSelect用の要素を取得または作成
+    let eventSelectContainer = document.getElementById('event-select-container');
+    
+    // 要素がなければ作成
+    if (!eventSelectContainer) {
+        eventSelectContainer = document.createElement('div');
+        eventSelectContainer.id = 'event-select-container';
+        eventSelectContainer.className = 'checkbox-group';
+        
+        // 見出し
+        const heading = document.createElement('h4');
+        heading.textContent = '参加希望のイベントを選択してください';
+        eventSelectContainer.appendChild(heading);
+        
+        // form_answer01の前に挿入
+        parentElement.insertBefore(eventSelectContainer, firstInput);
+    }
+    
+    // コンテナの内容をクリア（見出しを残す）
+    const heading = eventSelectContainer.querySelector('h4');
+    eventSelectContainer.innerHTML = '';
+    if (heading) {
+        eventSelectContainer.appendChild(heading);
+    }
+    
+    // 隠しフィールドを作成（選択したイベントを保存するため）
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.id = 'selected_events';
+    hiddenInput.name = 'selected_events';
+    eventSelectContainer.appendChild(hiddenInput);
+    
+    // 各イベントのチェックボックスを作成
+    events.forEach((event, index) => {
+        const label = document.createElement('label');
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = event.choice_text;
+        checkbox.id = `event_${index}`;
+        checkbox.dataset.date = event.date;
+        checkbox.dataset.title = event.title;
+        
+        // チェックボックスの変更イベント
+        checkbox.addEventListener('change', updateSelectedEvents);
+        
+        const labelText = document.createTextNode(`${event.choice_text} - ${event.title} (${event.contents})`);
+        
+        label.appendChild(checkbox);
+        label.appendChild(labelText);
+        
+        eventSelectContainer.appendChild(label);
+    });
+    
+    // form_answer01を非表示にするか、ラベルを更新
+    updateFirstInputLabel();
+}
+
+// 選択されたイベントを更新する関数
+function updateSelectedEvents() {
+    const checkboxes = document.querySelectorAll('#event-select-container input[type="checkbox"]');
+    const hiddenInput = document.getElementById('selected_events');
+    const firstInput = document.getElementById('form_answer01');
+    
+    if (!hiddenInput || !firstInput) return;
+    
+    const selectedEvents = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+    
+    hiddenInput.value = selectedEvents.join(', ');
+    firstInput.value = selectedEvents.join(', ');
+}
+
+// form_answer01のラベルを更新する関数
+function updateFirstInputLabel() {
+    const firstInput = document.getElementById('form_answer01');
+    if (!firstInput) return;
+    
+    // ラベルを取得または作成
+    let label = document.querySelector(`label[for="form_answer01"]`);
+    if (label) {
+        label.textContent = '選択したイベント（自動入力）';
+    }
+    
+    // 入力フィールドを読み取り専用に設定
+    firstInput.readOnly = true;
+    firstInput.placeholder = 'イベントを選択してください';
+}
+
+// スタイルを追加する関数
+function addStyles() {
+    // 既存のスタイル要素を探す
+    let styleElem = document.getElementById('custom-styles');
+    
+    // なければ作成
+    if (!styleElem) {
+        styleElem = document.createElement('style');
+        styleElem.id = 'custom-styles';
+        document.head.appendChild(styleElem);
+    }
+    
+    // スタイルを設定
+    styleElem.textContent = `
         .events-container {
             margin: 20px 0;
             padding: 15px;
@@ -175,7 +291,15 @@ function displayEvents(events) {
             margin-top: 5px;
         }
         .checkbox-group {
-            margin-top: 20px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        .checkbox-group h4 {
+            margin-top: 0;
+            color: #333;
+            margin-bottom: 10px;
         }
         .checkbox-group label {
             display: block;
@@ -192,96 +316,6 @@ function displayEvents(events) {
             margin-right: 8px;
         }
     `;
-    document.head.appendChild(style);
-}
-
-// イベントの選択肢をMultiSelectとして設定する関数
-function setEventChoices(events) {
-    // MultiSelect用の要素を取得または作成
-    let eventSelectContainer = document.getElementById('event-select-container');
-    
-    // 要素がなければ作成
-    if (!eventSelectContainer) {
-        eventSelectContainer = document.createElement('div');
-        eventSelectContainer.id = 'event-select-container';
-        eventSelectContainer.className = 'checkbox-group';
-        
-        // 見出し
-        const heading = document.createElement('h4');
-        heading.textContent = '参加希望のイベントを選択してください';
-        eventSelectContainer.appendChild(heading);
-        
-        // form_answer01の前に挿入（適宜調整してください）
-        const targetInput = document.getElementById('form_answer01');
-        const parentElement = targetInput.parentElement;
-        parentElement.insertBefore(eventSelectContainer, targetInput.parentElement.firstChild);
-    }
-    
-    // コンテナの内容をクリア（見出しを残す）
-    while (eventSelectContainer.childNodes.length > 1) {
-        eventSelectContainer.removeChild(eventSelectContainer.lastChild);
-    }
-    
-    // 隠しフィールドを作成（選択したイベントを保存するため）
-    const hiddenInput = document.getElementById('selected_events') || document.createElement('input');
-    hiddenInput.type = 'hidden';
-    hiddenInput.id = 'selected_events';
-    hiddenInput.name = 'selected_events';
-    eventSelectContainer.appendChild(hiddenInput);
-    
-    // 各イベントのチェックボックスを作成
-    events.forEach((event, index) => {
-        const label = document.createElement('label');
-        
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = event.choice_text;
-        checkbox.id = `event_${index}`;
-        checkbox.dataset.date = event.date;
-        checkbox.dataset.title = event.title;
-        
-        // チェックボックスの変更イベント
-        checkbox.addEventListener('change', updateSelectedEvents);
-        
-        const labelText = document.createTextNode(`${event.choice_text} - ${event.title} (${event.contents})`);
-        
-        label.appendChild(checkbox);
-        label.appendChild(labelText);
-        
-        eventSelectContainer.appendChild(label);
-    });
-    
-    // スタイルを更新
-    updateFormLayout();
-}
-
-// 選択されたイベントを更新する関数
-function updateSelectedEvents() {
-    const checkboxes = document.querySelectorAll('#event-select-container input[type="checkbox"]');
-    const hiddenInput = document.getElementById('selected_events');
-    
-    const selectedEvents = Array.from(checkboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-    
-    hiddenInput.value = selectedEvents.join(', ');
-    
-    // 最初のフォーム要素に選択したイベントを設定（フォーム送信に含める）
-    // form_answer01に設定する場合（適宜調整してください）
-    if (selectedEvents.length > 0) {
-        document.getElementById('form_answer01').value = selectedEvents.join(', ');
-    } else {
-        document.getElementById('form_answer01').value = '';
-    }
-}
-
-// フォームのレイアウトを調整する関数
-function updateFormLayout() {
-    // form_answer01のラベルを更新（非表示または調整）
-    const firstInputLabel = document.querySelector('label[for="form_answer01"]');
-    if (firstInputLabel) {
-        firstInputLabel.textContent = '選択したイベント'; // または非表示にする
-    }
 }
 
 // ローディングインジケーターの表示・非表示を制御する関数
@@ -317,8 +351,6 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-    text_list.push(document.getElementById('form_answer20').value);
-    text_list.push(document.getElementById('form_answer21').value);
 
     // 入力チェック
     let msg = "【送信内容】";
@@ -346,7 +378,7 @@ function onSubmit() {
             };
 
             // データ送信を実行
-            fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsoQ/exec?from=liff", {
+            fetch("https://script.google.com/macros/s/AKfycby0JVVEv0J8bxgNdx02KJMc_cNJCb9sABPstTeQ-1bOhs5kiDSFhqlDYSro9fVFz1LJnw/exec", {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
