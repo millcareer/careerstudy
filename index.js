@@ -11,7 +11,94 @@ document.addEventListener('DOMContentLoaded', (event) => {
     
     // 生年月日の選択肢を作成
     setupBirthdaySelects();
+    
+    // 日程が合わないボタンのイベントリスナー設定
+    setupNoScheduleButton();
 });
+
+// 日程が合わないボタンの設定
+function setupNoScheduleButton() {
+    const noScheduleButton = document.getElementById('no-schedule-button');
+    if (noScheduleButton) {
+        noScheduleButton.addEventListener('click', function() {
+            toggleNoSchedule();
+        });
+    }
+}
+
+// 日程が合わないの切り替え
+function toggleNoSchedule() {
+    const noScheduleButton = document.getElementById('no-schedule-button');
+    if (!noScheduleButton) return;
+    
+    // 日程が合わないモードかどうか
+    const isNoSchedule = noScheduleButton.classList.contains('active');
+    
+    if (isNoSchedule) {
+        // 日程が合わないモードを解除
+        noScheduleButton.classList.remove('active');
+        noScheduleButton.style.backgroundColor = '#f0f0f0';
+        noScheduleButton.style.color = '#000';
+        
+        // イベント選択を有効にする
+        enableEventSelection();
+        
+        // 「日程が合わない」を選択リストから削除
+        window.selectedEvents = window.selectedEvents.filter(event => event.value !== '日程が合わない');
+    } else {
+        // 日程が合わないモードを有効にする
+        noScheduleButton.classList.add('active');
+        noScheduleButton.style.backgroundColor = '#007bff';
+        noScheduleButton.style.color = '#fff';
+        
+        // すべての選択をクリア
+        clearAllEventSelections();
+        
+        // イベント選択を無効にする
+        disableEventSelection();
+        
+        // 「日程が合わない」を選択リストに追加
+        window.selectedEvents = [{
+            value: '日程が合わない',
+            title: '特になし'
+        }];
+    }
+    
+    // 選択状態を更新
+    updateSelectedEvents();
+    updateSelectionCount();
+    updateHiddenFields();
+}
+
+// イベント選択を無効にする
+function disableEventSelection() {
+    const options = document.querySelectorAll('.event-option');
+    options.forEach(option => {
+        option.style.opacity = '0.5';
+        option.style.pointerEvents = 'none';
+    });
+}
+
+// イベント選択を有効にする
+function enableEventSelection() {
+    const options = document.querySelectorAll('.event-option');
+    options.forEach(option => {
+        option.style.opacity = '1';
+        option.style.pointerEvents = 'auto';
+    });
+}
+
+// すべての選択をクリア
+function clearAllEventSelections() {
+    const selectedOptions = document.querySelectorAll('.event-option.selected');
+    selectedOptions.forEach(option => {
+        option.classList.remove('selected');
+        option.style.backgroundColor = '#f5f5f5';
+        option.style.color = '#000';
+    });
+    
+    window.selectedEvents = [];
+}
 
 // 生年月日選択セットアップ
 function setupBirthdaySelects() {
@@ -106,6 +193,10 @@ function createEventSelectionUI(events) {
         
         // クリックイベント
         option.addEventListener('click', function() {
+            // 日程が合わないモードなら何もしない
+            const noScheduleButton = document.getElementById('no-schedule-button');
+            if (noScheduleButton && noScheduleButton.classList.contains('active')) return;
+            
             toggleEventSelection(this, event);
         });
         
@@ -183,7 +274,14 @@ function updateSelectedEvents() {
         item.style.borderRadius = '4px';
         
         const text = document.createElement('span');
-        text.textContent = `${index + 1}. ${event.value} - ${event.title}`;
+        text.textContent = `${index + 1}. ${event.value}`;
+        
+        // 「日程が合わない」の場合は削除ボタンを表示しない
+        if (event.value === '日程が合わない') {
+            item.appendChild(text);
+            selectedList.appendChild(item);
+            return;
+        }
         
         const removeBtn = document.createElement('button');
         removeBtn.textContent = '削除';
@@ -224,6 +322,16 @@ function updateSelectionCount() {
     const countDisplay = document.getElementById('selection_count');
     if (!countDisplay) return;
     
+    // 日程が合わないモードかどうか
+    const noScheduleButton = document.getElementById('no-schedule-button');
+    const isNoSchedule = noScheduleButton && noScheduleButton.classList.contains('active');
+    
+    if (isNoSchedule) {
+        countDisplay.textContent = '日程が合わないを選択中';
+        countDisplay.style.color = '#00cc00';
+        return;
+    }
+    
     // 選択数を表示
     const count = window.selectedEvents.length;
     countDisplay.textContent = `選択数: ${count}/2`;
@@ -239,10 +347,16 @@ function updateHiddenFields() {
     
     if (!choice1Input || !choice2Input) return;
     
-    // 各フィールドに値を設定
+    // 日程が合わないモードの場合
+    if (window.selectedEvents.length === 1 && window.selectedEvents[0].value === '日程が合わない') {
+        choice1Input.value = '日程が合わない';
+        choice2Input.value = '日程が合わない';
+        return;
+    }
+    
+    // 通常の選択の場合
     choice1Input.value = window.selectedEvents[0] ? window.selectedEvents[0].value : '';
     choice2Input.value = window.selectedEvents[1] ? window.selectedEvents[1].value : '';
-    
 }
 
 // ローディングインジケーターの表示・非表示を制御する関数
@@ -262,8 +376,12 @@ function hideLoading() {
 
 // フォーム送信関数
 function onSubmit() {
-    // 選択数をチェック
-    if (window.selectedEvents.length !== 2) {
+    // 日程が合わないモードかどうか
+    const noScheduleButton = document.getElementById('no-schedule-button');
+    const isNoSchedule = noScheduleButton && noScheduleButton.classList.contains('active');
+    
+    // 日程が合わないモードでなければ選択数をチェック
+    if (!isNoSchedule && window.selectedEvents.length !== 2) {
         window.alert('イベントは必ず2つ選択してください。');
         return false;
     }
