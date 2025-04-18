@@ -78,10 +78,10 @@ function fetchUpcomingEvents() {
 
 // ドラムロールタイムピッカーUIを作成する関数
 function createDatePickerUI(events) {
-    // イベント選択エリアを取得
-    const selectContainer = document.querySelector('.form-group');
-    if (!selectContainer) {
-        console.error("フォームグループが見つかりません");
+    // ドラムロール要素を取得
+    const drumRoll = document.getElementById('event-drum-roll');
+    if (!drumRoll) {
+        console.error("ドラムロール要素が見つかりません");
         return;
     }
     
@@ -90,42 +90,6 @@ function createDatePickerUI(events) {
     if (originalSelect) {
         originalSelect.style.display = 'none';
     }
-    
-    // タイムピッカーコンテナを作成
-    const pickerContainer = document.createElement('div');
-    pickerContainer.id = 'date-picker-container';
-    pickerContainer.className = 'date-picker-container';
-    
-    // 選択したイベント表示エリア
-    const selectedEventsContainer = document.createElement('div');
-    selectedEventsContainer.id = 'selected-events';
-    selectedEventsContainer.className = 'selected-events';
-    
-    // 選択済みイベントの見出し
-    const selectedHeading = document.createElement('p');
-    selectedHeading.className = 'selected-heading';
-    selectedHeading.textContent = '選択済みイベント (2つ選択してください)';
-    selectedEventsContainer.appendChild(selectedHeading);
-    
-    // 選択したイベントリストを表示するエリア
-    const selectedList = document.createElement('div');
-    selectedList.id = 'selected-events-list';
-    selectedList.className = 'selected-events-list';
-    selectedEventsContainer.appendChild(selectedList);
-    
-    // ドラムロールピッカーを作成
-    const picker = document.createElement('div');
-    picker.id = 'event-picker';
-    picker.className = 'event-picker';
-    
-    // ピッカーの説明文
-    const pickerHeading = document.createElement('p');
-    pickerHeading.textContent = '下記のピッカーからイベントを選択してください';
-    picker.appendChild(pickerHeading);
-    
-    // イベントピッカーの作成
-    const drumRoll = document.createElement('div');
-    drumRoll.className = 'drum-roll';
     
     // イベントを日付でグループ化
     const eventsByDate = groupEventsByDate(events);
@@ -147,34 +111,22 @@ function createDatePickerUI(events) {
         drumRoll.appendChild(eventItem);
     }
     
-    picker.appendChild(drumRoll);
+    // 選択ボタンのイベントリスナーを設定
+    const addButton = document.getElementById('add-event-button');
+    if (addButton) {
+        addButton.addEventListener('click', function() {
+            addSelectedEvent();
+        });
+    }
     
-    // 選択ボタン
-    const addButton = document.createElement('button');
-    addButton.type = 'button';
-    addButton.id = 'add-event-button';
-    addButton.className = 'add-event-button';
-    addButton.textContent = '選択中のイベントを追加';
-    addButton.addEventListener('click', function() {
-        addSelectedEvent();
-    });
-    picker.appendChild(addButton);
-    
-    // 隠しフィールドを追加（既存のものを使用）
-    const choice1Input = document.getElementById('form_answer20');
-    const choice2Input = document.getElementById('form_answer21');
+    // 隠しフィールドを確認
+    const choice1Input = document.getElementById('form_answer22');
+    const choice2Input = document.getElementById('form_answer23');
     
     if (!choice1Input || !choice2Input) {
         console.error("隠しフィールドが見つかりません");
         return;
     }
-    
-    // コンテナに追加
-    pickerContainer.appendChild(selectedEventsContainer);
-    pickerContainer.appendChild(picker);
-    
-    // フォームグループの先頭に挿入
-    selectContainer.insertBefore(pickerContainer, selectContainer.firstChild);
     
     // スタイルを追加
     addDatePickerStyles();
@@ -305,8 +257,8 @@ function removeSelectedEvent(index) {
 
 // 隠しフィールドを更新する関数
 function updateHiddenFields() {
-    const choice1Input = document.getElementById('form_answer20');
-    const choice2Input = document.getElementById('form_answer21');
+    const choice1Input = document.getElementById('form_answer22');
+    const choice2Input = document.getElementById('form_answer23');
     const firstInput = document.getElementById('form_answer01');
     
     if (!choice1Input || !choice2Input) return;
@@ -464,7 +416,6 @@ function onSubmit() {
     let text_list = [];
     text_list.push(document.getElementById('form_answer01').value);
     text_list.push(document.getElementById('form_answer20').value);
-    text_list.push(document.getElementById('form_answer21').value);
     text_list.push(document.getElementById('form_answer02').value);
     text_list.push(document.getElementById('form_answer03').value);
     text_list.push(document.getElementById('form_answer04').value);
@@ -483,9 +434,9 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-    text_list.push(document.getElementById('form_answer22') ? document.getElementById('form_answer22').value : '');
-    text_list.push(document.getElementById('form_answer23') ? document.getElementById('form_answer23').value : '');
-
+    text_list.push(document.getElementById('form_answer22').value);
+    text_list.push(document.getElementById('form_answer23').value);
+    
     // 入力チェック
     let msg = "【送信内容】";
     let form_check_flag = 1;
