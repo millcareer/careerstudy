@@ -1174,29 +1174,17 @@
   <div style="margin-bottom: 10px;">
     <p>下記から希望する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
     
-    <!-- ドラムロールピッカー用コンテナ - JavaScriptでここに内容が追加されます -->
-    <div id="date-picker-container" class="date-picker-container">
-      <!-- 選択したイベント表示エリア -->
-      <div id="selected-events" class="selected-events">
-        <p class="selected-heading">選択済みイベント (2つ選択してください)</p>
-        <div id="selected-events-list" class="selected-events-list"></div>
-      </div>
+    <!-- イベント選択エリア -->
+    <div id="event-selection-area">
+      <!-- 選択済みイベント表示 -->
+      <div id="selected-events-list" style="margin-bottom: 10px;"></div>
       
-      <!-- ドラムロールピッカーエリア -->
-      <div id="event-picker" class="event-picker">
-        <p>イベントを選択してください</p>
-        <div class="drum-roll" id="event-drum-roll">
-          <!-- APIから取得したイベントがここに表示されます -->
-        </div>
-        <button type="button" id="add-event-button" class="add-event-button">選択中のイベントを追加</button>
-      </div>
+      <!-- 選択肢リスト -->
+      <div id="event-options-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;"></div>
+      
+      <!-- 選択数表示 -->
+      <p id="selection_count" style="color: #fcac04; font-size: 14px;">選択数: 0/2</p>
     </div>
-    
-    <!-- オリジナルのセレクトボックス（非表示） -->
-    <select name="event-dates[]" id="event_multiple_select" multiple="multiple" size="5" required="required" style="display: none; width: 100%; border: 1px solid #ccc; border-radius: 4px; padding: 8px; font-size: 14px;">
-      <!-- ここにGASからの選択肢が入ります -->
-    </select>
-    <p id="selection_count" style="color: #fcac04; font-size: 14px; margin-top: 5px;">選択数: 0/2</p>
     
     <!-- 隠しフィールド -->
     <input type="hidden" id="form_answer22" name="event_choice1" value="">
