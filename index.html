@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./index.css">
     <style>
-        /* ヘッダースタイル */
+        /* ヘッダータイル */
         .header-career {
             background-color: #fcac04;
         }
@@ -31,6 +31,17 @@
             border-top: 8px solid #3498db;
         }
     </style>
+    <!-- デバッグのためのスタイル -->
+    <style>
+        .debug-info {
+            background-color: #ffeeee;
+            color: #ff0000;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -41,22 +52,28 @@
         </div>
     </header>
     
-    <!-- ヘッダー2（終了後アンケート用） -->
+    <!-- ヘッダー2（完了後アンケート用） -->
     <header id="header-quest" class="header-quest" style="display: none;">
         <div class="header-block">
-            <p class="logo">終了後アンケート</p>
+            <p class="logo">完了後アンケート</p>
         </div>
     </header>
     
     <div class="contents">
         <div id="title-career" class="title title-career">
-            <p>情報登録フォーム</p>
+            <p>情報調査フォーム</p>
             <hr>
         </div>
         <div id="title-quest" class="title title-quest" style="display: none;">
-            <p>終了後アンケート</p>
+            <p>完了後アンケート</p>
             <hr>
         </div>
+    </div>
+    
+    <!-- デバッグ情報表示エリア -->
+    <div id="debug-container" class="debug-info" style="display: none;">
+        <h4>デバッグ情報</h4>
+        <div id="debug-content"></div>
     </div>
     
     <!-- ローディング表示 -->
@@ -77,7 +94,40 @@
     <input type="hidden" id="form_answer23" name="event_choice2" value="">
     
     <!-- JavaScript読み込み -->
+    <script>
+        // LIFFのSDKロード状態を確認するためのバックアップコード
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof liff === 'undefined') {
+                    // LIFFが読み込まれていない場合、エラーを表示
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('debug-container').style.display = 'block';
+                    document.getElementById('debug-content').innerHTML = 
+                        '<p>LIFF SDKが正しく読み込まれていません。エラーログを確認してください。</p>' +
+                        '<p>SDKのステータス: ' + (typeof liff) + '</p>' +
+                        '<button class="btn btn-warning" onclick="reloadPage()">再読み込み</button>';
+                }
+            }, 3000);
+        });
+        
+        // ページを再読み込みする関数
+        function reloadPage() {
+            location.reload();
+        }
+        
+        // デバッグ情報を表示する関数
+        function showDebugInfo(message) {
+            console.log('[DEBUG]', message);
+            document.getElementById('debug-container').style.display = 'block';
+            document.getElementById('debug-content').innerHTML += '<p>' + message + '</p>';
+        }
+    </script>
+    
+    <!-- LIFF SDK (必須) -->
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    
+    <!-- アプリケーションスクリプト -->
+    <script src="./debug.js"></script>
     <script src="./common/utils.js"></script>
     <script src="./liff.js"></script>
     <script src="./survey1/choices.js"></script>
