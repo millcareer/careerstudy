@@ -1,20 +1,82 @@
-// DOMが読み込まれたら実行される関数
+// DOMが読み込まれたら実行される
 document.addEventListener('DOMContentLoaded', (event) => {
-    // ローディングを確実に非表示にする
+    // ローディングを非表示に
     const loadingElement = document.getElementById('loading');
     if (loadingElement) {
         loadingElement.style.display = 'none';
     }
     
-    // カスタムローディングインジケーターを準備（非表示で）
+    // カスタムローディングインジケーターを作成
     createLoadingIndicator();
     
-    // イベント情報を取得して選択肢に設定（ローディング表示なし）
-    fetchUpcomingEvents();
+    // URL パラメータからフォームタイプを取得
+    const formType = getURLParameter('form') || '1'; // デフォルトはフォーム1
     
-    // 生年月日の選択肢を作成
-    setupBirthdaySelects();
+    // ヘッダーとタイトルの表示を切り替える
+    toggleHeaderAndTitle(formType);
+    
+    // フォームタイプに応じてフォームを表示
+    loadFormByType(formType);
 });
+
+// URLパラメータを取得する関数
+function getURLParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+// ヘッダーとタイトルの表示を切り替える関数
+function toggleHeaderAndTitle(formType) {
+    // ヘッダー要素
+    const headerCareer = document.getElementById('header-career');
+    const headerQuest = document.getElementById('header-quest');
+    
+    // タイトル要素
+    const titleCareer = document.getElementById('title-career');
+    const titleQuest = document.getElementById('title-quest');
+    
+    if (formType === '1') {
+        // キャリアスタディ用のヘッダーとタイトルを表示
+        if (headerCareer) headerCareer.style.display = 'block';
+        if (headerQuest) headerQuest.style.display = 'none';
+        if (titleCareer) titleCareer.style.display = 'block';
+        if (titleQuest) titleQuest.style.display = 'none';
+        
+        // ドキュメントタイトルも変更
+        document.title = 'キャリアスタディ - 情報登録フォーム';
+    } else if (formType === '2') {
+        // INTERN QUEST用のヘッダーとタイトルを表示
+        if (headerCareer) headerCareer.style.display = 'none';
+        if (headerQuest) headerQuest.style.display = 'block';
+        if (titleCareer) titleCareer.style.display = 'none';
+        if (titleQuest) titleQuest.style.display = 'block';
+        
+        // ドキュメントタイトルも変更
+        document.title = 'INTERN QUEST - アンケートフォーム';
+    }
+}
+
+// フォームタイプに応じてフォームを読み込む関数
+function loadFormByType(formType) {
+    const formContainer = document.getElementById('form-container');
+    
+    if (!formContainer) return;
+    
+    // フォームコンテナをクリア
+    formContainer.innerHTML = '';
+    
+    // コンテナを表示
+    formContainer.style.display = 'block';
+    
+    // フォームタイプに応じてフォームを作成
+    if (formType === '1') {
+        // アンケート1（既存のフォーム）
+        createSurvey1Form(formContainer);
+    } else if (formType === '2') {
+        // アンケート2（スプレッドシートベースのアンケート）
+        createSurvey2Form(formContainer);
+    }
+}
 
 // ローディングインジケーターを作成する関数
 function createLoadingIndicator() {
@@ -70,7 +132,7 @@ function createLoadingIndicator() {
     document.body.appendChild(loadingContainer);
 }
 
-// ローディングインジケーターの表示・非表示を制御する関数
+// ローディングインジケーターの表示／非表示を制御する関数
 function showLoading(message = '送信中...') {
     const loadingElement = document.getElementById('custom-loading');
     if (loadingElement) {
@@ -95,7 +157,7 @@ function hideLoading() {
 // イベント情報を取得する関数（ローディング表示なし）
 function fetchUpcomingEvents() {
     // イベント情報を取得
-    fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsoQ/exec?from=liff")
+    fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsqQ/exec?from=liff")
         .then(response => response.json())
         .then(data => {
             // イベント選択UIを作成
@@ -106,7 +168,7 @@ function fetchUpcomingEvents() {
         });
 }
 
-// 生年月日選択セットアップ関数
+// 生年月日選択セット関数
 function setupBirthdaySelects() {
     let yearSelect = document.getElementById('form_answer07');
     let monthSelect = document.getElementById('form_answer08');
@@ -129,7 +191,7 @@ function setupBirthdaySelects() {
             monthSelect.add(option);
         }
 
-        // 日数を設定する関数
+        // 日数を決定する関数
         function setDayOptions() {
             daySelect.innerHTML = '';
             let year = yearSelect.value;
@@ -158,7 +220,7 @@ function createEventSelectionUI(events) {
     const optionsList = document.getElementById('event-options-list');
     if (!optionsList) return;
     
-    // 選択したイベントを追跡する配列
+    // 選択したイベントを記録する配列
     window.selectedEvents = [];
     
     // イベントの選択肢を表示
@@ -402,7 +464,7 @@ function updateHiddenFields() {
     choice1Input.value = normalEvents[0] ? normalEvents[0].value : (noScheduleSelected ? '日程が合わない' : '');
     choice2Input.value = normalEvents[1] ? normalEvents[1].value : (noScheduleSelected ? '日程が合わない' : '');
     
-    // 複合フィールドにカンマ区切りで設定
+    // 合併フィールドにカンマ区切りで設定
     if (combinedInput) {
         const values = window.selectedEvents.map(event => event.value);
         combinedInput.value = values.join(', ');
@@ -462,7 +524,7 @@ function onSubmit() {
     for (let i = 0; i < text_list.length; i++) {
         if (text_list[i] == "") {
             form_check_flag = 0;
-            window.alert('入力項目に漏れがあります。全ての項目への入力をお願い致します。');
+            window.alert('入力項目に抜けがあります。全ての項目への入力をお願いします。');
             break;
         }
         msg = msg + "\n" + text_list[i];
@@ -494,7 +556,7 @@ function onSubmit() {
                 showLoading('送信完了！');
                 
                 try {
-                    // LINEメッセージの送信を試みる
+                    // LINEメッセージの送信を試み
                     if (liff.isApiAvailable('shareTargetPicker')) {
                         // shareTargetPickerが利用可能な場合
                         liff.shareTargetPicker([
@@ -566,4 +628,28 @@ function onSubmit() {
         });
     }
     return false;
+}
+
+// アンケート1（キャリアスタディ）のフォームを作成する関数
+function createSurvey1Form(container) {
+    // フォームの構築処理（既存の処理を呼び出す）
+    fetchUpcomingEvents();
+    setupBirthdaySelects();
+}
+
+// アンケート2（INTERN QUEST）のフォームを作成する関数
+function createSurvey2Form(container) {
+    // 新しいフォームを作成する処理をここに記述
+    const formHtml = `
+        <h2>終了後アンケート</h2>
+        <p>アンケートにご協力ください。</p>
+        <!-- ここにフォーム要素を追加 -->
+        <form id="quest-form">
+            <!-- フォーム要素 -->
+        </form>
+    `;
+    
+    container.innerHTML = formHtml;
+    
+    // フォームの初期化処理などを記述
 }
