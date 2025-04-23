@@ -11,28 +11,50 @@ function fetchUpcomingEvents() {
         }
     ];
 
-    // イベント情報を取得
-    fetch("https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsqQ/exec?from=liff", {
-        method: "GET",
-        mode: "cors", // CORSモードを指定
-        headers: {
-            "Accept": "application/json"
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('ネットワークレスポンスが正常ではありません');
-        }
-        return response.json();
+    // イベント情報を取得するためのJSONPリクエスト
+    return new Promise((resolve, reject) => {
+        const url = 'https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsqQ/exec';
+        
+        // JSONPコールバックを使用してCORS制限を回避
+        const callbackName = 'jsonpCallback_' + Date.now();
+        
+        // グローバルコールバック関数を作成
+        window[callbackName] = function(data) {
+            // スクリプトタグをクリーンアップ
+            document.body.removeChild(scriptTag);
+            // グローバルコールバック関数を削除
+            delete window[callbackName];
+            
+            // データを解決
+            if (data && Array.isArray(data) && data.length > 0) {
+                resolve(data);
+            } else {
+                console.warn("イベントデータが空か、予期しない形式です。デフォルトデータを使用します。");
+                resolve(defaultEvents);
+            }
+        };
+        
+        // スクリプトタグを作成
+        const scriptTag = document.createElement('script');
+        scriptTag.src = `${url}?from=liff&callback=${callbackName}`;
+        
+        // エラー処理
+        scriptTag.onerror = function() {
+            // クリーンアップ
+            document.body.removeChild(scriptTag);
+            delete window[callbackName];
+            
+            console.error("イベント情報の取得に失敗しました。デフォルトデータを使用します。");
+            resolve(defaultEvents);
+        };
+        
+        // スクリプトタグをドキュメントに追加
+        document.body.appendChild(scriptTag);
     })
     .then(data => {
-        if (data && Array.isArray(data) && data.length > 0) {
-            // イベント選択UIを作成
-            createEventSelectionUI(data);
-        } else {
-            console.warn("イベントデータが空か、予期しない形式です。デフォルトデータを使用します。");
-            createEventSelectionUI(defaultEvents);
-        }
+        // イベント選択UIを作成
+        createEventSelectionUI(data);
+        return data;
     })
     .catch(error => {
         console.error("イベント情報の取得に失敗しました:", error);
@@ -57,10 +79,149 @@ function fetchUpcomingEvents() {
                 createSurvey1Form(formContainer);
             }
         }
+        
+        return defaultEvents;
     });
 }
 
-// 初期イベントUI設定関数（エラー対策）
+// イベント選択UI生成関数 - 新しく追加
+function createEventSelectionUI(events) {
+    // イベント選択用のコンテナを作成
+    const eventContainer = document.getElementById('event-selection-container') || 
+                         document.createElement('div');
+    
+    if (!document.getElementById('event-selection-container')) {
+        eventContainer.id = 'event-selection-container';
+        const formContainer = document.getElementById('form-container');
+        if (formContainer) {
+            formContainer.appendChild(eventContainer);
+        }
+    } else {
+        // 既存のコンテンツをクリア
+        eventContainer.innerHTML = '';
+    }
+    
+    // イベントセクションの見出しを作成
+    const heading = document.createElement('h3');
+    heading.textContent = 'イベント選択';
+    heading.className = 'mb-3';
+    eventContainer.appendChild(heading);
+    
+    // イベント配列が有効かつ項目があるかチェック
+    if (!events || !Array.isArray(events) || events.length === 0) {
+        const noEvents = document.createElement('p');
+        noEvents.textContent = '現在予定されているイベントはありません。';
+        eventContainer.appendChild(noEvents);
+        return eventContainer;
+    }
+    
+    // イベント選択リストを作成
+    const optionsList = document.getElementById('event-options-list') || document.createElement('div');
+    optionsList.id = 'event-options-list';
+    optionsList.className = 'mb-3';
+    optionsList.innerHTML = '';
+    
+    // イベントオプションを追加
+    events.forEach((event, index) => {
+        const option = document.createElement('div');
+        option.className = 'form-check mb-2';
+        
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'form-check-input event-option';
+        input.id = `event-option-${index}`;
+        input.value = event.id || index;
+        input.dataset.title = event.title || '';
+        input.dataset.index = index;
+        
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.htmlFor = `event-option-${index}`;
+        label.textContent = event.choice_text || event.title || 'イベント名なし';
+        
+        option.appendChild(input);
+        option.appendChild(label);
+        optionsList.appendChild(option);
+        
+        // イベント選択時の処理
+        input.addEventListener('change', function() {
+            updateSelectedEvents();
+        });
+    });
+    
+    eventContainer.appendChild(optionsList);
+    
+    // 選択済みイベントリスト
+    const selectedList = document.getElementById('selected-events-list') || document.createElement('div');
+    selectedList.id = 'selected-events-list';
+    selectedList.className = 'mb-4';
+    selectedList.innerHTML = '';
+    
+    const initialMessage = document.createElement('p');
+    initialMessage.style.color = '#666';
+    initialMessage.textContent = 'イベントが選択されていません';
+    selectedList.appendChild(initialMessage);
+    
+    eventContainer.appendChild(selectedList);
+    
+    // 選択イベント更新関数
+    window.updateSelectedEvents = function() {
+        const checkboxes = document.querySelectorAll('.event-option:checked');
+        const selectedList = document.getElementById('selected-events-list');
+        const selectionCount = document.getElementById('selection_count');
+        
+        // 選択リストをクリア
+        selectedList.innerHTML = '';
+        
+        // 選択したイベントを配列に保存
+        window.selectedEvents = [];
+        
+        if (checkboxes.length === 0) {
+            const noSelection = document.createElement('p');
+            noSelection.style.color = '#666';
+            noSelection.textContent = 'イベントが選択されていません';
+            selectedList.appendChild(noSelection);
+        } else {
+            checkboxes.forEach(checkbox => {
+                const eventIndex = checkbox.dataset.index;
+                const event = events[eventIndex];
+                
+                // 選択イベントを配列に追加
+                window.selectedEvents.push(event);
+                
+                // 選択イベント表示
+                const eventItem = document.createElement('div');
+                eventItem.className = 'alert alert-info mb-2 d-flex justify-content-between align-items-center';
+                
+                const eventTitle = document.createElement('span');
+                eventTitle.textContent = event.title || 'イベント名なし';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn-close';
+                removeBtn.setAttribute('aria-label', '選択解除');
+                removeBtn.onclick = function() {
+                    document.getElementById(`event-option-${eventIndex}`).checked = false;
+                    updateSelectedEvents();
+                };
+                
+                eventItem.appendChild(eventTitle);
+                eventItem.appendChild(removeBtn);
+                selectedList.appendChild(eventItem);
+            });
+        }
+        
+        // 選択数表示を更新
+        if (selectionCount) {
+            selectionCount.textContent = `選択数: ${checkboxes.length}/2`;
+            selectionCount.style.color = checkboxes.length > 2 ? '#dc3545' : '#fcac04';
+        }
+    };
+    
+    return eventContainer;
+}
+
+// 初期イベントUI設定関数（エラー防止）
 function setupInitialEventUI() {
     const formContainer = document.getElementById('form-container');
     if (!formContainer) return;
