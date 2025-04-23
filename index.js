@@ -47,6 +47,15 @@ function fetchUpcomingEvents() {
             errorNotice.style.marginTop = '10px';
             errorNotice.innerHTML = 'イベント情報の取得に失敗しました。ネットワーク接続を確認し、ページを再読み込みしてください。';
             formContainer.prepend(errorNotice);
+
+             // ローディング表示を非表示にし、フォームコンテナを表示
+            document.getElementById('loading').style.display = 'none';
+            formContainer.style.display = 'block';
+            
+            // フォームを生成
+            if (typeof createSurvey1Form === 'function') {
+                createSurvey1Form(formContainer);
+            }
         }
     });
 }
