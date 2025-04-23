@@ -1,11 +1,11 @@
 // LIFFの基本情報
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function() {
     // liffId: LIFF URL "https://liff.line.me/xxx"のxxxに該当する箇所
     // LINE DevelopersのLIFF画面より確認可能
     var liffId = "1660795452-nYx391B8";
     console.log(`init liff, ID : ${liffId}`);
     initializeLiff(liffId);
-})
+});
 
 // index.htmlのsubimtで呼び出される関数
 function sendText(text) {
