@@ -41,7 +41,7 @@ function createSurvey1Form(container) {
         </div>
         <p class="form-text">大学名
         <font size="1">※入力すると予測が表示されます。</font></p>
-        <input type="text" name="university-name" id="form_answer10" list="university" placeholder="大学名" autocomplete="off" required="required">
+        <input type="text" name="university-name" id="form_answer10" list="university" placeholder="大学名" autocomplete="on" required="required">
         　<datalist id="university">
             <!-- 大学リストは既存のものを流用 -->
         </datalist>
