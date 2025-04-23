@@ -41,14 +41,14 @@ function createSurvey1Form(container) {
         </div>
         <p class="form-text">大学名
         <font size="1">※入力すると予測が表示されます。</font></p>
-        <input type="text" name="university-name" id="form_answer10" list="university" placeholder="大学名" autocomplete="on" required="required">
+        <input type="text" name="university-name" id="form_answer10" list="university" placeholder="大学名" autocomplete="off" required="required">
         　<datalist id="university">
-            <!-- 大学リストは既存のものを流用 -->
+            <!-- 大学リストはchoices.jsから動的に生成 -->
         </datalist>
 
         <p class="form-text">部活名</p>
         <select name="club-name" id="form_answer11" required="required">
-            <!-- 部活リストは既存のものを流用 -->
+            <!-- 部活リストはchoices.jsから動的に生成 -->
         </select>
 
         <p class="form-text">学年</p>
@@ -69,7 +69,7 @@ function createSurvey1Form(container) {
         </select>
         <p class="form-text">出身地</p>
         <select name="from_area" id="form_answer14" required="required">
-            <!-- 出身地リストは既存のものを流用 -->
+            <!-- 出身地リストはchoices.jsから動的に生成 -->
         </select>
 
         <p class="form-text">役職</p>
@@ -134,6 +134,9 @@ function createSurvey1Form(container) {
         </div>
     </div>
     `;
+    
+    // 選択肢データの初期化（choices.jsの関数を呼び出し）
+    initializeChoices();
     
     // 既存のスクリプトから生年月日セレクトボックスの生成
     setupBirthdaySelects();
