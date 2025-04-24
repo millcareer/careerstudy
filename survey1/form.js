@@ -286,14 +286,14 @@ function onSubmit() {
     
     // パスワードのバリデーション
     if (password !== confirmPassword) {
-        showError('パスワードと確認用パスワードが一致しません。');
+        alert('パスワードと確認用パスワードが一致しません。');
         return false;
     }
 
     // パスワードの形式チェック（英字と数字を含む8文字以上）
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordPattern.test(password)) {
-        showError('パスワードは英字と数字を含む8文字以上で設定してください。');
+        alert('パスワードは英字と数字を含む8文字以上で設定してください。');
         return false;
     }
 
@@ -301,7 +301,7 @@ function onSubmit() {
     const email = document.getElementById('form_answer01').value;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-        showError('有効なメールアドレスを入力してください。');
+        alert('有効なメールアドレスを入力してください。');
         return false;
     }
 
@@ -309,20 +309,20 @@ function onSubmit() {
     const phone = document.getElementById('form_answer02').value;
     const phonePattern = /^\d{1,5}-\d{1,4}-\d{4,5}$/;
     if (!phonePattern.test(phone)) {
-        showError('電話番号は正しい形式で入力してください（例：000-0000-0000）。');
+        alert('電話番号は正しい形式で入力してください（例：000-0000-0000）。');
         return false;
     }
 
     // イベント選択のチェック（選択済みのイベントを取得）
     const selectedEvents = document.querySelectorAll('#event-options-list input[type="checkbox"]:checked');
     if (selectedEvents.length === 0) {
-        showError('イベントを選択してください。');
+        alert('イベントを選択してください。');
         return false;
     }
 
     // 未入力項目がある場合
     if (emptyFields.length > 0) {
-        showError('以下の項目が未入力です：\n' + emptyFields.join('\n'));
+        alert('以下の項目が未入力です：\n' + emptyFields.join('\n'));
         return false;
     }
 

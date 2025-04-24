@@ -203,9 +203,7 @@ function createEventSelectionUI(events) {
             
             if (this.checked && selectedCheckboxes.length > 2) {
                 this.checked = false;
-                const errorMsg = document.querySelector('.error-message');
-                errorMsg.classList.add('visible');
-                setTimeout(() => errorMsg.classList.remove('visible'), 3000);
+                alert('最大2つまでしか選択できません。');
                 return;
             }
             
@@ -219,12 +217,6 @@ function createEventSelectionUI(events) {
     });
     
     container.appendChild(optionsContainer);
-
-    // Add error message container
-    const errorMessage = document.createElement('div');
-    errorMessage.className = 'error-message';
-    errorMessage.textContent = '最大2つまでしか選択できません。';
-    container.appendChild(errorMessage);
 
     // Add selected events display
     const selectedEventsContainer = document.createElement('div');
