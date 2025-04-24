@@ -9,8 +9,8 @@ function createSurvey1Form(container) {
         <div class="form-group">
             <label for="form_answer20" class="form-text">パスワード設定</label>
             <input type="password" name="password" id="form_answer20" required="required" minlength="8" placeholder="8文字以上で入力してください">
-            <p class="password-hint">・英字／数字を含む8文字以上で設定してください</p>
-            <p class="password-hint">・キャリアアプリのログインに用います。忘れずにおぼえておきましょう。</p>
+            <p class="password-hint">※英字／数字を含む8文字以上で設定してください</p>
+            <p class="password-hint">※キャリスタアプリのログインに用います。忘れずに控えておきましょう。</p>
         </div>
         <div class="form-group">
             <label for="form_answer21" class="form-text">パスワード確認</label>
