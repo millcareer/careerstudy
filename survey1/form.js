@@ -167,9 +167,9 @@ function createSurvey1Form(container) {
  </p>
 
         <!-- イベント選択セクション -->
-        <p class="form-text">INTERN QUEST参加予定</p>
+        <p class="form-text">参加希望イベントの選択</p>
         <div style="margin-bottom: 10px;">
-            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
+            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>または、日程が合わないを選択してください</p>
         </div>
         
         <!-- イベント選択肢表示エリア -->
