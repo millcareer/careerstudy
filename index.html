@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./index.css">
     <style>
-        /* ヘッダータイル */
+        /* ヘッダータイトル */
         .header-career {
             background-color: #fcac04;
         }
@@ -61,7 +61,7 @@
     
     <div class="contents">
         <div id="title-career" class="title title-career">
-            <p>情報調査フォーム</p>
+            <p>情報登録フォーム</p>
             <hr>
         </div>
         <div id="title-quest" class="title title-quest" style="display: none;">
@@ -95,14 +95,14 @@
     
     <!-- JavaScript読み込み -->
     <script>
-        // LIFFのSDKロード状態を確認するためのバックアップコード
+        // LIFFのSDKロード確認をするためのバックアップコード
         window.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 if (typeof liff === 'undefined') {
                     // LIFFが読み込まれていない場合、エラーを表示
                     document.getElementById('loading').style.display = 'none';
-                    document.getElementById('debug-container').style.display = 'block';
-                    document.getElementById('debug-content').innerHTML = 
+                     document.getElementById('debug-container').style.display = 'block';
+                     document.getElementById('debug-content').innerHTML = 
                         '<p>LIFF SDKが正しく読み込まれていません。エラーログを確認してください。</p>' +
                         '<p>SDKのステータス: ' + (typeof liff) + '</p>' +
                         '<button class="btn btn-warning" onclick="reloadPage()">再読み込み</button>';
@@ -131,6 +131,8 @@
     <script src="./common/utils.js"></script>
     <!-- 生年月日セレクトボックス初期化スクリプト -->
     <script src="./common/birthday.js"></script>
+    <!-- 共通イベント関連スクリプト -->
+    <script src="./common/events.js"></script>
     <script src="./liff.js"></script>
     <script src="./survey1/choices.js"></script>
     <script src="./survey1/form.js"></script>
