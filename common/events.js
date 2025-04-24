@@ -31,10 +31,18 @@ function fetchUpcomingEvents() {
             if (data && Array.isArray(data) && data.length > 0) {
                 // JSONデータをコンソールに出力（デバッグ用）
                 console.log('取得したイベントデータ:', JSON.stringify(data, null, 2));
+                
+                // 取得したJSONデータを表示
+                displayJsonPicker(data);
+                
                 resolve(data);
             } else {
                 console.warn("イベントデータが空か、予期しない形式です。デフォルトデータを使用します。");
                 console.log('デフォルトデータを使用:', JSON.stringify(defaultEvents, null, 2));
+                
+                // デフォルトJSONデータを表示
+                displayJsonPicker(defaultEvents);
+                
                 resolve(defaultEvents);
             }
         };
@@ -51,6 +59,10 @@ function fetchUpcomingEvents() {
             
             console.error("イベント情報の取得に失敗しました。デフォルトデータを使用します。");
             console.log('エラー時のデフォルトデータ:', JSON.stringify(defaultEvents, null, 2));
+            
+            // エラー時もデフォルトJSONデータを表示
+            displayJsonPicker(defaultEvents);
+            
             resolve(defaultEvents);
         };
         
@@ -90,6 +102,85 @@ function fetchUpcomingEvents() {
     });
 }
 
+// JSONデータを選択ピッカー形式で表示する関数
+function displayJsonPicker(jsonData) {
+    // JSON表示用コンテナを探す、なければ作成
+    let jsonContainer = document.getElementById('json-picker-container');
+    if (!jsonContainer) {
+        jsonContainer = document.createElement('div');
+        jsonContainer.id = 'json-picker-container';
+        jsonContainer.className = 'mt-3 mb-3 p-3 border rounded bg-light';
+        
+        // 説明テキスト
+        const title = document.createElement('h5');
+        title.textContent = '利用可能な日程一覧 (JSONデータ)';
+        title.className = 'mb-2';
+        jsonContainer.appendChild(title);
+        
+        // JSON選択用のセレクトボックスを作成
+        const select = document.createElement('select');
+        select.id = 'json-picker-select';
+        select.className = 'form-select mb-2';
+        select.multiple = true;
+        select.size = 5; // 5行表示
+        select.style.fontFamily = 'monospace';
+        
+        // イベントデータをオプションとして追加
+        jsonData.forEach((item, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            
+            // 表示用にJSONをフォーマット
+            const displayText = item.choice_text || item.title || '名称なし';
+            const detailText = item.date ? ` (${item.date})` : '';
+            option.textContent = `${displayText}${detailText} - ID: ${item.id || index}`;
+            
+            select.appendChild(option);
+        });
+        
+        jsonContainer.appendChild(select);
+        
+        // 選択されたJSONデータの詳細表示エリア
+        const detailContainer = document.createElement('div');
+        detailContainer.id = 'json-detail-container';
+        detailContainer.className = 'mt-2 p-2 border rounded bg-white';
+        detailContainer.style.maxHeight = '150px';
+        detailContainer.style.overflowY = 'auto';
+        
+        const pre = document.createElement('pre');
+        pre.id = 'json-detail-content';
+        pre.style.margin = '0';
+        pre.style.fontSize = '0.8rem';
+        pre.textContent = '← 上のリストから選択すると詳細が表示されます';
+        
+        detailContainer.appendChild(pre);
+        jsonContainer.appendChild(detailContainer);
+        
+        // 選択リスナーを追加
+        select.addEventListener('change', function() {
+            const selectedOptions = Array.from(this.selectedOptions);
+            if (selectedOptions.length > 0) {
+                const selectedIndices = selectedOptions.map(option => parseInt(option.value));
+                const selectedItems = selectedIndices.map(index => jsonData[index]);
+                
+                // 選択したアイテムの詳細をJSONとして表示
+                document.getElementById('json-detail-content').textContent = JSON.stringify(selectedItems, null, 2);
+            } else {
+                document.getElementById('json-detail-content').textContent = '← 上のリストから選択すると詳細が表示されます';
+            }
+        });
+        
+        // コンテナを適切な位置に挿入
+        // イベント選択と選択済みアイテムの間に配置
+        const eventOptionsContainer = document.getElementById('event-options-list');
+        if (eventOptionsContainer) {
+            eventOptionsContainer.parentNode.insertBefore(jsonContainer, document.getElementById('selected-events-list'));
+        }
+    }
+    
+    return jsonContainer;
+}
+
 // イベント選択UI生成関数
 function createEventSelectionUI(events) {
     // コンソールにイベントデータを表示（デバッグ用）
@@ -123,6 +214,21 @@ function createEventSelectionUI(events) {
         eventContainer.appendChild(noEvents);
         return eventContainer;
     }
+    
+    // イベント選択前の説明テキスト
+    const description = document.createElement('p');
+    description.textContent = '下記から参加する日程を2つ選択してください';
+    description.className = 'mb-3';
+    eventContainer.appendChild(description);
+    
+    // 選択数表示
+    const selectionCount = document.createElement('p');
+    selectionCount.id = 'selection_count';
+    selectionCount.textContent = '選択数: 0/2';
+    selectionCount.style.color = '#fcac04';
+    selectionCount.style.fontWeight = 'bold';
+    selectionCount.className = 'mb-2';
+    eventContainer.appendChild(selectionCount);
     
     // イベント選択リストを作成
     const optionsList = document.getElementById('event-options-list') || document.createElement('div');
@@ -160,11 +266,18 @@ function createEventSelectionUI(events) {
     
     eventContainer.appendChild(optionsList);
     
+    // ここでJSONピッカーを表示（displayJsonPicker関数はfetchUpcomingEventsで呼ばれるので二重表示を防ぐため不要）
+    
     // 選択済みイベントリスト
     const selectedList = document.getElementById('selected-events-list') || document.createElement('div');
     selectedList.id = 'selected-events-list';
     selectedList.className = 'mb-4';
     selectedList.innerHTML = '';
+    
+    const selectedHeading = document.createElement('h5');
+    selectedHeading.textContent = '選択した日程';
+    selectedHeading.className = 'mt-3 mb-2';
+    selectedList.appendChild(selectedHeading);
     
     const initialMessage = document.createElement('p');
     initialMessage.style.color = '#666';
@@ -184,6 +297,12 @@ function updateSelectedEvents(events) {
     
     // 選択リストをクリア
     selectedList.innerHTML = '';
+    
+    // 見出しを再追加
+    const selectedHeading = document.createElement('h5');
+    selectedHeading.textContent = '選択した日程';
+    selectedHeading.className = 'mt-3 mb-2';
+    selectedList.appendChild(selectedHeading);
     
     // 選択したイベントを配列に保存
     window.selectedEvents = [];
@@ -297,3 +416,4 @@ window.fetchUpcomingEvents = fetchUpcomingEvents;
 window.createEventSelectionUI = createEventSelectionUI;
 window.updateSelectedEvents = updateSelectedEvents;
 window.setupInitialEventUI = setupInitialEventUI;
+window.displayJsonPicker = displayJsonPicker;
