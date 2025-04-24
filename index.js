@@ -150,7 +150,6 @@ function showSuccessMessage() {
             <div class="alert alert-success">
                 <h4>送信完了</h4>
                 <p>フォームの送信が完了しました。ご協力ありがとうございました。</p>
-                <p>LINEメッセージで確認のご連絡をお送りいたしますので、ご確認ください。</p>
             </div>
         `;
     }
