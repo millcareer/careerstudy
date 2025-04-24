@@ -345,7 +345,7 @@ function fetchGASData() {
     
     // JSONPリクエスト用のscriptタグを作成
     const scriptTag = document.createElement('script');
-    scriptTag.src = 'https://script.google.com/macros/s/AKfycbzZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=json_picker&callback=' + callbackName;
+    scriptTag.src = 'https://script.google.com/macros/s/AKfycbxZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=json_picker&callback=' + callbackName;
     scriptTag.onerror = handleError;
     
     // スクリプトタグをドキュメントに追加してリクエスト実行
