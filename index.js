@@ -13,7 +13,7 @@ function fetchUpcomingEvents() {
 
     // イベント情報を取得するためのJSONPリクエスト
     return new Promise((resolve, reject) => {
-        const url = 'https://script.google.com/macros/s/AKfycbzIzUxkl_eqvUHRjkUA5iKet4pPVx3VdsUD2MHV5UJSHGemP6d9FMd8mUp3D2TzqElsqQ/exec';
+        const url = 'https://script.google.com/macros/s/AKfycbxZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=liff';
         
         // JSONPコールバックを使用してCORS制限を回避
         const callbackName = 'jsonpCallback_' + Date.now();
