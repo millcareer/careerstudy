@@ -13,7 +13,7 @@ function fetchUpcomingEvents() {
 
     // イベント情報を取得するためのJSONPリクエスト
     return new Promise((resolve, reject) => {
-        const url = 'https://script.google.com/macros/s/AKfycbxZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=liff';
+        const url = 'https://script.google.com/macros/s/AKfycbzZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=liff';
         
         // JSONPコールバックを使用してCORS制限を回避
         const callbackName = 'jsonpCallback_' + Date.now();
@@ -27,16 +27,19 @@ function fetchUpcomingEvents() {
             
             // データを解決
             if (data && Array.isArray(data) && data.length > 0) {
+                // JSONデータをコンソールに出力
+                console.log('取得したイベントデータ:', JSON.stringify(data, null, 2));
                 resolve(data);
             } else {
                 console.warn("イベントデータが空か、予期しない形式です。デフォルトデータを使用します。");
+                console.log('デフォルトデータを使用:', JSON.stringify(defaultEvents, null, 2));
                 resolve(defaultEvents);
             }
         };
         
         // スクリプトタグを作成
         const scriptTag = document.createElement('script');
-        scriptTag.src = `${url}?from=liff&callback=${callbackName}`;
+        scriptTag.src = `${url}&callback=${callbackName}`;
         
         // エラー処理
         scriptTag.onerror = function() {
@@ -45,6 +48,7 @@ function fetchUpcomingEvents() {
             delete window[callbackName];
             
             console.error("イベント情報の取得に失敗しました。デフォルトデータを使用します。");
+            console.log('エラー時のデフォルトデータ:', JSON.stringify(defaultEvents, null, 2));
             resolve(defaultEvents);
         };
         
@@ -86,6 +90,9 @@ function fetchUpcomingEvents() {
 
 // イベント選択UI生成関数 - 新しく追加
 function createEventSelectionUI(events) {
+    // コンソールにイベントデータを表示
+    console.log('createEventSelectionUIに渡されたデータ:', JSON.stringify(events, null, 2));
+    
     // イベント選択用のコンテナを作成
     const eventContainer = document.getElementById('event-selection-container') || 
                          document.createElement('div');
@@ -209,6 +216,9 @@ function createEventSelectionUI(events) {
                 eventItem.appendChild(removeBtn);
                 selectedList.appendChild(eventItem);
             });
+            
+            // 選択したイベントをコンソールに表示
+            console.log('選択されたイベント:', JSON.stringify(window.selectedEvents, null, 2));
         }
         
         // 選択数表示を更新
