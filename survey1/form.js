@@ -88,11 +88,11 @@ function createSurvey1Form(container) {
         <input type="text" name="faculty" id="form_answer16" required="required" minlength="1">
         <p class="form-text">学科</p>
         <input type="text" name="department" id="form_answer17" required="required" minlength="1">
-        <p class="form-text">学歴系統</p>
+        <p class="form-text">学習形態</p>
         <select name="role" id="form_answer18" required="required">
             <option>文系</option>
             <option>理系（スポーツ系）</option>
-            <option>理系（医療系）</option>
+            <option>理系（医歯系）</option>
             <option>理系（情報系）</option>
             <option>理系（工学系）</option>
             <option>理系（その他）</option>
@@ -102,67 +102,63 @@ function createSurvey1Form(container) {
         <p class="form-text">個人情報同意</p>
  <div style="height: 150px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
      <p style="text-align: left;">
-  個人情報保護方針<br>
- 【1】個人情報取り扱いに関する基本方針<br>
- 株式会社Mill Career（以下「当社」という）は、以下のとおり個人情報保護方針を定め、個人情報保護の仕組みを構築し、全従業員に個人情報保護の重要性の認識と取り組みを徹底させることにより、個人情報の保護を推進いたします。<br>
- 当社は利用目的を明確にした上で個人情報を取得し、目的の範囲内に留め、個人情報を利用いたします。また、利用目的の範囲を超えて個人情報の利用を行わないよう、内部の管理体制の整備および専門管理部署の設置をもじます。当社は、当社の保有する個人情報に関するお問い合わせやご相談に誠実に対応させていただきます。<br>
- 当社は、個人情報の取り扱いに関する法令、主務官庁のガイドラインその他の規範を遵守いたします。<br>
+  個人情報取扱指針<br>
+ 【1】個人情報取扱いに関する基本指針<br>
+ 株式会社Mill Career（以下「当社」という）は、以下のとおり個人情報取扱指針を定め、個人情報取扱の徹底を図り、全社的に個人情報取扱の重要性の認識と取組みを促進させ、個人情報の保護を推進したします。<br>
+ 当社は利用目的を明示した上で個人情報を取得し、目的の範囲内に留め、個人情報を利用いたします。また、利用目的の範囲を超えて個人情報の利用を行わないよう、内部の管理体制の整備および外部委託先の監督をもって進めます。<br>
  <br>
  【2】定義<br>
- 個人情報とは、個人に関する情報であって、その情報を構成する氏名、住所、電話番号、メールアドレス、所属団体、生年月日その他の記録等により個人を識別できるものをいいます。また、その情報のみでは識別できない場合でも、他の情報と容易に照合することができ、結果的に個人を識別できるものも個人情報に含まれます。<br>
+ 個人情報とは、個人に関する情報であって、その情報を構成する氏名、住所、電話番号、メールアドレス、所属組織、生年月日その他の記述等により個人を識別できるものを言います。また、その情報のみでは識別できない場合でも、他の情報と照合することで識別できる場合も個人情報に含まれます。<br>
  <br>
  【3】個人情報の利用目的<br>
- 個人情報の取得と利用の目的および利用範囲は以下の通りです。<br>
- 当社によるお客様へのサービス提供 （お客様の情報の収集に基づく、本サービスを通じた利用企業へのご紹介（本サービスを通じたマッチング利用企業へのエントリー、イベント参加企業ないしイベント参加企業への個人情報提供とみなします））<br>
- 　1.当社および当社の協力企業が提供するサービスのご案内や広報<br>
- 　2.アンケートのご協力依頼やアンケート結果の集計、キャンペーンの告知、プレゼント送付など<br>
- 　3.属性情報・嗜好情報・行動履歴等に基づく広告・コンテンツの最適化・表示<br>
- 　4.有益コンテンツ作成の参考対象の取得<br>
- 　5.マーケティング対象の選定、商品開発、新市場開拓 当社サービス提供、お客様からのお問合せへの対応のために必要な業務処理<br>
- 　6.利用統計などで特定の個人を識別できない形態による情報の提供<br>
- 　7.その他上記に付随・関連する業務<br>
+ 個人情報の取得と利用の目的および利用範囲は以下のとおりです。<br>
+ 当社によるお客様向けのサービス提供 （お客様の情報の収集に基づき、本サービスを通じた利用一部へのご案内（本サービスを通じたマッチング利用一部へのエントリー、イベント参加一般ないしイベント参加一部への個人情報提供とみなします））<br>
+ 　1.当社およびその関連会社が提供するサービスのご案内や情報<br>
+ 　2.アンケートのご回答協力やアンケート結果の集計、キャンペーンの告知、プレゼント送付など<br>
+ 　3.属性情報・履歴情報など基づく商品・コンテンツの最適化・表示<br>
+ 　4.有料コンテンツ作成の参画対象の選定<br>
+ 　5.本サービス提供、お客様からのお問合せ、マーケティング対象の確定、商品開発、品質向上 当社サービス提供、お客様からのお問合せへの対応のために必要な業務処理<br>
+ 　6.利用統計などで特定の個人を識別できない形式による情報の提供<br>
+ 　7.その他上記に準ずる業務<br>
  <br>
  【4】第三者への個人情報の提供について<br>
- 当社は、取得した個人情報の第三者への提供は、法令の定めがある場合を除き、必要な保護措置を講じた上で、以下の場合に限り行います。<br>
- 　1.当社および当社の協力企業が提供するサービスのご案内や広報<br>
- 　2.アンケートのご協力依頼やアンケート結果の集計、キャンペーンの告知、プレゼント送付など<br>
- 　3.属性情報・嗜好情報・行動履歴等に基づく広告・コンテンツの最適化・表示<br>
- 　4.有益コンテンツ作成の参考対象の取得<br>
- 　5.本サービスの改良・新規サービスの開発および マーケティング 当社サービス提供、お客様からのお問合せへの対応のために必要な業務処理<br>
- 　6.利用統計などで特定の個人を識別できない形態による情報の提供<br>
- 　7.その他上記に付随・関連する業務<br>
+ 当社は、取得した個人情報の第三者への提供は、法令の定めがある場合を除き、以下の場合に限り行います。<br>
+ 　1.ユーザ本人または第三者の生命、身体、財産そのほかの権利を保護するおそれがある場合<br>
+ 　2.本サービスの健全な運営に支障をきたすおそれがある場合 他の法令に反することとなる場合<br>
+ なお、上記個人情報の取扱い等に多大の危険を要する場合–その他、個人情報の取扱いの例外を行うことが適当な場合であって、当社の判断により例外の適用を認めると判断した場合は、当社の責任においてこれに関わる情報の取得や開示を行わないことがあります。また、当社は、サイト内で記述した個人情報に関して、多重アカウントを禁止する目的や、当社の業務の遂行に支障をきたす行為などを見出した場合に照らし、これに関わる情報の削除や修正をする場合があります。<br>
  <br>
- 【5】個人情報の取り扱いに関する例外や留意事項<br>
- 以下の場合は、個人情報の取り扱いに関する保護対象から除外されるものとします。<br>
- 　1.ユーザー本人または第三者の生命、身体、財産そのほかの権利利益を保護するおそれがある場合<br>
- 　2.本サービスの運営に支障をきたすおそれがある場合 他の法律に反することとなる場合<br>
- なお、上記個人情報の取扱い等に多大の負担を要する場合—その他、個人情報の取扱いの例外を行うことが妥当な場合であって、当社の裁量により例外の適用を認めると判断した場合は、個人情報の取扱い等を行わないことがあります。また、当社は、サイト内で記録した個人情報に関して、多重アカウントを防止する目的や、当社の業務の遂行に支障をきたす行為などを発見した場合に限定し、これに関わる情報の調査や開示をする場合があります。<br>
+ 【5】個人情報の取扱いに関する例外事項<br>
+ 以下の場合は、個人情報の取扱いに関する保護対象から除外されるものとします。<br>
+ 　1.ユーザ本人または第三者の生命、身体、財産そのほかの権利を保護するおそれがある場合<br>
+ 　2.本サービスの健全な運営に支障をきたすおそれがある場合 他の法令に反することとなる場合<br>
+ なお、上記個人情報の取扱い等に多大の危険を要する場合–その他、個人情報の取扱いの例外を行うことが適当な場合であって、当社の判断により例外の適用を認めると判断した場合は、当社の責任においてこれに関わる情報の取得や開示を行わないことがあります。また、当社は、サイト内で記述した個人情報に関して、多重アカウントを禁止する目的や、当社の業務の遂行に支障をきたす行為などを見出した場合に照らし、これに関わる情報の削除や修正をする場合があります。<br>
  <br>
  【6】クッキー<br>
- 当社のウェブサイトでは、本サービスの利用状況に関する情報の取得や、より良いものにマッチング利用企業やイベント参加企業への個人情報提供のためにクッキー情報やウェブビーコンをはじめとする技術を使用しています。お客様のブラウザからのアクセスおよび、お客様が過去に当社ウェブサイトを利用したことがあるかどうかを確認するほか、お客様の好みや利用状況に合わせた コンテンツや広告を表示したり、サービスのカスタマイズやセキュリティ維持、統計データの取得などに利用しております。<br>
- なお、ほとんどのブラウザでは、設定からクッキーの無効化や拒否をすることが可能です。ただし、当サイトの機能の一部は、クッキーが無効の場合、利用できなくなることがありますので、ご確認ください。<br>
+ 当社のウェブサイトでは、本サービスの利用規約に関する情報の取得や、よりよいものにマッチング利用一部やイベント参加一部への個人情報提供のためにクッキー情報やウェブビーコンを使用しています。お客様のブラウザからのアクセスおよび、お客様が明示的に当社ウェブサイトを利用したことが分かるかどうかを確認する他、お客様のプライバシやセキュリティ、利用統計データの取得など使用しております。<br>
+ なお、ほとんどのブラウザでは、初期設定からクッキーの無効化や削除をすることが可能です。ただし、クッキーの機能の一部は、無効の場合、利用できなくなることがありますので、ご注意ください。<br>
  <br>
- 【7】第三者データの取得に関する例外や留意事項<br>
- 当社のサービスでは、提供を受けたお客様の個人情報に関して、お客様ご本人の同意を得た上でこれに加え、自ら判断する場合は、以下のような場合は、個人情報の取扱い等の例外を行うことが妥当な場合であって、当社の裁量により例外の適用を認めると判断した場合は、個人情報の取扱い等を行わないことがあります。<br>
- 　1.ユーザー本人または第三者の生命、身体、財産そのほかの権利利益を保護するおそれがある場合<br>
- 　2.本サービスの運営に支障をきたすおそれがある場合 他の法律に反することとなる場合<br>
- なお、上記個人情報の取扱い等に多大の負担を要する場合—その他、個人情報の取扱いの例外を行うことが妥当な場合であって、当社の裁量により例外の適用を認めると判断した場合は、個人情報の取扱い等を行わないことがあります。<br>
+ 【7】第三者データの取得に関する例外事項<br>
+ 当社のサービスでは、本サービスの利用規約に関する情報の取得や、よりよいものにマッチング利用一部やイベント参加一部への個人情報提供のためにクッキー情報やウェブビーコンを使用しています。お客様のブラウザからのアクセスおよび、お客様が明示的に当社ウェブサイトを利用したことが分かるかどうかを確認する他、お客様のプライバシやセキュリティ、利用統計データの取得など使用しております。<br>
+ なお、ほとんどのブラウザでは、初期設定からクッキーの無効化や削除をすることが可能です。ただし、クッキーの機能の一部は、無効の場合、利用できなくなることがありますので、ご注意ください。<br>
  <br>
- 【8】個人情報の開示、訂正などの手続きについて<br>
- 当社は、保有する個人データに関して、本サービスを受けられる方からの開示・訂正・追加・削除・利用の停止・消去及び第三者への提供の停止（「開示等」といいます。）の申し出があった場合、本人確認を行った上で、適切かつ迅速に対応いたします。ただし、法令により個人情報の開示等をしない場合がありますので予めご了承下さい。<br>
+ 【8】第三者データの取得に関する例外事項<br>
+ 当社は、個人情報の取扱いに関する保護対象から除外されるものとします。<br>
+ 　1.ユーザ本人または第三者の生命、身体、財産そのほかの権利を保護するおそれがある場合<br>
+ 　2.本サービスの健全な運営に支障をきたすおそれがある場合 他の法令に反することとなる場合<br>
+ なお、上記個人情報の取扱い等に多大の危険を要する場合–その他、個人情報の取扱いの例外を行うことが適当な場合であって、当社の判断により例外の適用を認めると判断した場合は、当社の責任においてこれに関わる情報の取得や開示を行わないことがあります。また、当社は、サイト内で記述した個人情報に関して、多重アカウントを禁止する目的や、当社の業務の遂行に支障をきたす行為などを見出した場合に照らし、これに関わる情報の削除や修正をする場合があります。<br>
  <br>
  【9】個人情報提供の任意性<br>
- 当社が提供を求める全ての要素についてお答えいただかなくても結構ですが、必要となる情報が不足している場合は、本サービスを受けられないことがあります。<br>
+ 当社のサービスでは提供を求める全ての要素についておたずねいただかなくても結構ですが、必要となる情報が不足している場合は、本サービスを受けられないことがあります。<br>
  <br>
- 【10】本人が容易に認識できない方法による個人情報の取得について<br>
- 本サイトにおいて、サイトの使い勝手を向上させる目的や、アクセス解析などの統計的情報を取得する目的で、クッキーやウェブビーコン、携帯電話番号の暗号 化などの技術を使用することがありますが、そのような技術の使用によって、ユーザーが入力していない個人情報を取得することはありません。<br>
+ 【10】本社が識別できない方法による個人情報の取得について<br>
+ 本サイトにおいて、サイトの使い勝手を向上させる目的や、アクセス解析などの統計的情報を取得する目的で、クッキーやウェブビーコン、ブラウザからの端末情報など用いることがありますが、そのような情報の使用によって、ユーザが入力していない個人情報を取得することはありません。<br>
  <br>
- 【11】プライバシーポリシーの変更について<br>
- 当社は、個人情報の取り扱いに関する運用状況を見直し、継続的な改善に取り組むものとし、必要に応じて、本ポリシーの全部または一部を変更することがあります。変更後の内容は、当サイトでお知らせした時点から適用されるものとします。 なお、法令に特段の定めがある場合を除き、変更によって個人情報の取扱い等の一部制限をする場合で、お客様ご本人の同意を得ることが困難 な場合については、当サイトにおいて周知させていただきます。<br>
+ 【11】プライバシーポリシーの改訂について<br>
+ 当社は、個人情報の取取扱いに関する法定義務を見直し、随時的な変更に取り組むものとし、必要に応じて、本ポリシーの全部または一部を改訂することがあります。改訂後の内容は、サイト内で告知された時点から適用されるものとしますので、定期的にチェックすることをお勧めします。<br>
  <br>
- 【12】個人情報の取り扱いに関する問合せ<br>
- 名称 株式会社Mill Career 個人情報対応窓口 連絡先 info@millcareer.com<br>
- 最終変更 2023 年 04 月 01 日<br>
+ 【12】個人情報の取扱いに関する同意<br>
+ 名称 株式会社Mill Career 個人情報取扱責任者 担当 info@millcareer.com<br>
+ 最終改訂 2023 年 04 月 01 日<br>
    </p>
  </div>
  <p>
@@ -178,6 +174,11 @@ function createSurvey1Form(container) {
         
         <!-- イベント選択肢表示エリア -->
         <div id="event-options-list"></div>
+        
+        <!-- GASから取得したデータを表示するエリア -->
+        <div id="gas-data-container" class="mt-3 mb-3 p-3 border rounded bg-light">
+            <!-- GASからのデータがここに表示されます -->
+        </div>
         
         <!-- 選択済みイベント表示エリア -->
         <div style="margin-top: 20px;">
@@ -202,12 +203,151 @@ function createSurvey1Form(container) {
     // イベント情報の取得とUI作成（共通関数を呼び出し）
     if (typeof fetchUpcomingEvents === 'function') {
         console.log('イベント情報を取得します（survey1/form.js）');
-        fetchUpcomingEvents();
+        fetchUpcomingEvents().then(function() {
+            // イベント情報の取得後にGASからのデータを取得
+            fetchGASData();
+        });
     } else {
         console.error('fetchUpcomingEvents関数が見つかりません。common/events.jsが正しく読み込まれているか確認してください。');
         // フォールバック: 初期UIだけでも設定
         if (typeof setupInitialEventUI === 'function') {
             setupInitialEventUI();
+            // イベントUI設定後にGASからのデータを取得
+            fetchGASData();
+        } else {
+            // どちらの関数も利用できない場合は直接GASデータを取得
+            fetchGASData();
         }
     }
+}
+
+// GASからデータを取得し表示する関数
+function fetchGASData() {
+    // データコンテナの取得
+    const gasDataContainer = document.getElementById('gas-data-container');
+    if (!gasDataContainer) return;
+    
+    // タイトル追加
+    const title = document.createElement('h5');
+    title.textContent = 'GASから取得したデータ';
+    title.className = 'mb-2';
+    
+    // 説明文追加
+    const description = document.createElement('p');
+    description.textContent = '下記は利用可能な日程のJSONデータです。上の選択肢から実際に参加したい日程を選択してください。';
+    description.className = 'mb-2';
+    
+    // ローディング表示
+    const loadingContainer = document.createElement('div');
+    loadingContainer.className = 'text-center';
+    loadingContainer.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>データ取得中...</p>';
+    
+    // コンテナをクリアして新しい要素を追加
+    gasDataContainer.innerHTML = '';
+    gasDataContainer.appendChild(title);
+    gasDataContainer.appendChild(description);
+    gasDataContainer.appendChild(loadingContainer);
+    
+    // JSONPリクエスト用のコールバック名を生成
+    const callbackName = 'gasJsonCallback_' + Date.now();
+    
+    // グローバルコールバック関数を設定
+    window[callbackName] = function(data) {
+        // ローディング表示を削除
+        loadingContainer.remove();
+        
+        // データが正常に取得できたかチェック
+        if (data && (Array.isArray(data) || typeof data === 'object')) {
+            console.log('GASから取得したデータ:', JSON.stringify(data, null, 2));
+            
+            // 既存のdisplayJsonPicker関数を使用してデータを表示
+            if (typeof displayJsonPicker === 'function') {
+                // 配列でない場合は配列に変換
+                const dataArray = Array.isArray(data) ? data : [data];
+                
+                // JSONデータをピッカーで表示
+                const jsonContainer = displayJsonPicker(dataArray);
+                
+                // 既存のjson-picker-containerがある場合はそれを利用
+                const existingContainer = document.getElementById('json-picker-container');
+                if (existingContainer) {
+                    // 既存のコンテナを新しいものに置き換え
+                    existingContainer.parentNode.replaceChild(jsonContainer, existingContainer);
+                } else {
+                    // なければGASデータコンテナに追加
+                    gasDataContainer.appendChild(jsonContainer);
+                }
+            } else {
+                // displayJsonPicker関数がない場合は独自に表示
+                const jsonDisplay = document.createElement('div');
+                jsonDisplay.className = 'p-3 border rounded bg-light';
+                
+                // JSONデータ表示用のセレクトボックス
+                const select = document.createElement('select');
+                select.className = 'form-select mb-2';
+                select.multiple = true;
+                select.size = 5; // 5行表示
+                
+                // データをオプションとして追加
+                const dataArray = Array.isArray(data) ? data : [data];
+                dataArray.forEach((item, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = item.choice_text || item.title || JSON.stringify(item).substring(0, 50) + '...';
+                    select.appendChild(option);
+                });
+                
+                // 選択肢表示エリア
+                const detailContainer = document.createElement('div');
+                detailContainer.className = 'mt-2 p-2 border rounded bg-white';
+                detailContainer.style.maxHeight = '150px';
+                detailContainer.style.overflowY = 'auto';
+                
+                const pre = document.createElement('pre');
+                pre.style.margin = '0';
+                pre.style.fontSize = '0.8rem';
+                pre.textContent = '← 上のリストから選択すると詳細が表示されます';
+                
+                // 選択した項目の詳細を表示するイベントリスナー
+                select.addEventListener('change', function() {
+                    const selectedOptions = Array.from(this.selectedOptions);
+                    if (selectedOptions.length > 0) {
+                        const selectedIndices = selectedOptions.map(option => parseInt(option.value));
+                        const selectedItems = selectedIndices.map(index => dataArray[index]);
+                        pre.textContent = JSON.stringify(selectedItems, null, 2);
+                    } else {
+                        pre.textContent = '← 上のリストから選択すると詳細が表示されます';
+                    }
+                });
+                
+                detailContainer.appendChild(pre);
+                jsonDisplay.appendChild(select);
+                jsonDisplay.appendChild(detailContainer);
+                gasDataContainer.appendChild(jsonDisplay);
+            }
+        } else {
+            // データがない、またはエラーの場合
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'alert alert-warning';
+            errorMsg.textContent = 'GASからデータを取得できませんでした。デフォルトの選択肢から選んでください。';
+            gasDataContainer.appendChild(errorMsg);
+        }
+    };
+    
+    // エラーハンドラ
+    const handleError = function() {
+        loadingContainer.remove();
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'alert alert-danger';
+        errorMsg.textContent = 'GASからのデータ取得中にエラーが発生しました。デフォルトの選択肢から選んでください。';
+        gasDataContainer.appendChild(errorMsg);
+    };
+    
+    // JSONPリクエスト用のscriptタグを作成
+    const scriptTag = document.createElement('script');
+    scriptTag.src = 'https://script.google.com/macros/s/AKfycbzZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=json_picker&callback=' + callbackName;
+    scriptTag.onerror = handleError;
+    
+    // スクリプトタグをドキュメントに追加してリクエスト実行
+    document.body.appendChild(scriptTag);
 }
