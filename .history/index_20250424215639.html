@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>イベント参加登録</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="common/styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>イベント参加登録</h1>
+        
+        <!-- ローディング表示 -->
+        <div id="loading" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>読み込み中...</p>
+        </div>
+
+        <!-- フォームコンテナ -->
+        <div id="form-container" style="display: none;">
+            <!-- フォーム内容はJSで動的に生成 -->
+        </div>
+    </div>
+
+    <!-- 必要なスクリプト -->
+    <script src="common/utils.js"></script>
+    <script src="common/api.js"></script>
+    <script src="common/events.js"></script>
+    <script src="survey1/choices.js"></script>
+    <script src="survey1/birthday.js"></script>
+    <script src="survey1/form.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // フォームコンテナを取得
+            const formContainer = document.getElementById('form-container');
+            
+            // ローディング表示
+            const loading = document.getElementById('loading');
+            
+            // フォームを生成
+            if (typeof createSurvey1Form === 'function') {
+                createSurvey1Form(formContainer);
+                
+                // ローディングを非表示にしてフォームを表示
+                loading.style.display = 'none';
+                formContainer.style.display = 'block';
+            } else {
+                console.error('createSurvey1Form関数が見つかりません');
+                alert('フォームの初期化に失敗しました。ページを再読み込みしてください。');
+            }
+        });
+    </script>
+</body>
+</html>

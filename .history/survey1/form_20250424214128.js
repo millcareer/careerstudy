@@ -171,7 +171,7 @@ function createSurvey1Form(container) {
 
         <!-- 送信ボタン -->
         <div style="text-align: center; margin-top: 30px;">
-            <button onclick="return onSubmitSurvey1()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
+            <button onclick="return onSubmit()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
         </div>
     </div>
     `;
@@ -242,10 +242,10 @@ function showError(message) {
 }
 
 /**
- * Survey1フォーム送信時のバリデーション関数
+ * フォーム送信時のバリデーション関数
  * @returns {boolean} バリデーション結果
  */
-function onSubmitSurvey1() {
+function onSubmit() {
     // 必須項目のIDリスト
     const requiredFields = [
         { id: 'form_answer01', name: 'メールアドレス' },
@@ -330,5 +330,5 @@ function onSubmitSurvey1() {
     return true;
 }
 
-// 関数をエクスポート
-export { createSurvey1Form, onSubmitSurvey1 };
+// グローバルスコープに関数を公開
+window.onSubmit = onSubmit;

@@ -29,16 +29,13 @@ function createSurvey1Form(container) {
             <input type="text" name="first_name_read" id="form_answer06" required="required" placeholder="なまえ">
         </div>
         <p class="form-text">生年月日</p>
-        <div class="form-select-wrap">
-            <select class="birthday-year" id="form_answer07" required="required">
-            </select>
-            / 
-            <select class="birthday-month" id="form_answer08" required="required">
-            </select>
-            /
-            <select class="birthday-day" id="form_answer09" required="required">
-            </select>
-        </div>
+        <input type="date" 
+               id="form_answer07" 
+               name="birthday" 
+               required="required"
+               max="${new Date().toISOString().split('T')[0]}"
+               min="${new Date(new Date().getFullYear() - 100, 0, 1).toISOString().split('T')[0]}"
+        >
         <p class="form-text">大学名
         <font size="1">※入力すると予測が表示されます。</font></p>
         <input type="text" name="university-name" id="form_answer10" list="university" placeholder="大学名" autocomplete="off" required="required">
@@ -178,9 +175,6 @@ function createSurvey1Form(container) {
     
     // 選択肢データの初期化（choices.jsの関数を呼び出し）
     initializeChoices();
-    
-    // 既存のスクリプトから生年月日セレクトボックスの生成
-    setupBirthdaySelects();
     
     // イベント情報の取得とUI作成
     if (typeof fetchUpcomingEvents === 'function') {

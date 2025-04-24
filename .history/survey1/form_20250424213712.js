@@ -171,7 +171,7 @@ function createSurvey1Form(container) {
 
         <!-- 送信ボタン -->
         <div style="text-align: center; margin-top: 30px;">
-            <button onclick="return onSubmitSurvey1()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
+            <button onclick="return onSubmit()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
         </div>
     </div>
     `;
@@ -192,60 +192,10 @@ function createSurvey1Form(container) {
 }
 
 /**
- * エラーメッセージを表示する関数
- * @param {string} message - エラーメッセージ
- */
-function showError(message) {
-    // 既存のエラーメッセージがあれば削除
-    const existingError = document.getElementById('form-error-message');
-    if (existingError) {
-        existingError.remove();
-    }
-
-    // エラーメッセージ要素を作成
-    const errorDiv = document.createElement('div');
-    errorDiv.id = 'form-error-message';
-    errorDiv.className = 'alert alert-danger';
-    errorDiv.style.position = 'fixed';
-    errorDiv.style.top = '20px';
-    errorDiv.style.left = '50%';
-    errorDiv.style.transform = 'translateX(-50%)';
-    errorDiv.style.zIndex = '1000';
-    errorDiv.style.maxWidth = '80%';
-    errorDiv.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-    
-    // メッセージ内容
-    const messageContent = document.createElement('div');
-    messageContent.style.marginRight = '20px';
-    messageContent.innerHTML = message.replace(/\n/g, '<br>');
-    errorDiv.appendChild(messageContent);
-    
-    // 閉じるボタン
-    const closeButton = document.createElement('button');
-    closeButton.type = 'button';
-    closeButton.className = 'btn-close';
-    closeButton.style.position = 'absolute';
-    closeButton.style.right = '10px';
-    closeButton.style.top = '10px';
-    closeButton.onclick = () => errorDiv.remove();
-    errorDiv.appendChild(closeButton);
-    
-    // エラーメッセージを表示
-    document.body.appendChild(errorDiv);
-    
-    // 5秒後に自動的に消える
-    setTimeout(() => {
-        if (errorDiv.parentNode) {
-            errorDiv.remove();
-        }
-    }, 5000);
-}
-
-/**
- * Survey1フォーム送信時のバリデーション関数
+ * フォーム送信時のバリデーション関数
  * @returns {boolean} バリデーション結果
  */
-function onSubmitSurvey1() {
+function onSubmit() {
     // 必須項目のIDリスト
     const requiredFields = [
         { id: 'form_answer01', name: 'メールアドレス' },
@@ -286,14 +236,14 @@ function onSubmitSurvey1() {
     
     // パスワードのバリデーション
     if (password !== confirmPassword) {
-        showError('パスワードと確認用パスワードが一致しません。');
+        alert('パスワードと確認用パスワードが一致しません。');
         return false;
     }
 
     // パスワードの形式チェック（英字と数字を含む8文字以上）
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordPattern.test(password)) {
-        showError('パスワードは英字と数字を含む8文字以上で設定してください。');
+        alert('パスワードは英字と数字を含む8文字以上で設定してください。');
         return false;
     }
 
@@ -301,7 +251,7 @@ function onSubmitSurvey1() {
     const email = document.getElementById('form_answer01').value;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-        showError('有効なメールアドレスを入力してください。');
+        alert('有効なメールアドレスを入力してください。');
         return false;
     }
 
@@ -309,20 +259,20 @@ function onSubmitSurvey1() {
     const phone = document.getElementById('form_answer02').value;
     const phonePattern = /^\d{1,5}-\d{1,4}-\d{4,5}$/;
     if (!phonePattern.test(phone)) {
-        showError('電話番号は正しい形式で入力してください（例：000-0000-0000）。');
+        alert('電話番号は正しい形式で入力してください（例：000-0000-0000）。');
         return false;
     }
 
-    // イベント選択のチェック（選択済みのイベントを取得）
+    // イベント選択のチェック
     const selectedEvents = document.querySelectorAll('#event-options-list input[type="checkbox"]:checked');
     if (selectedEvents.length === 0) {
-        showError('イベントを選択してください。');
+        alert('イベントを選択してください。');
         return false;
     }
 
     // 未入力項目がある場合
     if (emptyFields.length > 0) {
-        showError('以下の項目が未入力です：\n' + emptyFields.join('\n'));
+        alert('以下の項目が未入力です：\n\n' + emptyFields.join('\n'));
         return false;
     }
 
@@ -330,5 +280,5 @@ function onSubmitSurvey1() {
     return true;
 }
 
-// 関数をエクスポート
-export { createSurvey1Form, onSubmitSurvey1 };
+// グローバルスコープに関数を公開
+window.onSubmit = onSubmit;
