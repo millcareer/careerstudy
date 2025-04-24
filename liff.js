@@ -1,7 +1,7 @@
 // LIFFの基本情報
 document.addEventListener('DOMContentLoaded', function() {
     // liffId: LIFF URL "https://liff.line.me/xxx"のxxxに相当する記号
-    // LINE DevelopersのLIFF画面より認証可能
+    // LINE DevelopersのLIFF画面より認可可能
     var liffId = "1660795452-nYx391B8";
     console.log(`init liff, ID : ${liffId}`);
     
@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // 必要な関数が定義されているか確認
+    // 必要な関数が実装されているか確認
     console.log("setupBirthdaySelects関数確認:", typeof setupBirthdaySelects);
     if (typeof setupBirthdaySelects === 'undefined') {
-        console.error("setupBirthdaySelects関数が見つかりません。common/birthday.jsが正しく読み込まれているか確認してください。");
+        console.error("setupBirthdaySelects関数が見つかりません。survey1/birthday.jsが正しく読み込まれているか確認してください。");
         showDebugInfo("setupBirthdaySelects関数が見つかりません");
         
-        // setupBirthdaySelects関数がない場合は簡易版を定義
+        // setupBirthdaySelects関数がない場合は簡易版を実装
         window.setupBirthdaySelects = function() {
             console.log("簡易版setupBirthdaySelects関数が実行されました");
             const yearSelect = document.querySelector('.birthday-year');
@@ -66,14 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("initializeChoices関数が見つかりません。survey1/choices.jsが正しく読み込まれているか確認してください。");
         showDebugInfo("initializeChoices関数が見つかりません");
         
-        // initializeChoices関数がない場合は簡易版を定義
+        // initializeChoices関数がない場合は簡易版を実装
         window.initializeChoices = function() {
             console.log("簡易版initializeChoices関数が実行されました");
             console.log("簡易版initializeChoices関数の実行が完了しました");
         };
     }
     
-    // LIFF初期化（ここでエラーが発生する可能性がある）
+    // LIFF初期化
     initializeLiff(liffId);
 });
 
@@ -182,7 +182,7 @@ function handleLiffInitializationFailure(err) {
     console.error('LIFF Initialization failed: ', err);
     window.alert('アプリケーションの初期化に失敗しました。後ほど再実行してください。');
     
-    // エラーが発生してもフォームを表示する試み
+    // エラーが発生してもフォームを表示する努力
     document.getElementById('loading').style.display = 'none';
     const formContainer = document.getElementById('form-container');
     if (formContainer) {
@@ -215,7 +215,7 @@ function showSimpleForm(container) {
     container.innerHTML = `
     <div class="container mt-4">
         <div class="alert alert-warning">
-            <strong>注意:</strong> 通常のフォームの読み込みに失敗しました。簡易フォームを表示しています。
+            <strong>注意:</strong> 本来のフォームの読み込みに失敗しました。簡易フォームを表示しています。
         </div>
         <form id="simple-form" class="needs-validation" novalidate>
             <div class="mb-3">
@@ -267,7 +267,7 @@ function showDebugInfo(message) {
     const formContainer = document.getElementById('form-container');
     if (formContainer) {
         const debugDiv = document.createElement('div');
-        debugDiv.style.background = '#ffeeee';
+        debugDiv.style.background = '#ffeee';
         debugDiv.style.color = '#ff0000';
         debugDiv.style.padding = '10px';
         debugDiv.style.margin = '10px 0';
