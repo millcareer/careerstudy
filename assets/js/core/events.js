@@ -1,4 +1,7 @@
 // common/events.js - イベント情報の取得と表示を管理するための共通関数
+import { EventSelectionUI } from '../assets/js/forms/events.js';
+
+let eventSelectionUI = null;
 
 /**
  * イベント情報を取得する関数
@@ -7,82 +10,95 @@
  * @returns {Promise} - イベントデータで解決するPromise
  */
 function fetchUpcomingEvents(url) {
-    // 初期UIを設定 - エラーが発生しても最低限のUIが表示されるように
-    setupInitialEventUI();
-
     // APIのURL（指定がなければデフォルト値）
     const apiUrl = url || 'https://script.google.com/macros/s/AKfycbw5gvosHHQQbTKL5UDdcI6OrPfXw_DY4IXSTgV2ADkyuvbLoT1AqoXHoPkhBuyo6_1RBQ/exec';
 
     // api.jsが読み込まれているか確認
     if (!window.api || typeof window.api.fetchEvents !== 'function') {
         console.error("API通信機能が初期化されていません。api.jsが正しく読み込まれているか確認してください。");
-        
-        // エラー時のデフォルトデータ
-        const defaultEvents = [
-            {
-                choice_text: "イベント参加不可（日程が合わない）",
-                title: "参加できません"
-            }
-        ];
-        
-        // エラー時にもデフォルトデータでUIを作成
-        createEventSelectionUI(defaultEvents);
-        
-        // エラー通知
-        const formContainer = document.getElementById('form-container');
-        if (formContainer) {
-            const errorNotice = document.createElement('div');
-            errorNotice.className = 'alert alert-warning';
-            errorNotice.style.marginTop = '10px';
-            errorNotice.innerHTML = 'API通信機能が初期化されていません。ページを再読み込みしてください。';
-            formContainer.prepend(errorNotice);
-        }
-        
-        return Promise.resolve(defaultEvents);
+        return handleAPIError("API通信機能が初期化されていません。ページを再読み込みしてください。");
     }
 
     // api.jsの関数を使ってデータ取得
     return window.api.fetchEvents(apiUrl)
         .then(data => {
-            // イベント選択UIを作成
-            createEventSelectionUI(data);
+            initializeEventSelection(data);
             return data;
         })
         .catch(error => {
             console.error("イベント情報の取得に失敗しました:", error);
-            
-            // エラー時のデフォルトデータ
-            const defaultEvents = [
-                {
-                    choice_text: "イベント参加不可（日程が合わない）",
-                    title: "参加できません"
-                }
-            ];
-            
-            // エラー時にもデフォルトデータでUIを作成
-            createEventSelectionUI(defaultEvents);
-            
-            // エラー通知
-            const formContainer = document.getElementById('form-container');
-            if (formContainer) {
-                const errorNotice = document.createElement('div');
-                errorNotice.className = 'alert alert-warning';
-                errorNotice.style.marginTop = '10px';
-                errorNotice.innerHTML = 'イベント情報の取得に失敗しました。ネットワーク接続を確認し、ページを再読み込みしてください。';
-                formContainer.prepend(errorNotice);
-
-                // ローディング表示を非表示にし、フォームコンテナを表示
-                document.getElementById('loading').style.display = 'none';
-                formContainer.style.display = 'block';
-                
-                // フォームを生成
-                if (typeof createSurvey1Form === 'function') {
-                    createSurvey1Form(formContainer);
-                }
-            }
-            
-            return defaultEvents;
+            return handleAPIError("イベント情報の取得に失敗しました。ネットワーク接続を確認し、ページを再読み込みしてください。");
         });
+}
+
+/**
+ * イベント選択UIの初期化
+ * 
+ * @param {Array} events - イベントデータの配列
+ */
+function initializeEventSelection(events) {
+    const formContainer = document.getElementById('form-container');
+    if (!formContainer) {
+        console.error('フォームコンテナが見つかりません');
+        return;
+    }
+
+    // イベントデータを整形
+    const formattedEvents = events.map(event => ({
+        id: event.id || String(Date.now()),
+        name: event.choice_text || event.title || '名称未設定',
+        description: event.date ? `開催日: ${event.date}` : undefined
+    }));
+
+    // EventSelectionUIのインスタンスを作成
+    const container = document.createElement('div');
+    container.id = 'event-selection-container';
+    formContainer.appendChild(container);
+
+    eventSelectionUI = new EventSelectionUI(container);
+    eventSelectionUI.initialize(formattedEvents);
+
+    // hidden fieldsの名前を旧システムに合わせる
+    const hiddenFields = container.querySelectorAll('input[type="hidden"]');
+    if (hiddenFields.length >= 2) {
+        hiddenFields[0].name = 'form_answer22';
+        hiddenFields[0].id = 'form_answer22';
+        hiddenFields[1].name = 'form_answer23';
+        hiddenFields[1].id = 'form_answer23';
+    }
+
+    // ローディング表示を非表示にし、フォームコンテナを表示
+    document.getElementById('loading').style.display = 'none';
+    formContainer.style.display = 'block';
+}
+
+/**
+ * APIエラー時の処理
+ * 
+ * @param {string} errorMessage - エラーメッセージ
+ * @returns {Array} - デフォルトのイベントデータ
+ */
+function handleAPIError(errorMessage) {
+    const defaultEvents = [{
+        id: 'unavailable',
+        name: "イベント参加不可（日程が合わない）",
+        description: "現在、参加可能なイベントはありません"
+    }];
+
+    // エラー通知とUIの初期化
+    const formContainer = document.getElementById('form-container');
+    if (formContainer) {
+        const errorNotice = document.createElement('div');
+        errorNotice.className = 'alert alert-warning';
+        errorNotice.style.marginTop = '10px';
+        errorNotice.innerHTML = errorMessage;
+        formContainer.prepend(errorNotice);
+
+        // デフォルトデータでUIを初期化
+        initializeEventSelection(defaultEvents);
+    }
+
+    return defaultEvents;
 }
 
 /**
@@ -332,7 +348,7 @@ function setupInitialEventUI() {
     window.selectedEvents = [];
 }
 
-// 関数をグローバルスコープにエクスポート
+// グローバルスコープで関数をエクスポート
 window.fetchUpcomingEvents = fetchUpcomingEvents;
 window.createEventSelectionUI = createEventSelectionUI;
 window.setupInitialEventUI = setupInitialEventUI;

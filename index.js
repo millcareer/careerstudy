@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const formContainer = document.getElementById('form-container');
     
     if (loadingElement) {
-        loadingElement.style.display = 'none';
+        loadingElement.style.display = 'block'; // イベント情報の取得中は表示
     }
     
     if (formContainer) {
-        formContainer.style.display = 'block';
+        formContainer.style.display = 'none'; // イベント情報の取得完了後に表示
         // Survey1フォームを作成
         if (typeof createSurvey1Form === 'function') {
             createSurvey1Form(formContainer);
@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchUpcomingEvents();
     } else {
         console.error('fetchUpcomingEvents関数が見つかりません。common/events.jsが正しく読み込まれているか確認してください。');
+        if (loadingElement) loadingElement.style.display = 'none';
+        if (formContainer) formContainer.style.display = 'block';
     }
 });
 
@@ -70,14 +72,18 @@ function validateForm() {
     });
     
     // イベント選択の確認
-    if (window.selectedEvents && window.selectedEvents.length === 0) {
+    const event1Value = document.querySelector('input[name="form_answer22"]')?.value;
+    const event2Value = document.querySelector('input[name="form_answer23"]')?.value;
+    
+    if (!event1Value && !event2Value) {
         console.error('イベントが選択されていません');
         const eventContainer = document.getElementById('event-selection-container');
         if (eventContainer) {
             eventContainer.classList.add('is-invalid');
-            const errorMsg = document.createElement('p');
-            errorMsg.className = 'text-danger';
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'event-selection-error';
             errorMsg.textContent = 'イベントを選択してください';
+            errorMsg.style.display = 'block';
             eventContainer.appendChild(errorMsg);
         }
         isValid = false;
@@ -109,7 +115,10 @@ function collectFormData() {
         department: document.getElementById('form_answer17')?.value,
         educationType: document.getElementById('form_answer18')?.value,
         agreement: document.getElementById('form_answer19')?.checked,
-        selectedEvents: window.selectedEvents || []
+        selectedEvents: [
+            document.getElementById('form_answer22')?.value,
+            document.getElementById('form_answer23')?.value
+        ].filter(Boolean)
     };
     
     console.log('収集したフォームデータ:', formData);
@@ -188,3 +197,6 @@ function showErrorMessage() {
         formContainer.prepend(errorNotice);
     }
 }
+
+// グローバルスコープで関数を公開
+window.onSubmit = onSubmit;

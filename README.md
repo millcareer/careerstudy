@@ -1,58 +1,106 @@
-# Career Study Application
+# Career Study Project
 
-LINEのLIFFアプリケーションを使用したキャリア調査アプリケーション。
+## Project Structure
 
-## エラー修正内容
-
-以下のエラーを修正しました：
-
-1. **CORS問題の修正**
-   - Google Apps Scriptからのデータ取得でCORSエラーが発生していた問題を解決
-   - JSONPアプローチを使用して、クロスドメインのデータ取得を可能に
-
-2. **未定義関数の実装**
-   - `createEventSelectionUI`関数が未定義だったエラーを修正
-   - イベント選択UIを生成する機能を実装
-
-3. **エラーハンドリングの改善**
-   - ネットワークエラー発生時のフォールバック実装
-   - ユーザーフレンドリーなエラーメッセージ表示
-
-## LIFF設定
-
-LIFFアプリを正しく動作させるには、以下の設定が必要です：
-
-1. LIFF IDの設定
-2. Google Apps Scriptのデプロイとエンドポイント設定
-3. LINEチャネルの設定
-
-## Google Apps Script設定
-
-`gas-script.js`ファイルにサンプルコードが含まれています。以下の手順で設定してください：
-
-1. Google Apps Scriptエディタでプロジェクトを作成
-2. `gas-script.js`のコードをコピー
-3. ウェブアプリとしてデプロイし、URLを取得
-4. `index.js`の`fetchUpcomingEvents`関数内のURLを更新
-
-## インストール手順
-
-1. リポジトリをクローン
 ```
-git clone https://github.com/millcareer/careerstudy.git
+careerstudy/
+├── assets/
+│   ├── styles/
+│   │   ├── main.css          # Main stylesheet for the application
+│   │   └── forms/
+│   │       ├── survey1.css   # Styles specific to Survey1
+│   │       └── survey2.css   # Styles specific to Survey2
+│   └── js/
+│       ├── config/
+│       │   └── constants.js   # Global constants and configuration
+│       ├── core/
+│       │   ├── api.js        # API interaction handling
+│       │   ├── auth.js       # Authentication functionality
+│       │   └── events.js     # Event management system
+│       └── forms/
+│           ├── components/
+│           │   ├── birthday.js    # Birthday selector component
+│           │   ├── choices.js     # Multiple choice input component
+│           │   ├── form.js        # Base form functionality
+│           │   └── selector.js    # Generic selector component
+│           ├── events.js          # Event selection handling
+│           ├── survey1.js         # First survey implementation
+│           └── survey2.js         # Second survey implementation
+├── index.html                     # Main entry point
+├── survey1.html                   # Survey1 specific page
+├── survey2.html                   # Survey2 specific page
+├── index.js                       # Application initialization
+├── liff.js                        # LINE Front-end Framework integration
+└── debug.js                       # Debugging utilities
 ```
 
-2. 必要な設定を行う
-   - LIFFのIDを設定
-   - Google Apps Scriptのエンドポイントを設定
+## Component Descriptions
 
-3. GitHubページにデプロイするか、任意のウェブサーバーにアップロード
+### Core Files
+- `index.html`: Main entry point of the application, contains the base HTML structure
+- `survey1.html`: First survey page with specific form structure
+- `survey2.html`: Second survey page with specific form structure
+- `index.js`: Initializes the application and sets up necessary configurations
+- `liff.js`: Handles LINE Front-end Framework integration for LINE platform features
+- `debug.js`: Contains utilities for development and debugging purposes
 
-4. LINEのLIFFアプリとして登録
+### Assets Structure
 
-## 使用技術
+#### Styles
+- `main.css`: Primary stylesheet containing global styles and layout definitions
+- `forms/survey1.css`: Specific styles for Survey1 components and layout
+- `forms/survey2.css`: Specific styles for Survey2 components and layout
 
-- LINE Front-end Framework (LIFF)
-- JavaScript (Vanilla JS)
-- Google Apps Script (バックエンド)
-- GitHub Pages (ホスティング)
+#### JavaScript Modules
+
+##### Config
+- `constants.js`: Defines global constants, configuration values, and enums used throughout the application
+
+##### Core Modules
+- `api.js`: Manages all API interactions and data fetching
+- `auth.js`: Handles user authentication and authorization
+- `events.js`: Core event system for managing user event selections and interactions
+
+##### Form Components
+- `birthday.js`: Custom component for date of birth selection with year/month/day inputs
+- `choices.js`: Reusable component for multiple choice or checkbox-based selections
+- `form.js`: Base form handling including validation and submission
+- `selector.js`: Generic selection component for dropdown and multi-select functionality
+
+##### Form Implementations
+- `events.js`: Specific implementation for event selection interface
+- `survey1.js`: First survey form implementation with validation and data handling
+- `survey2.js`: Second survey form implementation with its specific validation and handling
+
+## Survey Structure
+
+### Survey1
+- Initial registration and event selection
+- Personal information collection
+- Event preferences
+- Basic user profile creation
+
+### Survey2
+- Post-event feedback
+- Detailed experience evaluation
+- Future preferences collection
+- Career development insights
+
+## Key Features
+
+- Form validation with immediate feedback
+- Dynamic event selection interface
+- Birthday input with separate year/month/day selectors
+- LINE platform integration
+- Responsive design with modern UI components
+- Error handling and user feedback system
+- Multi-survey support with shared components
+
+## Technical Details
+
+- Uses vanilla JavaScript for better performance and maintainability
+- Implements modular component architecture
+- Includes comprehensive form validation
+- Features responsive CSS using modern layout techniques
+- Integrates with LINE's LIFF platform
+- Reusable components between surveys

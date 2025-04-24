@@ -12,7 +12,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./assets/styles/main.css">
+    <link rel="stylesheet" href="./assets/styles/forms.css">
     <style>
         /* ヘッダースタイル */
         .header-career {
@@ -78,14 +79,12 @@
 
     <!-- JavaScript読み込み -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="./common/utils.js"></script>
-    <script src="./common/api.js"></script>
-    <script src="./common/events.js"></script>
-    <script src="./liff.js"></script>
-    <script src="./survey1/birthday.js"></script>
-    <script src="./survey1/choices.js"></script>
-    <script src="./survey1/form.js"></script>
-    <script src="./survey2/form.js"></script>
+    <script src="./assets/js/core/api.js"></script>
+    <script src="./assets/js/core/auth.js"></script>
+    <script type="module" src="./assets/js/core/events.js"></script>
+    <script src="./assets/js/forms/components/birthday.js"></script>
+    <script src="./assets/js/forms/components/choices.js"></script>
+    <script src="./assets/js/forms/survey1.js"></script>
     <script src="./index.js"></script>
 </body>
 </html>
