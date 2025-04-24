@@ -13,6 +13,34 @@ function fetchUpcomingEvents(url) {
     // APIのURL（指定がなければデフォルト値）
     const apiUrl = url || 'https://script.google.com/macros/s/AKfycbw5gvosHHQQbTKL5UDdcI6OrPfXw_DY4IXSTgV2ADkyuvbLoT1AqoXHoPkhBuyo6_1RBQ/exec';
 
+    // api.jsが読み込まれているか確認
+    if (!window.api || typeof window.api.fetchEvents !== 'function') {
+        console.error("API通信機能が初期化されていません。api.jsが正しく読み込まれているか確認してください。");
+        
+        // エラー時のデフォルトデータ
+        const defaultEvents = [
+            {
+                choice_text: "イベント参加不可（日程が合わない）",
+                title: "参加できません"
+            }
+        ];
+        
+        // エラー時にもデフォルトデータでUIを作成
+        createEventSelectionUI(defaultEvents);
+        
+        // エラー通知
+        const formContainer = document.getElementById('form-container');
+        if (formContainer) {
+            const errorNotice = document.createElement('div');
+            errorNotice.className = 'alert alert-warning';
+            errorNotice.style.marginTop = '10px';
+            errorNotice.innerHTML = 'API通信機能が初期化されていません。ページを再読み込みしてください。';
+            formContainer.prepend(errorNotice);
+        }
+        
+        return Promise.resolve(defaultEvents);
+    }
+
     // api.jsの関数を使ってデータ取得
     return window.api.fetchEvents(apiUrl)
         .then(data => {
