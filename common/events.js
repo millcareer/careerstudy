@@ -15,7 +15,7 @@ function fetchUpcomingEvents() {
 
     // イベント情報を取得するためのJSONPリクエスト
     return new Promise((resolve, reject) => {
-        const url = 'https://script.google.com/macros/s/AKfycbzZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=liff';
+        const url = 'https://script.google.com/macros/s/AKfycbw5gvosHHQQbTKL5UDdcI6OrPfXw_DY4IXSTgV2ADkyuvbLoT1AqoXHoPkhBuyo6_1RBQ/exec';
         
         // JSONPコールバックを使用してCORS制限を回避
         const callbackName = 'jsonpCallback_' + Date.now();
