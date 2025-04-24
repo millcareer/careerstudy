@@ -175,118 +175,108 @@ function displayJsonPicker(jsonData) {
  * @returns {HTMLElement} - 作成されたイベント選択UIコンテナ要素
  */
 function createEventSelectionUI(events) {
-    // コンソールにイベントデータを表示（デバッグ用）
-    console.log('createEventSelectionUIに渡されたデータ:', JSON.stringify(events, null, 2));
+    const container = document.createElement('div');
+    container.className = 'event-selection-container';
+
+    // Add header
+    const header = document.createElement('div');
+    header.className = 'event-selection-header';
+    header.innerHTML = '<h3>イベント選択 (最大2つまで)</h3>';
+    container.appendChild(header);
+
+    // Create options container
+    const optionsContainer = document.createElement('div');
+    optionsContainer.className = 'event-options';
+
+    // Add event options
+    events.forEach(event => {
+        const option = document.createElement('label');
+        option.className = 'event-option';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = event.id;
+        checkbox.dataset.eventName = event.name;
+        
+        checkbox.addEventListener('change', function() {
+            const selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            
+            if (this.checked && selectedCheckboxes.length > 2) {
+                this.checked = false;
+                const errorMsg = document.querySelector('.error-message');
+                errorMsg.classList.add('visible');
+                setTimeout(() => errorMsg.classList.remove('visible'), 3000);
+                return;
+            }
+            
+            updateSelectedEventsList();
+            updateHiddenFields();
+        });
+        
+        option.appendChild(checkbox);
+        option.appendChild(document.createTextNode(event.name));
+        optionsContainer.appendChild(option);
+    });
     
-    // イベント選択用のコンテナを取得または作成
-    const eventContainer = document.getElementById('event-selection-container');
-    if (!eventContainer) {
-        console.error('event-selection-containerが見つかりません');
+    container.appendChild(optionsContainer);
+
+    // Add error message container
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'error-message';
+    errorMessage.textContent = '最大2つまでしか選択できません。';
+    container.appendChild(errorMessage);
+
+    // Add selected events display
+    const selectedEventsContainer = document.createElement('div');
+    selectedEventsContainer.innerHTML = `
+        <h4 class="selected-events-header">選択したイベント (<span id="selected-count">0</span>/2)</h4>
+        <div id="selected-events-list"></div>
+    `;
+    container.appendChild(selectedEventsContainer);
+
+    // Add hidden fields
+    const hiddenFields = document.createElement('div');
+    hiddenFields.style.display = 'none';
+    hiddenFields.innerHTML = `
+        <input type="hidden" name="form_answer22" id="form_answer22" value="">
+        <input type="hidden" name="form_answer23" id="form_answer23" value="">
+    `;
+    container.appendChild(hiddenFields);
+
+    return container;
+}
+
+function updateSelectedEventsList() {
+    const selectedCheckboxes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'));
+    const container = document.getElementById('selected-events-list');
+    const countElement = document.getElementById('selected-count');
+    
+    countElement.textContent = selectedCheckboxes.length;
+    
+    if (selectedCheckboxes.length === 0) {
+        container.innerHTML = '<div class="no-selection">イベントが選択されていません</div>';
         return;
     }
     
-    // コンテナをクリア
-    eventContainer.innerHTML = '';
+    const list = document.createElement('ul');
+    list.className = 'selected-events';
     
-    // イベントセクションのヘッダーを作成
-    const header = document.createElement('div');
-    header.innerHTML = `
-        <p class="form-text">参加希望イベントの選択</p>
-        <div style="margin-bottom: 10px;">
-            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
-        </div>
-    `;
-    eventContainer.appendChild(header);
-    
-    // イベント選択肢表示エリア
-    const optionsList = document.createElement('div');
-    optionsList.id = 'event-options-list';
-    eventContainer.appendChild(optionsList);
-    
-    // イベント選択肢を生成
-    events.forEach((event, index) => {
-        const option = document.createElement('div');
-        option.className = 'form-check';
-        option.innerHTML = `
-            <input class="form-check-input" type="checkbox" id="event_${index}" value="${index}">
-            <label class="form-check-label" for="event_${index}">
-                ${event.choice_text || event.title || '名称未設定のイベント'}
-            </label>
-        `;
-        
-        // チェックボックスのイベントリスナーを追加
-        const checkbox = option.querySelector('input[type="checkbox"]');
-        checkbox.addEventListener('change', () => updateSelectedEvents(events));
-        
-        optionsList.appendChild(option);
+    selectedCheckboxes.forEach(checkbox => {
+        const li = document.createElement('li');
+        li.textContent = checkbox.dataset.eventName;
+        list.appendChild(li);
     });
     
-    // 選択済みイベント表示エリア
-    const selectedArea = document.createElement('div');
-    selectedArea.style.marginTop = '20px';
-    selectedArea.innerHTML = `
-        <p class="form-text">選択した日程</p>
-        <p id="selection_count" style="color: #fcac04; margin-bottom: 10px;">選択数: 0/2</p>
-        <div id="selected-events-list">イベントが選択されていません</div>
-    `;
-    eventContainer.appendChild(selectedArea);
-    
-    // 初期状態の選択数を更新
-    updateSelectedEvents(events);
-    
-    return eventContainer;
+    container.innerHTML = '';
+    container.appendChild(list);
 }
 
-/**
- * 選択されたイベントを更新する関数
- * 
- * @param {Array} events - イベントデータの配列
- */
-function updateSelectedEvents(events) {
-    const checkboxes = document.querySelectorAll('#event-options-list input[type="checkbox"]');
-    const selectedEvents = Array.from(checkboxes)
-        .filter(cb => cb.checked)
-        .map(cb => events[parseInt(cb.value)]);
+function updateHiddenFields() {
+    const selectedCheckboxes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'));
+    const values = selectedCheckboxes.map(cb => cb.value);
     
-    // 選択数の更新
-    const countElement = document.getElementById('selection_count');
-    if (countElement) {
-        countElement.textContent = `選択数: ${selectedEvents.length}/2`;
-    }
-    
-    // 選択済みイベントリストの更新
-    const selectedList = document.getElementById('selected-events-list');
-    if (selectedList) {
-        if (selectedEvents.length > 0) {
-            selectedList.innerHTML = selectedEvents
-                .map(event => `<div>${event.choice_text || event.title}</div>`)
-                .join('');
-        } else {
-            selectedList.textContent = 'イベントが選択されていません';
-        }
-    }
-    
-    // 選択数が2を超えないようにする
-    if (selectedEvents.length >= 2) {
-        checkboxes.forEach(cb => {
-            if (!cb.checked) {
-                cb.disabled = true;
-            }
-        });
-    } else {
-        checkboxes.forEach(cb => {
-            cb.disabled = false;
-        });
-    }
-    
-    // 隠しフィールドの更新
-    const form_answer22 = document.getElementById('form_answer22');
-    const form_answer23 = document.getElementById('form_answer23');
-    
-    if (form_answer22 && form_answer23) {
-        form_answer22.value = selectedEvents[0] ? selectedEvents[0].choice_text || selectedEvents[0].title : '';
-        form_answer23.value = selectedEvents[1] ? selectedEvents[1].choice_text || selectedEvents[1].title : '';
-    }
+    document.getElementById('form_answer22').value = values[0] || '';
+    document.getElementById('form_answer23').value = values[1] || '';
 }
 
 /**
@@ -353,6 +343,5 @@ function setupInitialEventUI() {
 // 関数をグローバルスコープにエクスポート
 window.fetchUpcomingEvents = fetchUpcomingEvents;
 window.createEventSelectionUI = createEventSelectionUI;
-window.updateSelectedEvents = updateSelectedEvents;
 window.setupInitialEventUI = setupInitialEventUI;
 window.displayJsonPicker = displayJsonPicker;
