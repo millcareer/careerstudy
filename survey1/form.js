@@ -29,16 +29,13 @@ function createSurvey1Form(container) {
             <input type="text" name="first_name_read" id="form_answer06" required="required" placeholder="なまえ">
         </div>
         <p class="form-text">生年月日</p>
-        <div class="form-select-wrap">
-            <select class="birthday-year" id="form_answer07" required="required">
-            </select>
-            / 
-            <select class="birthday-month" id="form_answer08" required="required">
-            </select>
-            /
-            <select class="birthday-day" id="form_answer09" required="required">
-            </select>
-        </div>
+        <input type="date" 
+               id="form_answer07" 
+               name="birthday" 
+               required="required"
+               max="${new Date().toISOString().split('T')[0]}"
+               min="${new Date(new Date().getFullYear() - 100, 0, 1).toISOString().split('T')[0]}"
+        >
         <p class="form-text">大学名
         <font size="1">※入力すると予測が表示されます。</font></p>
         <input type="text" name="university-name" id="form_answer10" list="university" placeholder="大学名" autocomplete="off" required="required">
@@ -171,16 +168,13 @@ function createSurvey1Form(container) {
 
         <!-- 送信ボタン -->
         <div style="text-align: center; margin-top: 30px;">
-            <button onclick="return onSubmit()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
+            <button onclick="return onSubmitSurvey1()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
         </div>
     </div>
     `;
     
     // 選択肢データの初期化（choices.jsの関数を呼び出し）
     initializeChoices();
-    
-    // 既存のスクリプトから生年月日セレクトボックスの生成
-    setupBirthdaySelects();
     
     // イベント情報の取得とUI作成
     if (typeof fetchUpcomingEvents === 'function') {
@@ -242,10 +236,10 @@ function showError(message) {
 }
 
 /**
- * フォーム送信時のバリデーション関数
+ * Survey1フォーム送信時のバリデーション関数
  * @returns {boolean} バリデーション結果
  */
-function onSubmit() {
+function onSubmitSurvey1() {
     // 必須項目のIDリスト
     const requiredFields = [
         { id: 'form_answer01', name: 'メールアドレス' },
@@ -286,14 +280,14 @@ function onSubmit() {
     
     // パスワードのバリデーション
     if (password !== confirmPassword) {
-        alert('パスワードと確認用パスワードが一致しません。');
+        showError('パスワードと確認用パスワードが一致しません。');
         return false;
     }
 
     // パスワードの形式チェック（英字と数字を含む8文字以上）
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordPattern.test(password)) {
-        alert('パスワードは英字と数字を含む8文字以上で設定してください。');
+        showError('パスワードは英字と数字を含む8文字以上で設定してください。');
         return false;
     }
 
@@ -301,7 +295,7 @@ function onSubmit() {
     const email = document.getElementById('form_answer01').value;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-        alert('有効なメールアドレスを入力してください。');
+        showError('有効なメールアドレスを入力してください。');
         return false;
     }
 
@@ -309,20 +303,20 @@ function onSubmit() {
     const phone = document.getElementById('form_answer02').value;
     const phonePattern = /^\d{1,5}-\d{1,4}-\d{4,5}$/;
     if (!phonePattern.test(phone)) {
-        alert('電話番号は正しい形式で入力してください（例：000-0000-0000）。');
+        showError('電話番号は正しい形式で入力してください（例：000-0000-0000）。');
         return false;
     }
 
     // イベント選択のチェック（選択済みのイベントを取得）
     const selectedEvents = document.querySelectorAll('#event-options-list input[type="checkbox"]:checked');
     if (selectedEvents.length === 0) {
-        alert('イベントを選択してください。');
+        showError('イベントを選択してください。');
         return false;
     }
 
     // 未入力項目がある場合
     if (emptyFields.length > 0) {
-        alert('以下の項目が未入力です：\n' + emptyFields.join('\n'));
+        showError('以下の項目が未入力です：\n' + emptyFields.join('\n'));
         return false;
     }
 
@@ -330,5 +324,5 @@ function onSubmit() {
     return true;
 }
 
-// グローバルスコープに関数を公開
-window.onSubmit = onSubmit;
+// 関数をエクスポート
+export { createSurvey1Form, onSubmitSurvey1 };

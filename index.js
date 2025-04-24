@@ -1,102 +1,26 @@
 // index.js - メインページのJavaScript
 // イベント関連の機能はcommon/events.jsに移動済み
 // API通信機能はcommon/api.jsに移動済み
+import { createSurvey1Form, onSubmitSurvey1 } from './survey1/form.js';
 
 // 初期化時に必要なセットアップを実行
 document.addEventListener('DOMContentLoaded', function() {
     console.log('メインページの初期化を開始します');
     
-    // イベント情報を取得
-    if (typeof fetchUpcomingEvents === 'function') {
-        console.log('イベント情報を取得します');
-        fetchUpcomingEvents();
-    } else {
-        console.error('fetchUpcomingEvents関数が見つかりません。common/events.jsが正しく読み込まれているか確認してください。');
+    // フォームコンテナの取得
+    const formContainer = document.getElementById('form-container');
+    if (formContainer) {
+        // survey1のフォームを作成
+        createSurvey1Form(formContainer);
+        formContainer.style.display = 'block';
+    }
+    
+    // ローディング表示を非表示
+    const loading = document.getElementById('loading');
+    if (loading) {
+        loading.style.display = 'none';
     }
 });
-
-// フォーム送信処理
-function onSubmit() {
-    // 送信前のバリデーション
-    if (!validateForm()) {
-        return false;
-    }
-    
-    // フォームデータの収集
-    const formData = collectFormData();
-    
-    // データ送信処理
-    submitFormData(formData);
-    
-    return false; // フォームのデフォルト送信を阻止
-}
-
-// フォームバリデーション
-function validateForm() {
-    // 必須項目の確認
-    const requiredFields = document.querySelectorAll('[required]');
-    let isValid = true;
-    
-    requiredFields.forEach(field => {
-        if (!field.value && field.type !== 'checkbox') {
-            console.error(`必須項目が入力されていません: ${field.name}`);
-            field.classList.add('is-invalid');
-            isValid = false;
-        } else if (field.type === 'checkbox' && !field.checked) {
-            console.error(`必須チェックボックスが選択されていません: ${field.name}`);
-            field.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            field.classList.remove('is-invalid');
-        }
-    });
-    
-    // イベント選択の確認
-    if (window.selectedEvents && window.selectedEvents.length === 0) {
-        console.error('イベントが選択されていません');
-        const eventContainer = document.getElementById('event-selection-container');
-        if (eventContainer) {
-            eventContainer.classList.add('is-invalid');
-            const errorMsg = document.createElement('p');
-            errorMsg.className = 'text-danger';
-            errorMsg.textContent = 'イベントを選択してください';
-            eventContainer.appendChild(errorMsg);
-        }
-        isValid = false;
-    }
-    
-    return isValid;
-}
-
-// フォームデータの収集
-function collectFormData() {
-    const formData = {
-        email: document.getElementById('form_answer01')?.value,
-        password: document.getElementById('form_answer20')?.value,
-        telNumber: document.getElementById('form_answer02')?.value,
-        lastName: document.getElementById('form_answer03')?.value,
-        firstName: document.getElementById('form_answer04')?.value,
-        lastNameRead: document.getElementById('form_answer05')?.value,
-        firstNameRead: document.getElementById('form_answer06')?.value,
-        birthYear: document.getElementById('form_answer07')?.value,
-        birthMonth: document.getElementById('form_answer08')?.value,
-        birthDay: document.getElementById('form_answer09')?.value,
-        universityName: document.getElementById('form_answer10')?.value,
-        clubName: document.getElementById('form_answer11')?.value,
-        grade: document.getElementById('form_answer12')?.value,
-        sex: document.getElementById('form_answer13')?.value,
-        fromArea: document.getElementById('form_answer14')?.value,
-        role: document.getElementById('form_answer15')?.value,
-        faculty: document.getElementById('form_answer16')?.value,
-        department: document.getElementById('form_answer17')?.value,
-        educationType: document.getElementById('form_answer18')?.value,
-        agreement: document.getElementById('form_answer19')?.checked,
-        selectedEvents: window.selectedEvents || []
-    };
-    
-    console.log('収集したフォームデータ:', formData);
-    return formData;
-}
 
 // フォームデータの送信
 function submitFormData(formData) {
@@ -170,3 +94,7 @@ function showErrorMessage() {
         formContainer.prepend(errorNotice);
     }
 }
+
+// グローバルスコープに必要な関数を公開
+window.onSubmitSurvey1 = onSubmitSurvey1;
+window.submitFormData = submitFormData;
