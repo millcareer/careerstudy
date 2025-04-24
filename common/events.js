@@ -1,117 +1,77 @@
-// イベント情報の取得と表示を管理するための共通関数
+// common/events.js - イベント情報の取得と表示を管理するための共通関数
 
-// イベント情報を取得する関数
-function fetchUpcomingEvents() {
-    // 初期のUI設定 - エラーが発生しても最低限の操作ができるように
+/**
+ * イベント情報を取得する関数
+ * 
+ * @param {string} url - イベント情報を取得するAPI URL（省略時はデフォルトURL）
+ * @returns {Promise} - イベントデータで解決するPromise
+ */
+function fetchUpcomingEvents(url) {
+    // 初期UIを設定 - エラーが発生しても最低限のUIが表示されるように
     setupInitialEventUI();
 
-    // モック用のデフォルトデータを設定
-    const defaultEvents = [
-        {
-            choice_text: "イベント参加不可（日程が合わない）",
-            title: "参加できません"
-        }
-    ];
+    // APIのURL（指定がなければデフォルト値）
+    const apiUrl = url || 'https://script.google.com/macros/s/AKfycbw5gvosHHQQbTKL5UDdcI6OrPfXw_DY4IXSTgV2ADkyuvbLoT1AqoXHoPkhBuyo6_1RBQ/exec';
 
-    // イベント情報を取得するためのJSONPリクエスト
-    return new Promise((resolve, reject) => {
-        const url = 'https://script.google.com/macros/s/AKfycbw5gvosHHQQbTKL5UDdcI6OrPfXw_DY4IXSTgV2ADkyuvbLoT1AqoXHoPkhBuyo6_1RBQ/exec';
-        
-        // JSONPコールバックを使用してCORS制限を回避
-        const callbackName = 'jsonpCallback_' + Date.now();
-        
-        // グローバルコールバック関数を作成
-        window[callbackName] = function(data) {
-            // スクリプトタグをクリーンアップ
-            document.body.removeChild(scriptTag);
-            // グローバルコールバック関数を削除
-            delete window[callbackName];
+    // api.jsの関数を使ってデータ取得
+    return window.api.fetchEvents(apiUrl)
+        .then(data => {
+            // イベント選択UIを作成
+            createEventSelectionUI(data);
+            return data;
+        })
+        .catch(error => {
+            console.error("イベント情報の取得に失敗しました:", error);
             
-            // データを解決
-            if (data && Array.isArray(data) && data.length > 0) {
-                // JSONデータをコンソールに出力（デバッグ用）
-                console.log('取得したイベントデータ:', JSON.stringify(data, null, 2));
-                
-                // 取得したJSONデータを表示
-                displayJsonPicker(data);
-                
-                resolve(data);
-            } else {
-                console.warn("イベントデータが空か、予期しない形式です。デフォルトデータを使用します。");
-                console.log('デフォルトデータを使用:', JSON.stringify(defaultEvents, null, 2));
-                
-                // デフォルトJSONデータを表示
-                displayJsonPicker(defaultEvents);
-                
-                resolve(defaultEvents);
-            }
-        };
-        
-        // スクリプトタグを作成
-        const scriptTag = document.createElement('script');
-        scriptTag.src = `${url}&callback=${callbackName}`;
-        
-        // エラー処理
-        scriptTag.onerror = function() {
-            // クリーンアップ
-            document.body.removeChild(scriptTag);
-            delete window[callbackName];
+            // エラー時のデフォルトデータ
+            const defaultEvents = [
+                {
+                    choice_text: "イベント参加不可（日程が合わない）",
+                    title: "参加できません"
+                }
+            ];
             
-            console.error("イベント情報の取得に失敗しました。デフォルトデータを使用します。");
-            console.log('エラー時のデフォルトデータ:', JSON.stringify(defaultEvents, null, 2));
+            // エラー時にもデフォルトデータでUIを作成
+            createEventSelectionUI(defaultEvents);
             
-            // エラー時もデフォルトJSONデータを表示
-            displayJsonPicker(defaultEvents);
-            
-            resolve(defaultEvents);
-        };
-        
-        // スクリプトタグをドキュメントに追加
-        document.body.appendChild(scriptTag);
-    })
-    .then(data => {
-        // イベント選択UIを作成
-        createEventSelectionUI(data);
-        return data;
-    })
-    .catch(error => {
-        console.error("イベント情報の取得に失敗しました:", error);
-        // エラー時にデフォルトデータでUIを作成
-        createEventSelectionUI(defaultEvents);
-        
-        // エラー通知
-        const formContainer = document.getElementById('form-container');
-        if (formContainer) {
-            const errorNotice = document.createElement('div');
-            errorNotice.className = 'alert alert-warning';
-            errorNotice.style.marginTop = '10px';
-            errorNotice.innerHTML = 'イベント情報の取得に失敗しました。ネットワーク接続を確認し、ページを再読み込みしてください。';
-            formContainer.prepend(errorNotice);
+            // エラー通知
+            const formContainer = document.getElementById('form-container');
+            if (formContainer) {
+                const errorNotice = document.createElement('div');
+                errorNotice.className = 'alert alert-warning';
+                errorNotice.style.marginTop = '10px';
+                errorNotice.innerHTML = 'イベント情報の取得に失敗しました。ネットワーク接続を確認し、ページを再読み込みしてください。';
+                formContainer.prepend(errorNotice);
 
-             // ローディング表示を非表示にし、フォームコンテナを表示
-            document.getElementById('loading').style.display = 'none';
-            formContainer.style.display = 'block';
-            
-            // フォームを生成
-            if (typeof createSurvey1Form === 'function') {
-                createSurvey1Form(formContainer);
+                // ローディング表示を非表示にし、フォームコンテナを表示
+                document.getElementById('loading').style.display = 'none';
+                formContainer.style.display = 'block';
+                
+                // フォームを生成
+                if (typeof createSurvey1Form === 'function') {
+                    createSurvey1Form(formContainer);
+                }
             }
-        }
-        
-        return defaultEvents;
-    });
+            
+            return defaultEvents;
+        });
 }
 
-// JSONデータを選択ピッカー形式で表示する関数
+/**
+ * JSONデータを選択ピッカー形式で表示する関数
+ * 
+ * @param {Array} jsonData - 表示するJSONデータ
+ * @returns {HTMLElement} - 作成されたJSON選択UIコンテナ要素
+ */
 function displayJsonPicker(jsonData) {
-    // JSON表示用コンテナを探す、なければ作成
+    // JSONコンテナを探す、なければ作成
     let jsonContainer = document.getElementById('json-picker-container');
     if (!jsonContainer) {
         jsonContainer = document.createElement('div');
         jsonContainer.id = 'json-picker-container';
         jsonContainer.className = 'mt-3 mb-3 p-3 border rounded bg-light';
         
-        // 説明テキスト
+        // 見出しテキスト
         const title = document.createElement('h5');
         title.textContent = '利用可能な日程一覧 (JSONデータ)';
         title.className = 'mb-2';
@@ -151,7 +111,7 @@ function displayJsonPicker(jsonData) {
         pre.id = 'json-detail-content';
         pre.style.margin = '0';
         pre.style.fontSize = '0.8rem';
-        pre.textContent = '← 上のリストから選択すると詳細が表示されます';
+        pre.textContent = '↑ 上のリストから選択すると詳細が表示されます';
         
         detailContainer.appendChild(pre);
         jsonContainer.appendChild(detailContainer);
@@ -166,12 +126,11 @@ function displayJsonPicker(jsonData) {
                 // 選択したアイテムの詳細をJSONとして表示
                 document.getElementById('json-detail-content').textContent = JSON.stringify(selectedItems, null, 2);
             } else {
-                document.getElementById('json-detail-content').textContent = '← 上のリストから選択すると詳細が表示されます';
+                document.getElementById('json-detail-content').textContent = '↑ 上のリストから選択すると詳細が表示されます';
             }
         });
         
-        // コンテナを適切な位置に挿入
-        // イベント選択と選択済みアイテムの間に配置
+        // コンテナを適切な位置に追加
         const eventOptionsContainer = document.getElementById('event-options-list');
         if (eventOptionsContainer) {
             eventOptionsContainer.parentNode.insertBefore(jsonContainer, document.getElementById('selected-events-list'));
@@ -181,14 +140,19 @@ function displayJsonPicker(jsonData) {
     return jsonContainer;
 }
 
-// イベント選択UI生成関数
+/**
+ * イベント選択UI生成関数
+ * 
+ * @param {Array} events - イベントデータの配列
+ * @returns {HTMLElement} - 作成されたイベント選択UIコンテナ要素
+ */
 function createEventSelectionUI(events) {
     // コンソールにイベントデータを表示（デバッグ用）
     console.log('createEventSelectionUIに渡されたデータ:', JSON.stringify(events, null, 2));
     
     // イベント選択用のコンテナを作成
     const eventContainer = document.getElementById('event-selection-container') || 
-                         document.createElement('div');
+                           document.createElement('div');
     
     if (!document.getElementById('event-selection-container')) {
         eventContainer.id = 'event-selection-container';
@@ -207,7 +171,7 @@ function createEventSelectionUI(events) {
     heading.className = 'mb-3';
     eventContainer.appendChild(heading);
     
-    // イベント配列が有効かつ項目があるかチェック
+    // イベント一覧が有効かつ中身があるかチェック
     if (!events || !Array.isArray(events) || events.length === 0) {
         const noEvents = document.createElement('p');
         noEvents.textContent = '現在予定されているイベントはありません。';
@@ -217,7 +181,7 @@ function createEventSelectionUI(events) {
     
     // イベント選択前の説明テキスト
     const description = document.createElement('p');
-    description.textContent = '下記から参加する日程を2つ選択してください';
+    description.textContent = '上記から参加する日程を2つ選択してください';
     description.className = 'mb-3';
     eventContainer.appendChild(description);
     
@@ -266,8 +230,6 @@ function createEventSelectionUI(events) {
     
     eventContainer.appendChild(optionsList);
     
-    // ここでJSONピッカーを表示（displayJsonPicker関数はfetchUpcomingEventsで呼ばれるので二重表示を防ぐため不要）
-    
     // 選択済みイベントリスト
     const selectedList = document.getElementById('selected-events-list') || document.createElement('div');
     selectedList.id = 'selected-events-list';
@@ -289,7 +251,11 @@ function createEventSelectionUI(events) {
     return eventContainer;
 }
 
-// 選択されたイベントを更新する関数
+/**
+ * 選択されたイベントを更新する関数
+ * 
+ * @param {Array} events - イベントデータの配列
+ */
 function updateSelectedEvents(events) {
     const checkboxes = document.querySelectorAll('.event-option:checked');
     const selectedList = document.getElementById('selected-events-list');
@@ -304,7 +270,7 @@ function updateSelectedEvents(events) {
     selectedHeading.className = 'mt-3 mb-2';
     selectedList.appendChild(selectedHeading);
     
-    // 選択したイベントを配列に保存
+    // 選択したイベントを配列に格納
     window.selectedEvents = [];
     
     if (checkboxes.length === 0) {
@@ -330,7 +296,7 @@ function updateSelectedEvents(events) {
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
             removeBtn.className = 'btn-close';
-            removeBtn.setAttribute('aria-label', '選択解除');
+            removeBtn.setAttribute('aria-label', '選択削除');
             removeBtn.onclick = function() {
                 document.getElementById(`event-option-${eventIndex}`).checked = false;
                 updateSelectedEvents(events);
@@ -341,7 +307,7 @@ function updateSelectedEvents(events) {
             selectedList.appendChild(eventItem);
         });
         
-        // 選択したイベントをコンソールに表示（デバッグ用）
+        // 選択されたイベントをコンソールに表示（デバッグ用）
         console.log('選択されたイベント:', JSON.stringify(window.selectedEvents, null, 2));
     }
     
@@ -352,7 +318,9 @@ function updateSelectedEvents(events) {
     }
 }
 
-// 初期イベントUI設定関数（エラー防止）
+/**
+ * 初期イベントUI設定関数（エラー防止）
+ */
 function setupInitialEventUI() {
     const formContainer = document.getElementById('form-container');
     if (!formContainer) return;
@@ -367,7 +335,7 @@ function setupInitialEventUI() {
     
     // タイトル
     const titleElement = document.createElement('h3');
-    titleElement.textContent = '参加希望イベントの選択';
+    titleElement.textContent = '参加予定イベントの選択';
     titleElement.className = 'mb-3';
     
     // 説明文
