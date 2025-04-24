@@ -27,20 +27,12 @@ function fetchUpcomingEvents() {
             
             // データを解決
             if (data && Array.isArray(data) && data.length > 0) {
-                // JSONデータをコンソールに出力
+                // JSONデータをコンソールに出力（デバッグ用）
                 console.log('取得したイベントデータ:', JSON.stringify(data, null, 2));
-                
-                // JSONデータをUIに表示
-                displayJsonData(data, '取得したイベントデータ');
-                
                 resolve(data);
             } else {
                 console.warn("イベントデータが空か、予期しない形式です。デフォルトデータを使用します。");
                 console.log('デフォルトデータを使用:', JSON.stringify(defaultEvents, null, 2));
-                
-                // デフォルトデータをUIに表示
-                displayJsonData(defaultEvents, 'デフォルトデータを使用');
-                
                 resolve(defaultEvents);
             }
         };
@@ -57,10 +49,6 @@ function fetchUpcomingEvents() {
             
             console.error("イベント情報の取得に失敗しました。デフォルトデータを使用します。");
             console.log('エラー時のデフォルトデータ:', JSON.stringify(defaultEvents, null, 2));
-            
-            // エラー時のデフォルトデータをUIに表示
-            displayJsonData(defaultEvents, 'エラー時のデフォルトデータ');
-            
             resolve(defaultEvents);
         };
         
@@ -100,54 +88,9 @@ function fetchUpcomingEvents() {
     });
 }
 
-// JSONデータをUIに表示する関数
-function displayJsonData(data, title) {
-    // すでに存在する場合は削除
-    const existingJson = document.getElementById('json-data-display');
-    if (existingJson) {
-        existingJson.remove();
-    }
-    
-    // JSON表示コンテナを作成
-    const jsonContainer = document.createElement('div');
-    jsonContainer.id = 'json-data-display';
-    jsonContainer.className = 'mt-4 mb-4 p-3 border rounded bg-light';
-    
-    // タイトル
-    const titleElem = document.createElement('h5');
-    titleElem.textContent = title || 'JSONデータ';
-    titleElem.className = 'mb-2';
-    jsonContainer.appendChild(titleElem);
-    
-    // JSON表示
-    const pre = document.createElement('pre');
-    pre.className = 'mb-0';
-    pre.style.maxHeight = '200px';
-    pre.style.overflow = 'auto';
-    pre.style.fontSize = '0.8rem';
-    
-    const code = document.createElement('code');
-    code.textContent = JSON.stringify(data, null, 2);
-    pre.appendChild(code);
-    jsonContainer.appendChild(pre);
-    
-    // 挿入位置を特定
-    const selectedEventsList = document.getElementById('selected-events-list');
-    if (selectedEventsList) {
-        // 送信ボタンと選択済みイベント表示エリアの間に表示
-        selectedEventsList.parentNode.insertBefore(jsonContainer, selectedEventsList.nextSibling);
-    } else {
-        // フォールバック: formコンテナの最後に追加
-        const formContainer = document.getElementById('form-container');
-        if (formContainer) {
-            formContainer.appendChild(jsonContainer);
-        }
-    }
-}
-
 // イベント選択UI生成関数 - 新しく追加
 function createEventSelectionUI(events) {
-    // コンソールにイベントデータを表示
+    // コンソールにイベントデータを表示（デバッグ用）
     console.log('createEventSelectionUIに渡されたデータ:', JSON.stringify(events, null, 2));
     
     // イベント選択用のコンテナを作成
@@ -274,8 +217,8 @@ function createEventSelectionUI(events) {
                 selectedList.appendChild(eventItem);
             });
             
-            // 選択したイベントをUIに表示
-            displayJsonData(window.selectedEvents, '選択されたイベント');
+            // 選択したイベントをコンソールに表示（デバッグ用）
+            console.log('選択されたイベント:', JSON.stringify(window.selectedEvents, null, 2));
         }
         
         // 選択数表示を更新
