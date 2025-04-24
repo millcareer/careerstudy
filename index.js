@@ -1,5 +1,6 @@
 // index.js - メインページのJavaScript
-// イベント関連の機能はcommon/events.jsに移動しました
+// イベント関連の機能はcommon/events.jsに移動済み
+// API通信機能はcommon/api.jsに移動済み
 
 // 初期化時に必要なセットアップを実行
 document.addEventListener('DOMContentLoaded', function() {
@@ -10,10 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('イベント情報を取得します');
         fetchUpcomingEvents();
     } else {
-        console.error('fetchUpcomingEvents関数が見つかりません');
+        console.error('fetchUpcomingEvents関数が見つかりません。common/events.jsが正しく読み込まれているか確認してください。');
     }
-    
-    // その他のページ特有の初期化処理をここに記述
 });
 
 // フォーム送信処理
@@ -29,7 +28,7 @@ function onSubmit() {
     // データ送信処理
     submitFormData(formData);
     
-    return false; // フォームのデフォルト送信を防止
+    return false; // フォームのデフォルト送信を阻止
 }
 
 // フォームバリデーション
@@ -103,7 +102,7 @@ function collectFormData() {
 function submitFormData(formData) {
     console.log('フォームデータを送信します');
     
-    // LIFFが利用可能な場合はLINEプロフィール情報も追加
+    // LINEが利用可能な場合はLINEプロフィール情報も追加
     if (window.liff && liff.isLoggedIn()) {
         liff.getProfile()
             .then(profile => {
@@ -122,24 +121,19 @@ function submitFormData(formData) {
 
 // サーバーへのデータ送信
 function sendData(formData) {
-    // 実際のAPIエンドポイントに送信
-    fetch('https://script.google.com/macros/s/AKfycbyMCenjhw8xznFjWpYpIL0SDXdSns_9hbU92ZiucboJqzJhXJuItSKMhJ36W1ylZP2k/exec', {
-        method: 'POST',
-        mode: 'no-cors', // CORS対策
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(() => {
-        // 送信成功の処理
-        showSuccessMessage();
-    })
-    .catch(error => {
-        // 送信失敗の処理
-        console.error('データ送信に失敗しました:', error);
-        showErrorMessage();
-    });
+    // API通信機能を使用
+    const url = 'https://script.google.com/macros/s/AKfycbyMCenjhw8xznFjWpYpIL0SDXdSns_9hbU92ZiucboJqzJhXJuItSKMhJ36W1ylZP2k/exec';
+    
+    window.api.submitFormData(url, formData)
+        .then(() => {
+            // 送信成功の処理
+            showSuccessMessage();
+        })
+        .catch(error => {
+            // 送信失敗の処理
+            console.error('データ送信に失敗しました:', error);
+            showErrorMessage();
+        });
 }
 
 // 送信成功メッセージの表示
