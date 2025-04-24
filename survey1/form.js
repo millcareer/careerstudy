@@ -98,22 +98,6 @@ function createSurvey1Form(container) {
             <option>理系（その他）</option>
         </select>
         
-        <!-- イベント選択セクション -->
-        <p class="form-text">INTERN QUEST参加予定</p>
-        <div style="margin-bottom: 10px;">
-            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
-        </div>
-        
-        <!-- イベント選択肢表示エリア -->
-        <div id="event-options-list"></div>
-        
-        <!-- 選択済みイベント表示エリア -->
-        <div style="margin-top: 20px;">
-            <p class="form-text">選択した日程</p>
-            <p id="selection_count" style="color: #fcac04; margin-bottom: 10px;">選択数: 0/2</p>
-            <div id="selected-events-list"></div>
-        </div>
-        
         <!-- 個人情報同意セクション -->
         <p class="form-text">個人情報同意</p>
  <div style="height: 150px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
@@ -204,9 +188,22 @@ function createSurvey1Form(container) {
    <input type="checkbox" name="agreement" id="form_answer19" value="同意する" required="required">
    <label for="form_answer19">同意する</label>
  </p>
-            <input type="checkbox" name="agreement" id="form_answer19" value="同意する" required="required">
-            <label for="form_answer19">同意する</label>
-        </p>
+
+         <!-- イベント選択セクション -->
+        <p class="form-text">INTERN QUEST参加予定</p>
+        <div style="margin-bottom: 10px;">
+            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
+        </div>
+        
+        <!-- イベント選択肢表示エリア -->
+        <div id="event-options-list"></div>
+        
+        <!-- 選択済みイベント表示エリア -->
+        <div style="margin-top: 20px;">
+            <p class="form-text">選択した日程</p>
+            <p id="selection_count" style="color: #fcac04; margin-bottom: 10px;">選択数: 0/2</p>
+            <div id="selected-events-list"></div>
+        </div>
         
         <!-- 送信ボタン -->
         <div style="text-align: center; margin-top: 30px;">
