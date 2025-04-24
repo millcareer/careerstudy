@@ -123,7 +123,7 @@ function submitFormData(formData) {
 // サーバーへのデータ送信
 function sendData(formData) {
     // 実際のAPIエンドポイントに送信
-    fetch('https://script.google.com/macros/s/AKfycbzZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUMn5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbyMCenjhw8xznFjWpYpIL0SDXdSns_9hbU92ZiucboJqzJhXJuItSKMhJ36W1ylZP2k/exec', {
         method: 'POST',
         mode: 'no-cors', // CORS対策
         headers: {
