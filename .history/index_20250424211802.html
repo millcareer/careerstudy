@@ -102,13 +102,13 @@
     <!-- アプリケーションスクリプト -->
     <script src="./debug.js"></script>
     <script src="./common/utils.js"></script>
-    <!-- API通信機能 -->
+    <!-- API通信機能 - 最初に読み込み -->
     <script src="./common/api.js"></script>
     <script src="./survey1/birthday.js"></script>
-    <!-- 共通イベント機能スクリプト -->
-    <script src="./common/events.js"></script>
     <script src="./liff.js"></script>
     <script src="./survey1/choices.js"></script>
+    <!-- api.jsに依存するため後に読み込み -->
+    <script src="./common/events.js"></script>
     <script src="./survey1/form.js"></script>
     <script src="./survey2/form.js"></script>
     <script src="./index.js"></script>

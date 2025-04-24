@@ -169,19 +169,24 @@ function createSurvey1Form(container) {
         <!-- イベント選択セクション -->
         <p class="form-text">参加希望イベントの選択</p>
         <div style="margin-bottom: 10px;">
-            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
+            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>または、日程が合わないを選択してください</p>
         </div>
         
         <!-- イベント選択肢表示エリア -->
         <div id="event-options-list"></div>
         
+        <!-- GASから取得したデータを表示するエリア -->
+        <div id="gas-data-container" class="mt-3 mb-3 p-3 border rounded bg-light">
+            <!-- GASからのデータがここに表示されます -->
+        </div>
+        
         <!-- 選択済みイベント表示エリア -->
         <div style="margin-top: 20px;">
             <p class="form-text">選択した日程</p>
             <p id="selection_count" style="color: #fcac04; margin-bottom: 10px;">選択数: 0/2</p>
-            <div id="selected-events-list">イベントが選択されていません</div>
+            <div id="selected-events-list"></div>
         </div>
-
+        
         <!-- 送信ボタン -->
         <div style="text-align: center; margin-top: 30px;">
             <button onclick="return onSubmit()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
@@ -195,11 +200,115 @@ function createSurvey1Form(container) {
     // 既存のスクリプトから生年月日セレクトボックスの生成
     setupBirthdaySelects();
     
-    // イベント情報の取得とUI作成
+    // イベント情報の取得とUI作成（共通関数を呼び出し）
     if (typeof fetchUpcomingEvents === 'function') {
         console.log('イベント情報を取得します（survey1/form.js）');
-        fetchUpcomingEvents();
+        fetchUpcomingEvents().then(function() {
+            // イベント情報の取得後にGASからのデータを取得
+            fetchGASData();
+        });
     } else {
         console.error('fetchUpcomingEvents関数が見つかりません。common/events.jsが正しく読み込まれているか確認してください。');
+        // フォールバック: 初期UIだけでも設定
+        if (typeof setupInitialEventUI === 'function') {
+            setupInitialEventUI();
+            // イベントUI設定後にGASからのデータを取得
+            fetchGASData();
+        } else {
+            // どちらの関数も利用できない場合は直接GASデータを取得
+            fetchGASData();
+        }
+    }
+}
+
+// GASからデータを取得し表示する関数
+function fetchGASData() {
+    // データコンテナの取得
+    const gasDataContainer = document.getElementById('gas-data-container');
+    if (!gasDataContainer) return;
+    
+    // タイトル追加
+    const title = document.createElement('h5');
+    title.textContent = 'GASから取得したデータ';
+    title.className = 'mb-2';
+    
+    // 説明文追加
+    const description = document.createElement('p');
+    description.textContent = '下記は利用可能な日程のJSONデータです。上の選択肢から直接参加したい日程を選択してください。';
+    description.className = 'mb-2';
+    
+    // ローディング表示
+    const loadingContainer = document.createElement('div');
+    loadingContainer.className = 'text-center';
+    loadingContainer.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>データ取得中...</p>';
+    
+    // コンテナをクリアして新しい要素を追加
+    gasDataContainer.innerHTML = '';
+    gasDataContainer.appendChild(title);
+    gasDataContainer.appendChild(description);
+    gasDataContainer.appendChild(loadingContainer);
+    
+    // APIのURLを設定
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbxZemROe3jxhKdsvKqUwlLK6lRqrKk4DPTUM5yyKwK4fp9r-ewqItfautobpWsT7LO2g/exec?from=json_picker';
+    
+    // api.jsのfetchGasData関数を使用
+    if (window.api && typeof window.api.fetchGasData === 'function') {
+        window.api.fetchGasData(apiUrl)
+            .then(data => {
+                // ローディング表示を削除
+                loadingContainer.remove();
+                
+                // データが正常に取得できたかチェック
+                if (data && (Array.isArray(data) || typeof data === 'object')) {
+                    console.log('GASから取得したデータ:', JSON.stringify(data, null, 2));
+                    
+                    // 既存のdisplayJsonPicker関数を使用してデータを表示
+                    if (typeof displayJsonPicker === 'function') {
+                        // 配列でない場合は配列に変換
+                        const dataArray = Array.isArray(data) ? data : [data];
+                        
+                        // JSONデータをピッカーで表示
+                        const jsonContainer = displayJsonPicker(dataArray);
+                        
+                        // 既存のjson-picker-containerがある場合はそれを使用
+                        const existingContainer = document.getElementById('json-picker-container');
+                        if (existingContainer) {
+                            // 既存のコンテナを新しいものに置き換え
+                            existingContainer.parentNode.replaceChild(jsonContainer, existingContainer);
+                        } else {
+                            // なければGASデータコンテナに追加
+                            gasDataContainer.appendChild(jsonContainer);
+                        }
+                    } else {
+                        // ここにFetch APIを使った独自の表示ロジックを実装
+                        const jsonDisplay = document.createElement('pre');
+                        jsonDisplay.className = 'bg-white p-2 rounded';
+                        jsonDisplay.style.maxHeight = '200px';
+                        jsonDisplay.style.overflowY = 'auto';
+                        jsonDisplay.textContent = JSON.stringify(data, null, 2);
+                        gasDataContainer.appendChild(jsonDisplay);
+                    }
+                } else {
+                    // データがない場合のエラー表示
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'alert alert-warning';
+                    errorMsg.textContent = 'GASからデータを取得できませんでした。デフォルトの選択肢から選んでください。';
+                    gasDataContainer.appendChild(errorMsg);
+                }
+            })
+            .catch(error => {
+                loadingContainer.remove();
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'alert alert-danger';
+                errorMsg.textContent = 'GASからのデータ取得中にエラーが発生しました。デフォルトの選択肢から選んでください。';
+                gasDataContainer.appendChild(errorMsg);
+            });
+    } else {
+        // api.jsが読み込まれていない場合のエラー処理
+        loadingContainer.remove();
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'alert alert-warning';
+        errorMsg.textContent = 'API通信機能が初期化されていません。api.jsが正しく読み込まれているか確認してください。';
+        gasDataContainer.appendChild(errorMsg);
     }
 }

@@ -166,22 +166,6 @@ function createSurvey1Form(container) {
    <label for="form_answer19">同意する</label>
  </p>
 
-        <!-- イベント選択セクション -->
-        <p class="form-text">参加希望イベントの選択</p>
-        <div style="margin-bottom: 10px;">
-            <p>下記から参加する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
-        </div>
-        
-        <!-- イベント選択肢表示エリア -->
-        <div id="event-options-list"></div>
-        
-        <!-- 選択済みイベント表示エリア -->
-        <div style="margin-top: 20px;">
-            <p class="form-text">選択した日程</p>
-            <p id="selection_count" style="color: #fcac04; margin-bottom: 10px;">選択数: 0/2</p>
-            <div id="selected-events-list">イベントが選択されていません</div>
-        </div>
-
         <!-- 送信ボタン -->
         <div style="text-align: center; margin-top: 30px;">
             <button onclick="return onSubmit()" class="btn btn-primary" style="padding: 10px 40px; font-size: 18px;">送信する</button>
@@ -194,12 +178,4 @@ function createSurvey1Form(container) {
     
     // 既存のスクリプトから生年月日セレクトボックスの生成
     setupBirthdaySelects();
-    
-    // イベント情報の取得とUI作成
-    if (typeof fetchUpcomingEvents === 'function') {
-        console.log('イベント情報を取得します（survey1/form.js）');
-        fetchUpcomingEvents();
-    } else {
-        console.error('fetchUpcomingEvents関数が見つかりません。common/events.jsが正しく読み込まれているか確認してください。');
-    }
 }
