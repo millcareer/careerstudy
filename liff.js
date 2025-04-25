@@ -11,6 +11,8 @@ $(document).ready(function () {
 function getFormType() {
     const url = new URL(window.location.href);
     const formType = url.searchParams.get('type') || 'register';
+    console.log('Current URL:', window.location.href);
+    console.log('Form type from URL:', formType);
     return formType;
 }
 
@@ -112,8 +114,18 @@ function handleLiffInitializationFailure(err) {
 
 // フォームタイプに基づいてUIを初期化する関数
 function initializeFormUI(formType) {
+    console.log('Initializing UI with form type:', formType);
+    
     const registerForm = document.querySelector('.form.register-only');
     const surveyForm = document.querySelector('.form.survey-only');
+    
+    if (!registerForm || !surveyForm) {
+        console.error('Forms not found:', {
+            registerForm: !!registerForm,
+            surveyForm: !!surveyForm
+        });
+        return;
+    }
     
     // 全てのフォームからshowクラスを削除
     registerForm.classList.remove('show');
@@ -121,16 +133,25 @@ function initializeFormUI(formType) {
     
     if (formType === 'register') {
         // 登録フォームを表示
+        console.log('Showing register form');
         registerForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント参加登録';
     } else if (formType === 'survey') {
         // アンケートフォームを表示
+        console.log('Showing survey form');
         surveyForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント終了後アンケート';
     }
     
-    // デバッグ用のログ
-    console.log('Form type:', formType);
-    console.log('Register form display:', registerForm.style.display);
-    console.log('Survey form display:', surveyForm.style.display);
+    // 現在の表示状態を確認
+    console.log('Form visibility after update:', {
+        register: {
+            display: window.getComputedStyle(registerForm).display,
+            classList: registerForm.classList.toString()
+        },
+        survey: {
+            display: window.getComputedStyle(surveyForm).display,
+            classList: surveyForm.classList.toString()
+        }
+    });
 }
