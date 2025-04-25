@@ -199,18 +199,26 @@ async function onSubmit(event) {
         await sendData(data);
     } else if (formType === 'survey') {
         // アンケートフォームの処理
-        const satisfaction = document.getElementById('satisfaction').value;
-        const feedback = document.getElementById('feedback').value;
+        const groupDiscussion = document.getElementById('survey_group_discussion').value;
+        const satisfaction = document.getElementById('survey_satisfaction').value;
+        const impression = document.getElementById('survey_impression').value;
         
-        if (!satisfaction || !feedback) {
+        if (!groupDiscussion || !satisfaction || !impression) {
             alert('全ての項目を入力してください。');
+            return;
+        }
+        
+        // 文字数チェック
+        if (impression.length < 50) {
+            alert('感想は50文字以上で入力してください。');
             return;
         }
         
         const data = {
             type: 'survey',
+            groupDiscussion: groupDiscussion,
             satisfaction: satisfaction,
-            feedback: feedback
+            impression: impression
         };
         
         await sendData(data);
