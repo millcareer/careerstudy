@@ -7,12 +7,24 @@ $(document).ready(function () {
     initializeLiff(liffId);
 })
 
+// フォームタイプの判定
+function getFormType() {
+    const url = new URL(window.location.href);
+    const formType = url.searchParams.get('type') || 'register';
+    return formType;
+}
+
 // index.htmlのsubimtで呼び出される関数
 function sendText(text) {
+    // フォームタイプに基づいてメッセージを加工
+    const formType = getFormType();
+    const prefix = formType === 'register' ? '[登録]' : '[アンケート]';
+    const finalText = `${prefix} ${text}`;
+
     if (!liff.isInClient()) {
-        shareTargetPicker(text);
+        shareTargetPicker(finalText);
     } else {
-        sendMessages(text);
+        sendMessages(finalText);
     }
 }
 
@@ -67,6 +79,8 @@ function handleLiffInitializationSuccess() {
         liff.login({ redirectUri: location.href });
     } else {
         console.log('Login Success');
+        // フォームタイプに基づいてUIを初期化
+        initializeFormUI(getFormType());
     }
 }
 
@@ -95,3 +109,15 @@ function handleLiffInitializationFailure(err) {
 //             window.alert('シェアターゲットピッカーの開始に失敗しました。');
 //         });
 // }
+
+// フォームタイプに基づいてUIを初期化する関数
+function initializeFormUI(formType) {
+    if (formType === 'register') {
+        $('#formTitle').text('イベント参加登録');
+        $('.survey-only').hide();
+    } else if (formType === 'survey') {
+        $('#formTitle').text('イベント終了後アンケート');
+        $('.register-only').hide();
+    }
+    // 共通の初期化処理があればここに追加
+}

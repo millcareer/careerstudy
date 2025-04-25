@@ -409,6 +409,13 @@ function updateHiddenFields() {
     }
 }
 
+// APIエンドポイント
+const ENDPOINTS = {
+    REGISTER: "https://script.google.com/macros/s/AKfycby0JVVEv0J8bxgNdx02KJMc_cNJCb9sABPstTeQ-1bOhs5kiDSFhqlDYSro9fVFz1LJnw/exec",
+    // TODO: アンケートフォーム用のエンドポイントを設定
+    SURVEY: "SURVEY_ENDPOINT_URL_HERE"
+};
+
 // フォーム送信関数
 function onSubmit() {
     // 「日程が合わない」が選択されているか
@@ -482,7 +489,7 @@ function onSubmit() {
             };
 
             // データ送信を実行
-            fetch("https://script.google.com/macros/s/AKfycby0JVVEv0J8bxgNdx02KJMc_cNJCb9sABPstTeQ-1bOhs5kiDSFhqlDYSro9fVFz1LJnw/exec", {
+            fetch(ENDPOINTS.REGISTER, {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
@@ -566,4 +573,95 @@ function onSubmit() {
         });
     }
     return false;
+}
+
+function submitForm() {
+    const formType = getFormType(); // liff.jsで定義した関数を使用
+    
+    if (formType === 'register') {
+        submitRegistrationForm();
+    } else {
+        submitSurveyForm();
+    }
+}
+
+function submitRegistrationForm() {
+    // 既存の登録フォームの送信処理
+    onSubmit();
+}
+
+function submitSurveyForm() {
+    // アンケートフォームのバリデーションと送信
+    const groupDiscussion = document.getElementById('survey_group_discussion').value;
+    const satisfaction = document.getElementById('survey_satisfaction').value;
+    const impression = document.getElementById('survey_impression').value;
+
+    // 必須項目のバリデーション
+    if (!groupDiscussion || !satisfaction || !impression) {
+        alert('必須項目を入力してください。');
+        return;
+    }
+
+    // 最小文字数のバリデーション
+    if (impression.length < 50) {
+        alert('感想は50文字以上入力してください。');
+        return;
+    }
+
+    // 送信データの作成
+    const surveyData = {
+        groupDiscussion,
+        satisfaction,
+        impression
+    };
+
+    // LINEメッセージとして送信するテキストを作成
+    const messageText = `
+アンケート回答:
+グループディスカッションのレベル: ${groupDiscussion}
+イベントの満足度: ${satisfaction}
+感想・改善点: ${impression}
+    `.trim();
+
+    // LIFFプロフィールを取得してデータを送信
+    showLoading('アンケートを送信中...');
+    
+    liff.getProfile().then(profile => {
+        const payload = {
+            userId: profile.userId,
+            displayName: profile.displayName,
+            surveyData: surveyData,
+            rawMessage: messageText
+        };
+
+        // エンドポイントが設定されていない場合は、LINEメッセージのみ送信
+        if (ENDPOINTS.SURVEY === "SURVEY_ENDPOINT_URL_HERE") {
+            console.warn("Survey endpoint not configured. Skipping data submission to server.");
+            showLoading('送信完了！');
+            sendText(messageText);
+            return;
+        }
+
+        // データをサーバーに送信
+        fetch(ENDPOINTS.SURVEY, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            // データ送信完了後の処理
+            showLoading('送信完了！');
+            
+            // LINEメッセージを送信
+            sendText(messageText);
+        }).catch((err) => {
+            hideLoading();
+            alert("送信に失敗しました。" + err);
+        });
+    }).catch(err => {
+        hideLoading();
+        alert("LINEプロフィールの取得に失敗しました。" + err);
+    });
 }
