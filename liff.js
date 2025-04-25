@@ -115,15 +115,22 @@ function initializeFormUI(formType) {
     const registerForm = document.querySelector('.form.register-only');
     const surveyForm = document.querySelector('.form.survey-only');
     
+    // 全てのフォームからshowクラスを削除
+    registerForm.classList.remove('show');
+    surveyForm.classList.remove('show');
+    
     if (formType === 'register') {
         // 登録フォームを表示
-        registerForm.style.display = 'block';
-        surveyForm.style.display = 'none';
+        registerForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント参加登録';
     } else if (formType === 'survey') {
         // アンケートフォームを表示
-        registerForm.style.display = 'none';
-        surveyForm.style.display = 'block';
+        surveyForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント終了後アンケート';
     }
+    
+    // デバッグ用のログ
+    console.log('Form type:', formType);
+    console.log('Register form display:', registerForm.style.display);
+    console.log('Survey form display:', surveyForm.style.display);
 }
