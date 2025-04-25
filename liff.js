@@ -133,62 +133,75 @@ function handleLiffInitializationFailure(err) {
 
 // フォームタイプに基づいてUIを初期化する関数
 function initializeFormUI(formType) {
-    console.log('initializeFormUI called with formType:', formType);
-    console.log('URL parameters:', new URL(window.location.href).searchParams.toString());
+    console.log('=== Form Initialization Debug ===');
+    console.log('1. Initial state');
+    console.log('Document ready state:', document.readyState);
+    console.log('Current URL:', window.location.href);
+    console.log('Form type:', formType);
     
     const registerForm = document.querySelector('.form.register-only');
     const surveyForm = document.querySelector('.form.survey-only');
     
-    console.log('Forms found:', {
-        registerForm: {
-            found: !!registerForm,
-            classList: registerForm?.classList.toString()
-        },
-        surveyForm: {
-            found: !!surveyForm,
-            classList: surveyForm?.classList.toString()
-        }
+    console.log('2. Form elements found:');
+    console.log('Register form:', {
+        exists: !!registerForm,
+        id: registerForm?.id,
+        classList: registerForm?.classList.toString(),
+        display: registerForm ? window.getComputedStyle(registerForm).display : null,
+        visibility: registerForm ? window.getComputedStyle(registerForm).visibility : null
+    });
+    console.log('Survey form:', {
+        exists: !!surveyForm,
+        id: surveyForm?.id,
+        classList: surveyForm?.classList.toString(),
+        display: surveyForm ? window.getComputedStyle(surveyForm).display : null,
+        visibility: surveyForm ? window.getComputedStyle(surveyForm).visibility : null
     });
     
     if (!registerForm || !surveyForm) {
-        console.error('Required form elements not found!');
-        console.log('All forms:', Array.from(document.querySelectorAll('.form')).map(form => ({
-            classList: form.classList.toString(),
+        console.error('3. Error: Required form elements not found!');
+        console.log('All form elements:', Array.from(document.querySelectorAll('.form')).map(form => ({
             id: form.id,
-            display: window.getComputedStyle(form).display
+            classList: form.classList.toString(),
+            display: window.getComputedStyle(form).display,
+            visibility: window.getComputedStyle(form).visibility,
+            html: form.outerHTML
         })));
         return;
     }
     
+    console.log('3. Updating form visibility');
     // まずすべてのフォームからshowクラスを削除
     registerForm.classList.remove('show');
     surveyForm.classList.remove('show');
     
     if (formType === 'register') {
-        // 登録フォームを表示
-        console.log('Showing register form');
+        console.log('4. Showing register form');
         registerForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント参加登録';
     } else if (formType === 'survey') {
-        // アンケートフォームを表示
-        console.log('Showing survey form');
+        console.log('4. Showing survey form');
         surveyForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント完了後アンケート';
     }
     
     // 表示後の状態を確認
-    console.log('Form visibility after update:', {
-        register: {
-            display: window.getComputedStyle(registerForm).display,
-            classList: registerForm.classList.toString(),
-            computedVisibility: window.getComputedStyle(registerForm).visibility
-        },
-        survey: {
-            display: window.getComputedStyle(surveyForm).display,
-            classList: surveyForm.classList.toString(),
-            computedVisibility: window.getComputedStyle(surveyForm).visibility
-        }
+    console.log('5. Final form states:');
+    console.log('Register form:', {
+        classList: registerForm.classList.toString(),
+        display: window.getComputedStyle(registerForm).display,
+        visibility: window.getComputedStyle(registerForm).visibility,
+        offsetHeight: registerForm.offsetHeight,
+        clientHeight: registerForm.clientHeight
     });
+    console.log('Survey form:', {
+        classList: surveyForm.classList.toString(),
+        display: window.getComputedStyle(surveyForm).display,
+        visibility: window.getComputedStyle(surveyForm).visibility,
+        offsetHeight: surveyForm.offsetHeight,
+        clientHeight: surveyForm.clientHeight
+    });
+    console.log('=== End Form Initialization Debug ===');
 }
 
 // フォーム送信処理
