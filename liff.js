@@ -342,48 +342,11 @@ async function sendData(data, formType) {
 document.addEventListener('DOMContentLoaded', function() {
     const registerForm = document.querySelector('.form.register-only');
     const surveyForm = document.querySelector('.form.survey-only');
-    const feedbackTextarea = document.getElementById('form_feedback');
-    const currentCount = document.getElementById('current_count');
-    const countMessage = document.getElementById('count_message');
-    const minLength = 50;
-
-    // 文字数カウント機能
-    if (feedbackTextarea) {
-        feedbackTextarea.addEventListener('input', function() {
-            const length = this.value.length;
-            currentCount.textContent = length;
-            
-            if (length < minLength) {
-                this.classList.remove('valid');
-                this.classList.add('invalid');
-                countMessage.classList.remove('success');
-                countMessage.classList.add('error');
-                countMessage.textContent = `あと${minLength - length}文字必要です`;
-            } else {
-                this.classList.remove('invalid');
-                this.classList.add('valid');
-                countMessage.classList.remove('error');
-                countMessage.classList.add('success');
-                countMessage.textContent = '必要文字数を満たしています';
-            }
-        });
-    }
 
     if (registerForm) {
         registerForm.addEventListener('submit', onSubmit);
     }
     if (surveyForm) {
-        surveyForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // フィードバックの文字数チェック
-            const feedback = document.getElementById('form_feedback');
-            if (feedback && feedback.value.length < minLength) {
-                alert(`ご意見・ご感想は${minLength}文字以上で入力してください。`);
-                return;
-            }
-            
-            onSubmit(event);
-        });
+        surveyForm.addEventListener('submit', onSubmit);
     }
 });
