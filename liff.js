@@ -141,19 +141,19 @@ function initializeFormUI(formType) {
         return;
     }
     
-    // 全てのフォームからshowクラスを削除
-    registerForm.classList.remove('show');
-    surveyForm.classList.remove('show');
+    // まずすべてのフォームを非表示に
+    registerForm.style.display = 'none';
+    surveyForm.style.display = 'none';
     
     if (formType === 'register') {
         // 登録フォームを表示
         console.log('Showing register form');
-        registerForm.classList.add('show');
+        registerForm.style.display = 'block';
         document.getElementById('formTitle').textContent = 'イベント参加登録';
     } else if (formType === 'survey') {
         // アンケートフォームを表示
         console.log('Showing survey form');
-        surveyForm.classList.add('show');
+        surveyForm.style.display = 'block';
         document.getElementById('formTitle').textContent = 'イベント終了後アンケート';
     }
     
@@ -168,4 +168,99 @@ function initializeFormUI(formType) {
             classList: surveyForm.classList.toString()
         }
     });
+}
+
+// フォーム送信処理
+async function onSubmit(event) {
+    event.preventDefault();
+    
+    // 現在のフォームタイプを取得
+    const formType = getFormType();
+    console.log('Form submission for type:', formType);
+    
+    if (formType === 'register') {
+        // 登録フォームの処理
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        
+        if (!name || !email || !phone) {
+            alert('全ての項目を入力してください。');
+            return;
+        }
+        
+        const data = {
+            type: 'register',
+            name: name,
+            email: email,
+            phone: phone
+        };
+        
+        await sendData(data);
+    } else if (formType === 'survey') {
+        // アンケートフォームの処理
+        const satisfaction = document.getElementById('satisfaction').value;
+        const feedback = document.getElementById('feedback').value;
+        
+        if (!satisfaction || !feedback) {
+            alert('全ての項目を入力してください。');
+            return;
+        }
+        
+        const data = {
+            type: 'survey',
+            satisfaction: satisfaction,
+            feedback: feedback
+        };
+        
+        await sendData(data);
+    }
+}
+
+// データをサーバーに送信する関数
+async function sendData(data) {
+    try {
+        console.log('Sending data:', data);
+        
+        // LIFFのコンテキスト情報を取得
+        const context = liff.getContext();
+        const idToken = await liff.getIDToken();
+        
+        // データにLINE情報を追加
+        const payload = {
+            ...data,
+            userId: context.userId,
+            idToken: idToken
+        };
+        
+        // サーバーにデータを送信
+        const response = await fetch('/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error('送信に失敗しました');
+        }
+        
+        const result = await response.json();
+        console.log('Server response:', result);
+        
+        // 送信成功メッセージを表示
+        alert('送信が完了しました！');
+        
+        // フォームをリセット
+        if (data.type === 'register') {
+            document.getElementById('registerForm').reset();
+        } else if (data.type === 'survey') {
+            document.getElementById('surveyForm').reset();
+        }
+        
+    } catch (error) {
+        console.error('Error sending data:', error);
+        alert('エラーが発生しました: ' + error.message);
+    }
 }
