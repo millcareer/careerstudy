@@ -1,5 +1,5 @@
 // LIFFの基本情報
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function() {
     // liffId: LIFF URL "https://liff.line.me/xxx"のxxxに該当する箇所
     // LINE DevelopersのLIFF画面より確認可能
     var liffId = "1660795452-nYx391B8";
@@ -8,8 +8,11 @@ $(document).ready(function () {
     // 初期化は一度だけ行う
     let initialized = false;
     
-    initializeLiff(liffId);
-})
+    if (!initialized) {
+        initialized = true;
+        initializeLiff(liffId);
+    }
+});
 
 // フォームタイプの判定
 function getFormType() {
@@ -131,35 +134,45 @@ function handleLiffInitializationFailure(err) {
 // フォームタイプに基づいてUIを初期化する関数
 function initializeFormUI(formType) {
     console.log('initializeFormUI called with formType:', formType);
-    console.log('URL:', window.location.href);
+    console.log('URL parameters:', new URL(window.location.href).searchParams.toString());
     
     const registerForm = document.querySelector('.form.register-only');
     const surveyForm = document.querySelector('.form.survey-only');
     
     console.log('Forms found:', {
-        registerForm: !!registerForm,
-        surveyForm: !!surveyForm
+        registerForm: {
+            found: !!registerForm,
+            classList: registerForm?.classList.toString()
+        },
+        surveyForm: {
+            found: !!surveyForm,
+            classList: surveyForm?.classList.toString()
+        }
     });
     
     if (!registerForm || !surveyForm) {
         console.error('Required form elements not found!');
-        console.log('All forms:', document.querySelectorAll('.form'));
+        console.log('All forms:', Array.from(document.querySelectorAll('.form')).map(form => ({
+            classList: form.classList.toString(),
+            id: form.id,
+            display: window.getComputedStyle(form).display
+        })));
         return;
     }
     
-    // まずすべてのフォームを非表示に
-    registerForm.style.cssText = 'display: none !important;';
-    surveyForm.style.cssText = 'display: none !important;';
+    // まずすべてのフォームからshowクラスを削除
+    registerForm.classList.remove('show');
+    surveyForm.classList.remove('show');
     
     if (formType === 'register') {
         // 登録フォームを表示
         console.log('Showing register form');
-        registerForm.style.cssText = 'display: block !important;';
+        registerForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント参加登録';
     } else if (formType === 'survey') {
         // アンケートフォームを表示
         console.log('Showing survey form');
-        surveyForm.style.cssText = 'display: block !important;';
+        surveyForm.classList.add('show');
         document.getElementById('formTitle').textContent = 'イベント完了後アンケート';
     }
     
@@ -167,11 +180,13 @@ function initializeFormUI(formType) {
     console.log('Form visibility after update:', {
         register: {
             display: window.getComputedStyle(registerForm).display,
-            classList: registerForm.classList.toString()
+            classList: registerForm.classList.toString(),
+            computedVisibility: window.getComputedStyle(registerForm).visibility
         },
         survey: {
             display: window.getComputedStyle(surveyForm).display,
-            classList: surveyForm.classList.toString()
+            classList: surveyForm.classList.toString(),
+            computedVisibility: window.getComputedStyle(surveyForm).visibility
         }
     });
 }
@@ -309,3 +324,16 @@ async function sendData(data, formType) {
         throw error;
     }
 }
+
+// フォーム送信のイベントリスナーを設定
+document.addEventListener('DOMContentLoaded', function() {
+    const registerForm = document.querySelector('.form.register-only');
+    const surveyForm = document.querySelector('.form.survey-only');
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', onSubmit);
+    }
+    if (surveyForm) {
+        surveyForm.addEventListener('submit', onSubmit);
+    }
+});

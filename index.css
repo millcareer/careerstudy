@@ -89,34 +89,39 @@ header {
   border-radius: 2px;
 }
 
+/* ===== フォームコンテナ ===== */
+.forms-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 /* ===== フォームスタイル ===== */
 .form {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  background-color: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  display: none; /* デフォルトで非表示 */
+    width: 100%;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    display: none; /* デフォルトで非表示 */
 }
 
 /* フォーム表示制御 */
 .form.show {
-  display: block !important;
+    display: block !important;
 }
 
 /* アンケートフォーム特有のスタイル */
 .form.survey-only select[name="satisfaction"] {
-  width: 100%;
-  margin-bottom: 20px;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .form.survey-only textarea[name="feedback"] {
-  width: 100%;
-  min-height: 150px;
-  resize: vertical;
-  margin-bottom: 20px;
+    width: 100%;
+    min-height: 150px;
+    resize: vertical;
+    margin-bottom: 20px;
 }
 
 /* ボタンエリア */
