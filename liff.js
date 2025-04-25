@@ -178,11 +178,11 @@ function initializeFormUI(formType) {
     if (formType === 'register') {
         console.log('4. Showing register form');
         registerForm.classList.add('show');
-        document.getElementById('formTitle').textContent = 'イベント参加登録';
+        document.getElementById('formTitle').textContent = '情報登録フォーム';
     } else if (formType === 'survey') {
         console.log('4. Showing survey form');
         surveyForm.classList.add('show');
-        document.getElementById('formTitle').textContent = 'イベント完了後アンケート';
+        document.getElementById('formTitle').textContent = '終了後アンケート';
     }
     
     // 表示後の状態を確認
