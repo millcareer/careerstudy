@@ -112,12 +112,18 @@ function handleLiffInitializationFailure(err) {
 
 // フォームタイプに基づいてUIを初期化する関数
 function initializeFormUI(formType) {
+    const registerForm = document.querySelector('.form.register-only');
+    const surveyForm = document.querySelector('.form.survey-only');
+    
     if (formType === 'register') {
-        $('#formTitle').text('イベント参加登録');
-        $('.survey-only').hide();
+        // 登録フォームを表示
+        registerForm.style.display = 'block';
+        surveyForm.style.display = 'none';
+        document.getElementById('formTitle').textContent = 'イベント参加登録';
     } else if (formType === 'survey') {
-        $('#formTitle').text('イベント終了後アンケート');
-        $('.register-only').hide();
+        // アンケートフォームを表示
+        registerForm.style.display = 'none';
+        surveyForm.style.display = 'block';
+        document.getElementById('formTitle').textContent = 'イベント終了後アンケート';
     }
-    // 共通の初期化処理があればここに追加
 }

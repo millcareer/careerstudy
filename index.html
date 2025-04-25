@@ -39,11 +39,11 @@
             <hr>
         </div>
     </div>
-    <div class="form">
-        <!-- 登録フォーム用の要素 -->
-        <div class="register-only">
-            <p class="form-text">メールアドレス</p>
-            <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required" placeholder="例：example@example.com">
+
+    <!-- 登録フォーム -->
+    <div class="form register-only">
+        <p class="form-text">メールアドレス</p>
+        <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required" placeholder="例：example@example.com">
 	<div class="form-group">
 	    <label for="form_answer20" class="form-text">パスワード設定</label>
 	    <input type="password" name="password" id="form_answer20" required="required" minlength="8" placeholder="8文字以上で入力してください">
@@ -1295,7 +1295,8 @@ document.querySelector('.btn').addEventListener('click', function(event) {
 });
 </script>
 
-        <!-- アンケートフォーム用の要素 -->            
+        <!-- アンケートフォーム -->
+        <div class="form survey-only" style="display: none;">
             <p class="form-text">今日を振り返って、現時点でのグループディスカッションのレベルを教えて下さい。</p>
             <div class="form-rating">
                 <select id="survey_group_discussion" required="required">
@@ -1320,11 +1321,10 @@ document.querySelector('.btn').addEventListener('click', function(event) {
 
             <p class="form-text">満足度の理由、感想&改善点を教えてください。</p>
             <textarea id="survey_impression" rows="4" required="required" minlength="50" placeholder="皆の意見で、後輩のためにもより良いINTERN QUESTを作っていきましょう😊お願いします！&#13;&#10;※最低50文字以上で入力してください。"></textarea>
-        </div>
 
-        <div class="submit">
-            <button type="submit" onclick="submitForm()">送信</button>
+            <div class="submit">
+                <button type="submit" onclick="submitForm()">送信</button>
+            </div>
         </div>
-    </div>
 </body>
 </html>
