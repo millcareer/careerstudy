@@ -4,16 +4,28 @@ $(document).ready(function () {
     // LINE DevelopersのLIFF画面より確認可能
     var liffId = "1660795452-nYx391B8";
     console.log(`init liff, ID : ${liffId}`);
+    
+    // 初期化は一度だけ行う
+    let initialized = false;
+    
     initializeLiff(liffId);
 })
 
 // フォームタイプの判定
 function getFormType() {
-    const url = new URL(window.location.href);
-    const formType = url.searchParams.get('type') || 'register';
-    console.log('Current URL:', window.location.href);
-    console.log('Form type from URL:', formType);
-    return formType;
+    try {
+        const url = new URL(window.location.href);
+        const formType = url.searchParams.get('type');
+        console.log('URL parameters:', {
+            full_url: window.location.href,
+            type: formType
+        });
+        // typeパラメータが'survey'の場合のみsurveyを返し、それ以外は全てregisterとする
+        return formType === 'survey' ? 'survey' : 'register';
+    } catch (error) {
+        console.error('Error getting form type:', error);
+        return 'register'; // エラーの場合はデフォルトとしてregisterを返す
+    }
 }
 
 // index.htmlのsubimtで呼び出される関数
@@ -81,8 +93,10 @@ function handleLiffInitializationSuccess() {
         liff.login({ redirectUri: location.href });
     } else {
         console.log('Login Success');
-        // フォームタイプに基づいてUIを初期化
-        initializeFormUI(getFormType());
+        // フォームの初期化は一度だけ行う
+        const formType = getFormType();
+        console.log('Initializing with form type:', formType);
+        initializeFormUI(formType);
     }
 }
 
