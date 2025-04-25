@@ -130,14 +130,35 @@ function handleLiffInitializationFailure(err) {
 function initializeFormUI(formType) {
     console.log('Initializing UI with form type:', formType);
     
+    // DOMの読み込み状態を確認
+    console.log('Document ready state:', document.readyState);
+    
     const registerForm = document.querySelector('.form.register-only');
     const surveyForm = document.querySelector('.form.survey-only');
+    
+    // フォーム要素の取得状態を詳細にログ
+    console.log('Form elements:', {
+        registerForm: {
+            found: !!registerForm,
+            element: registerForm,
+            display: registerForm ? window.getComputedStyle(registerForm).display : null,
+            classList: registerForm ? registerForm.classList.toString() : null
+        },
+        surveyForm: {
+            found: !!surveyForm,
+            element: surveyForm,
+            display: surveyForm ? window.getComputedStyle(surveyForm).display : null,
+            classList: surveyForm ? surveyForm.classList.toString() : null
+        }
+    });
     
     if (!registerForm || !surveyForm) {
         console.error('Forms not found:', {
             registerForm: !!registerForm,
             surveyForm: !!surveyForm
         });
+        // エラーの場合でもUIの状態を記録
+        console.log('Current DOM structure:', document.body.innerHTML);
         return;
     }
     
@@ -167,6 +188,12 @@ function initializeFormUI(formType) {
             display: window.getComputedStyle(surveyForm).display,
             classList: surveyForm.classList.toString()
         }
+    });
+    
+    // スタイルの適用状態を確認
+    console.log('Computed styles:', {
+        registerForm: window.getComputedStyle(registerForm),
+        surveyForm: window.getComputedStyle(surveyForm)
     });
 }
 
