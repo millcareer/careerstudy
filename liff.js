@@ -87,13 +87,15 @@ function initializeLiff(liffId) {
         });
 }
 
-function handleLiffInitializationSuccess() {
+async function handleLiffInitializationSuccess() {
     if (!liff.isInClient() && !liff.isLoggedIn()) {
         window.alert("LINEアカウントにログインしてください。");
-        liff.login({ redirectUri: location.href });
+        // パラメータを保持するようにリダイレクトURLを作成
+        const currentUrl = new URL(location.href);
+        liff.login({ redirectUri: currentUrl.toString() });
     } else {
         console.log('Login Success');
-        // フォームの初期化は一度だけ行う
+        // フォームの初期化
         const formType = getFormType();
         console.log('Initializing with form type:', formType);
         initializeFormUI(formType);
@@ -128,57 +130,40 @@ function handleLiffInitializationFailure(err) {
 
 // フォームタイプに基づいてUIを初期化する関数
 function initializeFormUI(formType) {
-    console.log('Initializing UI with form type:', formType);
-    
-    // DOMの読み込み状態を確認
-    console.log('Document ready state:', document.readyState);
+    console.log('initializeFormUI called with formType:', formType);
+    console.log('URL:', window.location.href);
     
     const registerForm = document.querySelector('.form.register-only');
     const surveyForm = document.querySelector('.form.survey-only');
     
-    // フォーム要素の取得状態を詳細にログ
-    console.log('Form elements:', {
-        registerForm: {
-            found: !!registerForm,
-            element: registerForm,
-            display: registerForm ? window.getComputedStyle(registerForm).display : null,
-            classList: registerForm ? registerForm.classList.toString() : null
-        },
-        surveyForm: {
-            found: !!surveyForm,
-            element: surveyForm,
-            display: surveyForm ? window.getComputedStyle(surveyForm).display : null,
-            classList: surveyForm ? surveyForm.classList.toString() : null
-        }
+    console.log('Forms found:', {
+        registerForm: !!registerForm,
+        surveyForm: !!surveyForm
     });
     
     if (!registerForm || !surveyForm) {
-        console.error('Forms not found:', {
-            registerForm: !!registerForm,
-            surveyForm: !!surveyForm
-        });
-        // エラーの場合でもUIの状態を記録
-        console.log('Current DOM structure:', document.body.innerHTML);
+        console.error('Required form elements not found!');
+        console.log('All forms:', document.querySelectorAll('.form'));
         return;
     }
     
     // まずすべてのフォームを非表示に
-    registerForm.style.display = 'none';
-    surveyForm.style.display = 'none';
+    registerForm.style.cssText = 'display: none !important;';
+    surveyForm.style.cssText = 'display: none !important;';
     
     if (formType === 'register') {
         // 登録フォームを表示
         console.log('Showing register form');
-        registerForm.style.display = 'block';
+        registerForm.style.cssText = 'display: block !important;';
         document.getElementById('formTitle').textContent = 'イベント参加登録';
     } else if (formType === 'survey') {
         // アンケートフォームを表示
         console.log('Showing survey form');
-        surveyForm.style.display = 'block';
-        document.getElementById('formTitle').textContent = 'イベント終了後アンケート';
+        surveyForm.style.cssText = 'display: block !important;';
+        document.getElementById('formTitle').textContent = 'イベント完了後アンケート';
     }
     
-    // 現在の表示状態を確認
+    // 表示後の状態を確認
     console.log('Form visibility after update:', {
         register: {
             display: window.getComputedStyle(registerForm).display,
@@ -189,113 +174,138 @@ function initializeFormUI(formType) {
             classList: surveyForm.classList.toString()
         }
     });
-    
-    // スタイルの適用状態を確認
-    console.log('Computed styles:', {
-        registerForm: window.getComputedStyle(registerForm),
-        surveyForm: window.getComputedStyle(surveyForm)
-    });
 }
 
 // フォーム送信処理
 async function onSubmit(event) {
     event.preventDefault();
-    
-    // 現在のフォームタイプを取得
+    console.log('Form submission started');
+
     const formType = getFormType();
-    console.log('Form submission for type:', formType);
-    
+    console.log('Form type:', formType);
+
+    let data = {};
+    let missingFields = [];
+
     if (formType === 'register') {
         // 登録フォームの処理
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        
-        if (!name || !email || !phone) {
-            alert('全ての項目を入力してください。');
+        const fields = {
+            email: 'form_answer01',
+            password: 'form_answer20',
+            password_confirm: 'form_answer21',
+            telNumber: 'form_answer02',
+            lastName: 'form_answer03',
+            firstName: 'form_answer04',
+            lastNameRead: 'form_answer05',
+            firstNameRead: 'form_answer06',
+            birthYear: 'form_answer07',
+            birthMonth: 'form_answer08',
+            birthDay: 'form_answer09',
+            university: 'form_answer10'
+        };
+
+        // パスワード確認
+        const password = document.getElementById(fields.password).value;
+        const passwordConfirm = document.getElementById(fields.password_confirm).value;
+
+        if (password !== passwordConfirm) {
+            alert('パスワードが一致しません。');
             return;
         }
-        
-        const data = {
-            type: 'register',
-            name: name,
-            email: email,
-            phone: phone
-        };
-        
-        await sendData(data);
+
+        // 必須フィールドの確認と値の取得
+        for (const [key, id] of Object.entries(fields)) {
+            const element = document.getElementById(id);
+            if (!element || !element.value.trim()) {
+                missingFields.push(key);
+            } else {
+                data[key] = element.value.trim();
+            }
+        }
     } else if (formType === 'survey') {
         // アンケートフォームの処理
-        const groupDiscussion = document.getElementById('survey_group_discussion').value;
-        const satisfaction = document.getElementById('survey_satisfaction').value;
-        const impression = document.getElementById('survey_impression').value;
+        const satisfaction = document.getElementById('form_satisfaction');
+        const feedback = document.getElementById('form_feedback');
+
+        if (!satisfaction || !satisfaction.value) {
+            missingFields.push('satisfaction');
+        } else {
+            data.satisfaction = satisfaction.value;
+        }
+
+        if (!feedback || !feedback.value.trim()) {
+            missingFields.push('feedback');
+        } else {
+            data.feedback = feedback.value.trim();
+        }
+    }
+
+    if (missingFields.length > 0) {
+        alert(`以下の必須項目が未入力です：\n${missingFields.join('\n')}`);
+        return;
+    }
+
+    try {
+        console.log('Sending data:', data);
+        await sendData(data, formType);
+        console.log('Data sent successfully');
         
-        if (!groupDiscussion || !satisfaction || !impression) {
-            alert('全ての項目を入力してください。');
-            return;
+        // フォーム送信成功後の処理
+        if (formType === 'register') {
+            alert('登録が完了しました。');
+        } else {
+            alert('アンケートの回答ありがとうございました。');
         }
         
-        // 文字数チェック
-        if (impression.length < 50) {
-            alert('感想は50文字以上で入力してください。');
-            return;
-        }
+        // LINEメッセージの送信
+        const message = formType === 'register' ? 
+            'イベントの登録が完了しました。' : 
+            'アンケートの回答ありがとうございました。';
         
-        const data = {
-            type: 'survey',
-            groupDiscussion: groupDiscussion,
-            satisfaction: satisfaction,
-            impression: impression
-        };
-        
-        await sendData(data);
+        await sendText(message);
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('送信中にエラーが発生しました。もう一度お試しください。');
     }
 }
 
 // データをサーバーに送信する関数
-async function sendData(data) {
+async function sendData(data, formType) {
     try {
-        console.log('Sending data:', data);
+        console.log('Sending data:', { formType, data });
         
-        // LIFFのコンテキスト情報を取得
-        const context = liff.getContext();
-        const idToken = await liff.getIDToken();
-        
-        // データにLINE情報を追加
-        const payload = {
-            ...data,
-            userId: context.userId,
-            idToken: idToken
-        };
-        
-        // サーバーにデータを送信
-        const response = await fetch('/submit', {
+        // APIエンドポイントの設定
+        const endpoint = formType === 'register' ? 
+            'https://script.google.com/macros/s/YOUR_REGISTER_DEPLOYMENT_ID/exec' :
+            'https://script.google.com/macros/s/YOUR_SURVEY_DEPLOYMENT_ID/exec';
+
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                type: formType,
+                ...data
+            })
         });
-        
+
         if (!response.ok) {
-            throw new Error('送信に失敗しました');
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const result = await response.json();
         console.log('Server response:', result);
-        
-        // 送信成功メッセージを表示
-        alert('送信が完了しました！');
-        
-        // フォームをリセット
-        if (data.type === 'register') {
-            document.getElementById('registerForm').reset();
-        } else if (data.type === 'survey') {
-            document.getElementById('surveyForm').reset();
+
+        // フォームのリセット
+        const form = document.querySelector(`.form.${formType}-only`);
+        if (form) {
+            form.reset();
         }
-        
+
+        return result;
     } catch (error) {
-        console.error('Error sending data:', error);
-        alert('エラーが発生しました: ' + error.message);
+        console.error('Error in sendData:', error);
+        throw error;
     }
 }
