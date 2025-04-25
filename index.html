@@ -1209,6 +1209,38 @@
         <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
     </div>
 
+    <!-- アンケートフォーム -->
+    <div class="form survey-only">
+        <p class="form-text">今日を振り返って、現時点でのグループディスカッションのレベルを教えて下さい。</p>
+        <div class="form-rating">
+            <select id="survey_group_discussion" required="required">
+                <option value="">選択してください</option>
+                <option value="4">かなりうまくいったと感じた。</option>
+                <option value="3">うまくできたが、成長の余地があると感じた。</option>
+                <option value="2">うまくいった部分もあったが、成長が必要だと感じた。</option>
+                <option value="1">まだまだ全体的に成長が必要だと感じた。</option>
+            </select>
+        </div>
+
+        <p class="form-text">イベントの運営・内容に関する満足度を教えてください。</p>
+        <div class="form-rating">
+            <select id="survey_satisfaction" required="required">
+                <option value="">選択してください</option>
+                <option value="4">とても満足だった。</option>
+                <option value="3">満足だった。</option>
+                <option value="2">不満だった。</option>
+                <option value="1">とても不満だった。</option>
+            </select>
+        </div>
+
+        <p class="form-text">満足度の理由、感想&改善点を教えてください。</p>
+        <textarea id="survey_impression" rows="4" required="required" minlength="50" placeholder="皆の意見で、後輩のためにもより良いINTERN QUESTを作っていきましょう😊お願いします！&#13;&#10;※最低50文字以上で入力してください。"></textarea>
+
+        <div class="btn-block">
+            <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -1302,37 +1334,5 @@ document.querySelector('.btn').addEventListener('click', function(event) {
     }
 });
 </script>
-
-        <!-- アンケートフォーム -->
-        <div class="form survey-only">
-            <p class="form-text">今日を振り返って、現時点でのグループディスカッションのレベルを教えて下さい。</p>
-            <div class="form-rating">
-                <select id="survey_group_discussion" required="required">
-                    <option value="">選択してください</option>
-                    <option value="4">かなりうまくいったと感じた。</option>
-                    <option value="3">うまくできたが、成長の余地があると感じた。</option>
-                    <option value="2">うまくいった部分もあったが、成長が必要だと感じた。</option>
-                    <option value="1">まだまだ全体的に成長が必要だと感じた。</option>
-                </select>
-            </div>
-
-            <p class="form-text">イベントの運営・内容に関する満足度を教えてください。</p>
-            <div class="form-rating">
-                <select id="survey_satisfaction" required="required">
-                    <option value="">選択してください</option>
-                    <option value="4">とても満足だった。</option>
-                    <option value="3">満足だった。</option>
-                    <option value="2">不満だった。</option>
-                    <option value="1">とても不満だった。</option>
-                </select>
-            </div>
-
-            <p class="form-text">満足度の理由、感想&改善点を教えてください。</p>
-            <textarea id="survey_impression" rows="4" required="required" minlength="50" placeholder="皆の意見で、後輩のためにもより良いINTERN QUESTを作っていきましょう😊お願いします！&#13;&#10;※最低50文字以上で入力してください。"></textarea>
-
-            <div class="btn-block">
-                <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
-            </div>
-        </div>
 </body>
 </html>
