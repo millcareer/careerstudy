@@ -341,3 +341,39 @@ font[size="1"] {
     padding: 8px 16px;
   }
 }
+
+/* 文字数カウンター */
+.character-count {
+    text-align: right;
+    margin-top: 5px;
+    font-size: 14px;
+    color: var(--gray-dark);
+}
+
+.character-count.invalid {
+    color: #dc3545;
+}
+
+.count-message {
+    margin-left: 10px;
+    font-size: 12px;
+}
+
+.count-message.error {
+    color: #dc3545;
+}
+
+.count-message.success {
+    color: #198754;
+}
+
+/* テキストエリアのスタイル更新 */
+.form textarea.invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form textarea.valid {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}

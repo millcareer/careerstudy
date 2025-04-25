@@ -52,20 +52,30 @@
     <!-- アンケートフォーム -->
     <div class="form survey-only">
         <div class="form-group">
-            <p class="form-text">イベントの満足度</p>
+            <p class="form-text">今日を振り返って、現時点でのグループディスカッションのレベルを教えて下さい。</p>
             <select name="satisfaction" id="form_satisfaction" required="required">
                 <option value="">選択してください</option>
-                <option value="5">とても満足</option>
-                <option value="4">満足</option>
-                <option value="3">普通</option>
-                <option value="2">やや不満</option>
-                <option value="1">不満</option>
+                <option value="4">かなりうまくいったと感じた。</option>
+                <option value="3">うまくできたが、成長の余地があると感じた。</option>
+                <option value="2">うまくいった部分もあったが、成長が必要だと感じた。</option>
+                <option value="1">まだまだ全体的に成長が必要だと感じた。</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <p class="form-text">イベントの運営・内容に関する満足度を教えてください。</p>
+            <select name="satisfaction" id="form_satisfaction" required="required">
+                <option value="">選択してください</option>
+                <option value="4">とても満足だった。</option>
+                <option value="3">満足だった。</option>
+                <option value="2">不満だった。</option>
+                <option value="1">とても不満だった。</option>
             </select>
         </div>
         
         <div class="form-group">
-            <p class="form-text">ご意見・ご感想</p>
-            <textarea name="feedback" id="form_feedback" required="required" rows="5" placeholder="ご意見・ご感想をお聞かせください"></textarea>
+            <p class="form-text">満足度の理由、感想&改善点を教えてください。</p>
+            <textarea name="feedback" id="form_feedback" required="required" rows="5" placeholder="皆の意見で、後輩のためにもより良いINTERN QUESTを作っていきましょう😊お願いします！"></textarea>
         </div>
     </div>
 
