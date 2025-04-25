@@ -23,6 +23,9 @@
         .title hr {
             border-top: 8px solid #fcac04;
         }
+        .form.survey-only {
+            display: none;
+        }
     </style>
 </head>
 
@@ -1296,7 +1299,7 @@ document.querySelector('.btn').addEventListener('click', function(event) {
 </script>
 
         <!-- アンケートフォーム -->
-        <div class="form survey-only" style="display: none;">
+        <div class="form survey-only">
             <p class="form-text">今日を振り返って、現時点でのグループディスカッションのレベルを教えて下さい。</p>
             <div class="form-rating">
                 <select id="survey_group_discussion" required="required">
@@ -1322,8 +1325,8 @@ document.querySelector('.btn').addEventListener('click', function(event) {
             <p class="form-text">満足度の理由、感想&改善点を教えてください。</p>
             <textarea id="survey_impression" rows="4" required="required" minlength="50" placeholder="皆の意見で、後輩のためにもより良いINTERN QUESTを作っていきましょう😊お願いします！&#13;&#10;※最低50文字以上で入力してください。"></textarea>
 
-            <div class="submit">
-                <button type="submit" onclick="submitForm()">送信</button>
+            <div class="btn-block">
+                <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
             </div>
         </div>
 </body>
