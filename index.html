@@ -1341,5 +1341,37 @@ document.querySelector('.btn').addEventListener('click', function(event) {
     }
 });
 </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackTextarea = document.getElementById('form_feedback');
+            const currentCount = document.getElementById('current_count');
+            const countMessage = document.getElementById('count_message');
+            const minLength = 50;
+
+            if (feedbackTextarea) {
+                feedbackTextarea.addEventListener('input', function() {
+                    const length = this.value.length;
+                    currentCount.textContent = length;
+                    
+                    if (length < minLength) {
+                        this.classList.remove('valid');
+                        this.classList.add('invalid');
+                        countMessage.classList.remove('success');
+                        countMessage.classList.add('error');
+                        countMessage.textContent = `あと${minLength - length}文字必要です`;
+                    } else {
+                        this.classList.remove('invalid');
+                        this.classList.add('valid');
+                        countMessage.classList.remove('error');
+                        countMessage.classList.add('success');
+                        countMessage.textContent = '必要文字数を満たしています';
+                    }
+                });
+
+                // 初期表示時のカウント表示
+                feedbackTextarea.dispatchEvent(new Event('input'));
+            }
+        });
+    </script>
 </body>
 </html>
