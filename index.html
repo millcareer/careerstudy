@@ -1437,11 +1437,6 @@ document.querySelector('.btn').addEventListener('click', function(event) {
                 formContainer.appendChild(formGroup);
             });
 
-            // 最後に送信ボタンも追加
-            const buttonArea = document.createElement('div');
-            buttonArea.className = 'button-area';
-            buttonArea.innerHTML = `<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>`;
-            formContainer.appendChild(buttonArea);
         }
 
         // ⑤ 仮の送信処理
