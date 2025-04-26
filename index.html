@@ -1643,10 +1643,17 @@ function collectFormDataManually() {
 function sendFormData(formDataObj) {
     console.log('送信データ:', formDataObj);
     
+    // 送信ボタンを無効化して二重送信防止
+    const submitButton = document.querySelector('.button-area .btn');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = '送信中...';
+    }
+    
     // GASにデータを送信
     fetch(API_URL, {
         method: 'POST',
-	mode: 'no-cors',
+        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -1655,41 +1662,26 @@ function sendFormData(formDataObj) {
             data: formDataObj
         })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('サーバーエラー: ' + response.status);
-        }
-        return response.json();
-    })
-    .then(result => {
-        console.log('送信結果:', result);
-        if (result.success) {
-            alert('アンケートの回答ありがとうございました！');
-            
-            // LIFFが初期化されているか確認してから閉じる
-            if (typeof liff !== 'undefined' && liff.isInClient()) {
-                // LIFFブラウザを閉じる
-                liff.closeWindow();
-            } else {
-                console.log('LIFF環境ではないか、初期化されていません');
-                // LIFF環境でない場合は何らかの代替処理
-                window.location.href = 'index.html';
-            }
+    .then(() => {
+        // no-corsモードでは、レスポンスの内容にアクセスできないので
+        // 成功したと仮定して処理を続ける
+        console.log('リクエストは送信されました（レスポンスの詳細は不明）');
+        alert('アンケートの回答ありがとうございました！');
+        
+        // LIFFが初期化されているか確認してから閉じる
+        if (typeof liff !== 'undefined' && liff.isInClient()) {
+            // LIFFブラウザを閉じる
+            liff.closeWindow();
         } else {
-            alert('エラーが発生しました: ' + (result.message || '不明なエラー'));
-            // 送信ボタンを再度有効化
-            const submitButton = document.querySelector('.button-area .btn');
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.textContent = '送信';
-            }
+            console.log('LIFF環境ではないか、初期化されていません');
+            // LIFF環境でない場合は何らかの代替処理
+            window.location.href = 'index.html';
         }
     })
     .catch(error => {
         console.error('送信エラー:', error);
         alert('送信中にエラーが発生しました: ' + error.message);
         // 送信ボタンを再度有効化
-        const submitButton = document.querySelector('.button-area .btn');
         if (submitButton) {
             submitButton.disabled = false;
             submitButton.textContent = '送信';
