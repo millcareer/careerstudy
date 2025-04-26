@@ -1646,6 +1646,7 @@ function sendFormData(formDataObj) {
     // GASにデータを送信
     fetch(API_URL, {
         method: 'POST',
+	mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },
