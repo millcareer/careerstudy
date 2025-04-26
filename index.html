@@ -1313,80 +1313,111 @@ document.querySelector('.btn').addEventListener('click', function(event) {
 });
 
     // ① URLパラメータを取得する関数
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                type: params.get('type'),     // type=survey or type=register
-                eventid: params.get('eventid') // eventid=xxxx（surveyのとき）
-            };
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        type: params.get('type'),     // type=survey or type=register
+        eventid: params.get('eventid') // eventid=xxxx（surveyのとき）
+    };
+}
+
+// ② スプレッドシートAPI URL（GASのデプロイURLに置き換える）
+const API_URL = 'https://script.google.com/macros/s/AKfycbzeGs2ZUykKO6yBX2MTzuMDgl7lX7g6ZqouuX47gmFPZs7jNZZVGtuGAtTBqkGdWCQN/exec';
+
+// ③ ページ読み込み時の処理
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM Content Loaded');
+    const { type, eventid } = getUrlParams();
+    console.log('URL Parameters:', type, eventid);
+    
+    if (type === 'survey') {
+        console.log('Survey mode detected');
+        document.querySelector('.survey-only').classList.add('show');
+        document.querySelector('.register-only').classList.remove('show');
+        
+        if (!eventid) {
+            alert('イベントIDが見つかりませんでした');
+            return;
         }
 
-        // ② スプレッドシートAPI URL（GASのデプロイURLに置き換える）
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzeGs2ZUykKO6yBX2MTzuMDgl7lX7g6ZqouuX47gmFPZs7jNZZVGtuGAtTBqkGdWCQN/exec';
-
-        // ③ ページ読み込み時の処理
-        document.addEventListener('DOMContentLoaded', async () => {
-            const { type, eventid } = getUrlParams();
+        try {
+            console.log('Fetching survey data from:', `${API_URL}?eventid=${eventid}`);
+            const response = await fetch(`${API_URL}?eventid=${eventid}`);
+            console.log('Response received:', response);
             
-            if (type === 'survey') {
-                document.querySelector('.survey-only').classList.add('show');
-                document.querySelector('.register-only').classList.remove('show');
-                
-                if (!eventid) {
-                    alert('イベントIDが見つかりませんでした');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`${API_URL}?eventid=${eventid}`);
-                    const questions = await response.json();
-                    renderSurveyForm(questions);
-                } catch (error) {
-                    console.error('アンケートデータ取得エラー:', error);
-                }
-                
-            } else if (type === 'register') {
-                document.querySelector('.register-only').classList.add('show');
-                document.querySelector('.survey-only').classList.remove('show');
-            } else {
-                alert('URLのtypeパラメータが正しくありません');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
+            const questions = await response.json();
+            console.log('Questions parsed:', questions);
+            renderSurveyForm(questions);
+        } catch (error) {
+            console.error('アンケートデータ取得エラー:', error);
+            alert('アンケートデータの取得に失敗しました: ' + error.message);
+        }
+        
+    } else if (type === 'register') {
+        console.log('Register mode detected');
+        document.querySelector('.register-only').classList.add('show');
+        document.querySelector('.survey-only').classList.remove('show');
+    } else {
+        console.log('Invalid type parameter:', type);
+        alert('URLのtypeパラメータが正しくありません');
+    }
 
-            // 既存の文字数カウント機能
-            const feedbackTextarea = document.getElementById('form_feedback');
-            const currentCount = document.getElementById('current_count');
-            const countMessage = document.getElementById('count_message');
-            const minLength = 50;
+    // 既存の文字数カウント機能
+    const feedbackTextarea = document.getElementById('form_feedback');
+    const currentCount = document.getElementById('current_count');
+    const countMessage = document.getElementById('count_message');
+    const minLength = 50;
 
-            if (feedbackTextarea) {
-                feedbackTextarea.addEventListener('input', function() {
-                    const length = this.value.length;
-                    currentCount.textContent = length;
-                    
-                    if (length < minLength) {
-                        this.classList.remove('valid');
-                        this.classList.add('invalid');
-                        countMessage.classList.remove('success');
-                        countMessage.classList.add('error');
-                        countMessage.textContent = `あと${minLength - length}文字必要です`;
-                    } else {
-                        this.classList.remove('invalid');
-                        this.classList.add('valid');
-                        countMessage.classList.remove('error');
-                        countMessage.classList.add('success');
-                        countMessage.textContent = '必要文字数を満たしています';
-                    }
-                });
-
-                // 初期表示時のカウント表示
-                feedbackTextarea.dispatchEvent(new Event('input'));
+    if (feedbackTextarea) {
+        console.log('Feedback textarea found');
+        feedbackTextarea.addEventListener('input', function() {
+            const length = this.value.length;
+            currentCount.textContent = length;
+            
+            if (length < minLength) {
+                this.classList.remove('valid');
+                this.classList.add('invalid');
+                countMessage.classList.remove('success');
+                countMessage.classList.add('error');
+                countMessage.textContent = `あと${minLength - length}文字必要です`;
+            } else {
+                this.classList.remove('invalid');
+                this.classList.add('valid');
+                countMessage.classList.remove('error');
+                countMessage.classList.add('success');
+                countMessage.textContent = '必要文字数を満たしています';
             }
         });
 
-       // ④ アンケートをレンダリングする関数
+        // 初期表示時のカウント表示
+        feedbackTextarea.dispatchEvent(new Event('input'));
+    } else {
+        console.log('Feedback textarea not found');
+    }
+});
+
+// ④ アンケートをレンダリングする関数
 function renderSurveyForm(questions) {
+    console.log('Rendering survey form');
     const formContainer = document.querySelector('.survey-only');
+    
+    if (!formContainer) {
+        console.error('Survey form container not found');
+        return;
+    }
+    
     formContainer.innerHTML = ''; // 既存内容リセット
+
+    // 質問データのチェック
+    if (!Array.isArray(questions) || questions.length === 0) {
+        console.error('Invalid questions data:', questions);
+        formContainer.innerHTML = '<p>アンケートデータが正しくありません</p>';
+        return;
+    }
 
     // デバッグ用
     console.log('質問データ受信:', questions.length + '件');
@@ -1404,6 +1435,7 @@ function renderSurveyForm(questions) {
     formContainer.appendChild(form);
 
     questions.forEach((q, index) => {
+        console.log('Processing question:', q);
         // 企業IDが変わったら新しいセクションを作成
         if (q.company_id !== currentCompanyId) {
             // 最初でない場合は区切り線を追加
@@ -1489,13 +1521,13 @@ function renderSurveyForm(questions) {
         // 質問をグループに追加
         companyGroup.appendChild(formGroup);
     });
-
 }
-        }
-        // ⑤ 仮の送信処理
-        function submitSurveyForm() {
-            alert('アンケートを送信しました（本番ではAPI連携予定）');
-        }
+
+// ⑤ 仮の送信処理
+function submitSurveyForm() {
+    alert('アンケートを送信しました（本番ではAPI連携予定）');
+}
+	
 </script>
 </body>
 </html>
