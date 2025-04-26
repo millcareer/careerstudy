@@ -1389,7 +1389,34 @@ document.querySelector('.btn').addEventListener('click', function(event) {
             const formContainer = document.querySelector('.survey-only');
             formContainer.innerHTML = ''; // 既存内容リセット（ベースの3問消す）
 
+            let currentCompany = '';
+            let companyGroup = null;
+
             questions.forEach((q, index) => {
+                // 新しい企業のグループを開始
+                if (q.company !== currentCompany) {
+                    // 最初の企業以外の場合、前の企業グループの後に水平線を追加
+                    if (currentCompany !== '') {
+                        const divider = document.createElement('hr');
+                        divider.style.borderTop = '2px solid #fcac04';
+                        divider.style.margin = '30px 0';
+                        formContainer.appendChild(divider);
+                    }
+                    
+                    currentCompany = q.company;
+                    
+                    // 企業名を表示
+                    const companyHeader = document.createElement('h3');
+                    companyHeader.textContent = currentCompany;
+                    companyHeader.style.color = '#fcac04';
+                    companyHeader.style.marginTop = '20px';
+                    formContainer.appendChild(companyHeader);
+                    
+                    companyGroup = document.createElement('div');
+                    companyGroup.className = 'company-group';
+                    formContainer.appendChild(companyGroup);
+                }
+
                 const formGroup = document.createElement('div');
                 formGroup.className = 'form-group';
 
@@ -1403,7 +1430,7 @@ document.querySelector('.btn').addEventListener('click', function(event) {
                     const select = document.createElement('select');
                     select.name = `question_${index}`;
                     select.required = true;
-                    select.className = 'form-control';  // Bootstrap用クラス適用
+                    select.className = 'form-control';
                     select.innerHTML = `<option value="">選択してください</option>`;
                     options.forEach(opt => {
                         const option = document.createElement('option');
@@ -1412,12 +1439,11 @@ document.querySelector('.btn').addEventListener('click', function(event) {
                         select.appendChild(option);
                     });
                     formGroup.appendChild(select);
-
                 } else {
                     const textarea = document.createElement('textarea');
                     textarea.name = `question_${index}`;
                     textarea.required = true;
-                    textarea.className = 'form-control'; // Bootstrap用クラス適用
+                    textarea.className = 'form-control';
                     textarea.rows = 5;
                     textarea.placeholder = '簡単でもいいので、"自分に合いそうな点"、"合わなそうな点"を考えながら書いてみよう！';
                     textarea.minLength = 30;
@@ -1434,7 +1460,7 @@ document.querySelector('.btn').addEventListener('click', function(event) {
                     formGroup.appendChild(charCountDiv);
                 }
 
-                formContainer.appendChild(formGroup);
+                companyGroup.appendChild(formGroup);
             });
 
         }
