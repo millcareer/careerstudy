@@ -1322,7 +1322,7 @@ function getUrlParams() {
 }
 
 // ② スプレッドシートAPI URL（GASのデプロイURLに置き換える）
-const API_URL = 'https://script.google.com/macros/s/AKfycbzeGs2ZUykKO6yBX2MTzuMDgl7lX7g6ZqouuX47gmFPZs7jNZZVGtuGAtTBqkGdWCQN/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyi35p8NbnVmGvpykIB-G7ok3kqlN5F3p5GruJwDRIPKzzEJfRU-wQY7zkpO3nqvLUl/exec';
 
 // ③ ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1524,9 +1524,121 @@ function renderSurveyForm(questions) {
     });
 }
 
-// ⑤ 仮の送信処理
+// ⑤ アンケートフォーム送信処理
 function submitSurveyForm() {
-    alert('アンケートを送信しました（本番ではAPI連携予定）');
+    console.log('送信処理を開始します');
+    
+    // フォーム要素を取得
+    const form = document.getElementById('survey-form');
+    if (!form) {
+        console.error('フォームが見つかりません');
+        alert('フォームが見つかりませんでした');
+        return;
+    }
+    
+    // フォームデータを収集
+    const formData = new FormData(form);
+    const { eventid } = getUrlParams();
+    
+    // フォームデータをオブジェクトに変換
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+        formDataObj[key] = value;
+    });
+    
+    // イベントIDを追加
+    formDataObj.eventid = eventid;
+    
+    // タイムスタンプを追加
+    formDataObj.timestamp = new Date().toISOString();
+    
+    // 送信ボタンを無効化して二重送信防止
+    const submitButton = document.querySelector('.button-area .btn');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = '送信中...';
+    }
+    
+    // LIFFが利用可能かつ初期化済みの場合はユーザーIDを取得
+    if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+        liff.getProfile()
+            .then(profile => {
+                // ユーザーIDを追加
+                formDataObj.userId = profile.userId;
+                // オプション: 他のプロフィール情報も追加可能
+                formDataObj.displayName = profile.displayName;
+                
+                console.log('ユーザー情報を取得しました:', profile.userId);
+                // データを送信
+                sendFormData(formDataObj);
+            })
+            .catch(error => {
+                console.error('プロフィール取得エラー:', error);
+                // プロフィール取得失敗時も送信は続行
+                sendFormData(formDataObj);
+            });
+    } else {
+        // LIFFでない場合はそのまま送信
+        console.log('LIFFが利用できないか、ログインしていません');
+        sendFormData(formDataObj);
+    }
+}
+
+// 実際にデータを送信する関数（コード分割のため）
+function sendFormData(formDataObj) {
+    console.log('送信データ:', formDataObj);
+    
+    // GASにデータを送信
+    fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            action: 'submitSurvey',
+            data: formDataObj
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('サーバーエラー: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log('送信結果:', result);
+        if (result.success) {
+            alert('アンケートの回答ありがとうございました！');
+            
+            // LIFFが初期化されているか確認してから閉じる
+            if (liff && liff.isInClient()) {
+                // LIFFブラウザを閉じる
+                liff.closeWindow();
+            } else {
+                console.log('LIFF環境ではないか、初期化されていません');
+                // LIFF環境でない場合は何らかの代替処理
+                window.location.href = 'index.html';
+            }
+        } else {
+            alert('エラーが発生しました: ' + (result.message || '不明なエラー'));
+            // 送信ボタンを再度有効化
+            const submitButton = document.querySelector('.button-area .btn');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = '送信';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('送信エラー:', error);
+        alert('送信中にエラーが発生しました: ' + error.message);
+        // 送信ボタンを再度有効化
+        const submitButton = document.querySelector('.button-area .btn');
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = '送信';
+        }
+    });
 }
 	
 </script>
