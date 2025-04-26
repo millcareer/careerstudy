@@ -50,41 +50,12 @@
     </div>
     
     <!-- アンケートフォーム -->
-    <div class="form survey-only">
-        <div class="form-group">
-            <p class="form-text">今日を振り返って、現時点でのグループディスカッションのレベルを教えて下さい。</p>
-            <select name="satisfaction" id="form_satisfaction" required="required">
-                <option value="">選択してください</option>
-                <option value="4">かなりうまくいったと感じた。</option>
-                <option value="3">うまくできたが、成長の余地があると感じた。</option>
-                <option value="2">うまくいった部分もあったが、成長が必要だと感じた。</option>
-                <option value="1">まだまだ全体的に成長が必要だと感じた。</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <p class="form-text">イベントの運営・内容に関する満足度を教えてください。</p>
-            <select name="satisfaction" id="form_satisfaction" required="required">
-                <option value="">選択してください</option>
-                <option value="4">とても満足だった。</option>
-                <option value="3">満足だった。</option>
-                <option value="2">不満だった。</option>
-                <option value="1">とても不満だった。</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <p class="form-text">満足度の理由、感想&改善点を教えてください。</p>
-            <textarea name="feedback" id="form_feedback" required="required" rows="5" placeholder="皆の意見で、後輩のためにもより良いINTERN QUESTを作っていきましょう😊お願いします！" minlength="30"></textarea>
-            <div class="character-count">
-                文字数: <span id="current_count">0</span>
-                <span id="count_message" class="count-message"></span>
-            </div>
-        </div>
+    <div class="form survey-only" id="survey-form">
+        <!-- 質問がここに動的に追加されます -->
     </div>
-
+  
     <div class="button-area">
-         <button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>
+        <button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>
     </div>
 
     <!-- 登録フォーム -->
@@ -1342,7 +1313,47 @@ document.querySelector('.btn').addEventListener('click', function(event) {
 });
 </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // ① URLパラメータを取得する関数
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                type: params.get('type'),     // type=survey or type=register
+                eventid: params.get('eventid') // eventid=xxxx（surveyのとき）
+            };
+        }
+
+        // ② スプレッドシートAPI URL（GASのデプロイURLに置き換える）
+        const API_URL = 'https://script.google.com/macros/s/xxxxxxxxxxxxxxxxxxxxxxxx/exec';
+
+        // ③ ページ読み込み時の処理
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { type, eventid } = getUrlParams();
+            
+            if (type === 'survey') {
+                document.querySelector('.survey-only').classList.add('show');
+                document.querySelector('.register-only').classList.remove('show');
+                
+                if (!eventid) {
+                    alert('イベントIDが見つかりませんでした');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_URL}?eventid=${eventid}`);
+                    const questions = await response.json();
+                    renderSurveyForm(questions);
+                } catch (error) {
+                    console.error('アンケートデータ取得エラー:', error);
+                }
+                
+            } else if (type === 'register') {
+                document.querySelector('.register-only').classList.add('show');
+                document.querySelector('.survey-only').classList.remove('show');
+            } else {
+                alert('URLのtypeパラメータが正しくありません');
+            }
+
+            // 既存の文字数カウント機能
             const feedbackTextarea = document.getElementById('form_feedback');
             const currentCount = document.getElementById('current_count');
             const countMessage = document.getElementById('count_message');
@@ -1372,6 +1383,71 @@ document.querySelector('.btn').addEventListener('click', function(event) {
                 feedbackTextarea.dispatchEvent(new Event('input'));
             }
         });
+
+        // ④ アンケートをレンダリングする関数
+        function renderSurveyForm(questions) {
+            const formContainer = document.querySelector('.survey-only');
+            formContainer.innerHTML = ''; // 既存内容リセット（ベースの3問消す）
+
+            questions.forEach((q, index) => {
+                const formGroup = document.createElement('div');
+                formGroup.className = 'form-group';
+
+                const label = document.createElement('p');
+                label.className = 'form-text';
+                label.textContent = q.question_text;
+                formGroup.appendChild(label);
+
+                if (q.options) {
+                    const options = q.options.split(',');
+                    const select = document.createElement('select');
+                    select.name = `question_${index}`;
+                    select.required = true;
+                    select.className = 'form-control';  // Bootstrap用クラス適用
+                    select.innerHTML = `<option value="">選択してください</option>`;
+                    options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt;
+                        select.appendChild(option);
+                    });
+                    formGroup.appendChild(select);
+
+                } else {
+                    const textarea = document.createElement('textarea');
+                    textarea.name = `question_${index}`;
+                    textarea.required = true;
+                    textarea.className = 'form-control'; // Bootstrap用クラス適用
+                    textarea.rows = 5;
+                    textarea.placeholder = '自由記述欄';
+                    textarea.minLength = 30;
+                    
+                    const charCountDiv = document.createElement('div');
+                    charCountDiv.className = 'character-count';
+                    charCountDiv.innerHTML = `文字数: <span id="current_count_${index}">0</span>`;
+
+                    textarea.addEventListener('input', () => {
+                        document.getElementById(`current_count_${index}`).textContent = textarea.value.length;
+                    });
+
+                    formGroup.appendChild(textarea);
+                    formGroup.appendChild(charCountDiv);
+                }
+
+                formContainer.appendChild(formGroup);
+            });
+
+            // 最後に送信ボタンも追加
+            const buttonArea = document.createElement('div');
+            buttonArea.className = 'button-area';
+            buttonArea.innerHTML = `<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>`;
+            formContainer.appendChild(buttonArea);
+        }
+
+        // ⑤ 仮の送信処理
+        function submitSurveyForm() {
+            alert('アンケートを送信しました（本番ではAPI連携予定）');
+        }
     </script>
 </body>
 </html>
