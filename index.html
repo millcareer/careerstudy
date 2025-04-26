@@ -1459,8 +1459,9 @@ function renderSurveyForm(questions) {
             }
             
             const heading = document.createElement('h3');
-            heading.textContent = `[${headingText}]`;
+            heading.textContent = `${headingText}`;
             heading.style.color = '#fcac04';
+		heading.style.fontWeight = 'bold';
             heading.style.marginTop = '20px';
             form.appendChild(heading);
             
