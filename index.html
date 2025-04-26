@@ -1312,163 +1312,122 @@ document.querySelector('.btn').addEventListener('click', function(event) {
     }
 });
 </script>
-    <script>
-        // ① URLパラメータを取得する関数
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                type: params.get('type'),     // type=survey or type=register
-                eventid: params.get('eventid') // eventid=xxxx（surveyのとき）
-            };
+    // ④ アンケートをレンダリングする関数
+function renderSurveyForm(questions) {
+    const formContainer = document.querySelector('.survey-only');
+    formContainer.innerHTML = ''; // 既存内容リセット
+
+    // デバッグ用
+    console.log('質問データ:', questions);
+
+    // 企業IDごとにグループ化するために並べ替え
+    questions.sort((a, b) => {
+        // company_idがない場合に備えて安全に比較
+        const idA = a.company_id || '';
+        const idB = b.company_id || '';
+        if (idA < idB) return -1;
+        if (idA > idB) return 1;
+        return 0;
+    });
+
+    let currentCompanyId = '';
+    let companyGroup = null;
+
+    // 送信フォーム作成
+    const form = document.createElement('form');
+    form.id = 'survey-form';
+    form.onsubmit = function(e) {
+        e.preventDefault();
+        submitSurveyForm();
+    };
+    formContainer.appendChild(form);
+
+    questions.forEach((q, index) => {
+        // 新しい企業のグループを開始
+        if (q.company_id !== currentCompanyId) {
+            // 最初の企業以外の場合、前の企業グループの後に水平線を追加
+            if (currentCompanyId !== '') {
+                const divider = document.createElement('hr');
+                divider.style.border = 'none';
+                divider.style.borderTop = '2px solid #fcac04';
+                divider.style.margin = '30px 0';
+                divider.style.width = '100%';
+                form.appendChild(divider);
+                
+                // デバッグ用
+                console.log('水平線を追加: 企業ID ' + currentCompanyId + ' の後');
+            }
+            
+            // 現在の企業IDを更新
+            currentCompanyId = q.company_id || '';
+            
+            // 企業名を表示
+            const companyName = q.company || `企業ID: ${currentCompanyId}`;
+            const companyHeader = document.createElement('h3');
+            companyHeader.textContent = `[${companyName}]`;
+            companyHeader.style.color = '#fcac04';
+            companyHeader.style.marginTop = '20px';
+            form.appendChild(companyHeader);
+            
+            // 新しい企業グループを作成
+            companyGroup = document.createElement('div');
+            companyGroup.className = 'company-group';
+            companyGroup.dataset.companyId = currentCompanyId;
+            form.appendChild(companyGroup);
+            
+            // デバッグ用
+            console.log('新しい企業セクション開始: ' + companyName + ' (ID: ' + currentCompanyId + ')');
         }
 
-        // ② スプレッドシートAPI URL（GASのデプロイURLに置き換える）
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzeGs2ZUykKO6yBX2MTzuMDgl7lX7g6ZqouuX47gmFPZs7jNZZVGtuGAtTBqkGdWCQN/exec';
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
 
-        // ③ ページ読み込み時の処理
-        document.addEventListener('DOMContentLoaded', async () => {
-            const { type, eventid } = getUrlParams();
+        const label = document.createElement('p');
+        label.className = 'form-text';
+        label.textContent = q.question_text;
+        formGroup.appendChild(label);
+
+        if (q.options) {
+            const options = q.options.split(',');
+            const select = document.createElement('select');
+            select.name = `question_${index}`;
+            select.id = `question_${index}`;
+            select.required = true;
+            select.className = 'form-control';
+            select.innerHTML = `<option value="">選択してください</option>`;
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                select.appendChild(option);
+            });
+            formGroup.appendChild(select);
+        } else {
+            const textarea = document.createElement('textarea');
+            textarea.name = `question_${index}`;
+            textarea.id = `question_${index}`;
+            textarea.required = true;
+            textarea.className = 'form-control';
+            textarea.rows = 5;
+            textarea.placeholder = '簡単でもいいので、"自分に合いそうな点"、"合わなそうな点"を考えながら書いてみよう！';
+            textarea.minLength = 30;
             
-            if (type === 'survey') {
-                document.querySelector('.survey-only').classList.add('show');
-                document.querySelector('.register-only').classList.remove('show');
-                
-                if (!eventid) {
-                    alert('イベントIDが見つかりませんでした');
-                    return;
-                }
+            const charCountDiv = document.createElement('div');
+            charCountDiv.className = 'character-count';
+            charCountDiv.innerHTML = `文字数: <span id="current_count_${index}">0</span>`;
 
-                try {
-                    const response = await fetch(`${API_URL}?eventid=${eventid}`);
-                    const questions = await response.json();
-                    renderSurveyForm(questions);
-                } catch (error) {
-                    console.error('アンケートデータ取得エラー:', error);
-                }
-                
-            } else if (type === 'register') {
-                document.querySelector('.register-only').classList.add('show');
-                document.querySelector('.survey-only').classList.remove('show');
-            } else {
-                alert('URLのtypeパラメータが正しくありません');
-            }
-
-            // 既存の文字数カウント機能
-            const feedbackTextarea = document.getElementById('form_feedback');
-            const currentCount = document.getElementById('current_count');
-            const countMessage = document.getElementById('count_message');
-            const minLength = 50;
-
-            if (feedbackTextarea) {
-                feedbackTextarea.addEventListener('input', function() {
-                    const length = this.value.length;
-                    currentCount.textContent = length;
-                    
-                    if (length < minLength) {
-                        this.classList.remove('valid');
-                        this.classList.add('invalid');
-                        countMessage.classList.remove('success');
-                        countMessage.classList.add('error');
-                        countMessage.textContent = `あと${minLength - length}文字必要です`;
-                    } else {
-                        this.classList.remove('invalid');
-                        this.classList.add('valid');
-                        countMessage.classList.remove('error');
-                        countMessage.classList.add('success');
-                        countMessage.textContent = '必要文字数を満たしています';
-                    }
-                });
-
-                // 初期表示時のカウント表示
-                feedbackTextarea.dispatchEvent(new Event('input'));
-            }
-        });
-
-        // ④ アンケートをレンダリングする関数
-        function renderSurveyForm(questions) {
-            const formContainer = document.querySelector('.survey-only');
-            formContainer.innerHTML = ''; // 既存内容リセット（ベースの3問消す）
-
-            let currentCompany = '';
-            let companyGroup = null;
-
-            questions.forEach((q, index) => {
-                // 新しい企業のグループを開始
-                if (q.company !== currentCompany) {
-                    // 最初の企業以外の場合、前の企業グループの後に水平線を追加
-                    if (currentCompany !== '') {
-                        const divider = document.createElement('hr');
-                        divider.style.borderTop = '2px solid #fcac04';
-                        divider.style.margin = '30px 0';
-                        formContainer.appendChild(divider);
-                    }
-                    
-                    currentCompany = q.company;
-                    
-                    // 企業名を表示
-                    const companyHeader = document.createElement('h3');
-                    companyHeader.textContent = currentCompany;
-                    companyHeader.style.color = '#fcac04';
-                    companyHeader.style.marginTop = '20px';
-                    formContainer.appendChild(companyHeader);
-                    
-                    companyGroup = document.createElement('div');
-                    companyGroup.className = 'company-group';
-                    formContainer.appendChild(companyGroup);
-                }
-
-                const formGroup = document.createElement('div');
-                formGroup.className = 'form-group';
-
-                const label = document.createElement('p');
-                label.className = 'form-text';
-                label.textContent = q.question_text;
-                formGroup.appendChild(label);
-
-                if (q.options) {
-                    const options = q.options.split(',');
-                    const select = document.createElement('select');
-                    select.name = `question_${index}`;
-                    select.required = true;
-                    select.className = 'form-control';
-                    select.innerHTML = `<option value="">選択してください</option>`;
-                    options.forEach(opt => {
-                        const option = document.createElement('option');
-                        option.value = opt;
-                        option.textContent = opt;
-                        select.appendChild(option);
-                    });
-                    formGroup.appendChild(select);
-                } else {
-                    const textarea = document.createElement('textarea');
-                    textarea.name = `question_${index}`;
-                    textarea.required = true;
-                    textarea.className = 'form-control';
-                    textarea.rows = 5;
-                    textarea.placeholder = '簡単でもいいので、"自分に合いそうな点"、"合わなそうな点"を考えながら書いてみよう！';
-                    textarea.minLength = 30;
-                    
-                    const charCountDiv = document.createElement('div');
-                    charCountDiv.className = 'character-count';
-                    charCountDiv.innerHTML = `文字数: <span id="current_count_${index}">0</span>`;
-
-                    textarea.addEventListener('input', () => {
-                        document.getElementById(`current_count_${index}`).textContent = textarea.value.length;
-                    });
-
-                    formGroup.appendChild(textarea);
-                    formGroup.appendChild(charCountDiv);
-                }
-
-                companyGroup.appendChild(formGroup);
+            textarea.addEventListener('input', () => {
+                document.getElementById(`current_count_${index}`).textContent = textarea.value.length;
             });
 
+            formGroup.appendChild(textarea);
+            formGroup.appendChild(charCountDiv);
         }
 
-        // ⑤ 仮の送信処理
-        function submitSurveyForm() {
-            alert('アンケートを送信しました（本番ではAPI連携予定）');
-        }
+        companyGroup.appendChild(formGroup);
+    });
+
+}
     </script>
 </body>
 </html>
