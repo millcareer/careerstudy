@@ -1320,20 +1320,7 @@ function renderSurveyForm(questions) {
 
     // デバッグ用
     console.log('質問データ:', questions);
-
-    // 企業IDごとにグループ化するために並べ替え
-    questions.sort((a, b) => {
-        // company_idがない場合に備えて安全に比較
-        const idA = a.company_id || '';
-        const idB = b.company_id || '';
-        if (idA < idB) return -1;
-        if (idA > idB) return 1;
-        return 0;
-    });
-
-    let currentCompanyId = '';
-    let companyGroup = null;
-
+    
     // 送信フォーム作成
     const form = document.createElement('form');
     form.id = 'survey-form';
@@ -1342,6 +1329,23 @@ function renderSurveyForm(questions) {
         submitSurveyForm();
     };
     formContainer.appendChild(form);
+
+    // 企業IDごとにグループ化
+    let currentCompanyId = '';
+    let companyGroup = null;
+
+    // company_idで並べ替え（fixed1, fixed2, fixed3を先頭に、その後c01, c02...）
+    questions.sort((a, b) => {
+        // fixed*は上部に配置
+        const aIsFixed = a.company_id.startsWith('fixed');
+        const bIsFixed = b.company_id.startsWith('fixed');
+        
+        if (aIsFixed && !bIsFixed) return -1;
+        if (!aIsFixed && bIsFixed) return 1;
+        
+        // 同じグループ内で比較
+        return a.company_id.localeCompare(b.company_id);
+    });
 
     questions.forEach((q, index) => {
         // 新しい企業のグループを開始
@@ -1355,17 +1359,25 @@ function renderSurveyForm(questions) {
                 divider.style.width = '100%';
                 form.appendChild(divider);
                 
-                // デバッグ用
                 console.log('水平線を追加: 企業ID ' + currentCompanyId + ' の後');
             }
             
             // 現在の企業IDを更新
-            currentCompanyId = q.company_id || '';
+            currentCompanyId = q.company_id;
             
-            // 企業名を表示
-            const companyName = q.company || `企業ID: ${currentCompanyId}`;
-            const companyHeader = document.createElement('h3');
-            companyHeader.textContent = `[${companyName}]`;
+            // 企業名を表示 (fixed1,2,3の場合は特別な表示)
+            let companyHeader = document.createElement('h3');
+            
+            if (q.company_id.startsWith('fixed')) {
+                if (q.company_id === 'fixed1') {
+                    companyHeader.textContent = '[イベントの振り返り]';
+                } else if (q.company_id === 'fixed2' || q.company_id === 'fixed3') {
+                    companyHeader.textContent = '[イベント全体の評価]';
+                }
+            } else {
+                companyHeader.textContent = `[${q.company_name}]`;
+            }
+            
             companyHeader.style.color = '#fcac04';
             companyHeader.style.marginTop = '20px';
             form.appendChild(companyHeader);
@@ -1373,39 +1385,43 @@ function renderSurveyForm(questions) {
             // 新しい企業グループを作成
             companyGroup = document.createElement('div');
             companyGroup.className = 'company-group';
-            companyGroup.dataset.companyId = currentCompanyId;
+            companyGroup.dataset.companyId = q.company_id;
             form.appendChild(companyGroup);
             
-            // デバッグ用
-            console.log('新しい企業セクション開始: ' + companyName + ' (ID: ' + currentCompanyId + ')');
+            console.log('新しい企業セクション開始: ' + q.company_name + ' (ID: ' + q.company_id + ')');
         }
 
+        // 質問グループの作成
         const formGroup = document.createElement('div');
         formGroup.className = 'form-group';
-
+        
         const label = document.createElement('p');
         label.className = 'form-text';
         label.textContent = q.question_text;
         formGroup.appendChild(label);
 
-        if (q.options) {
+        if (q.options && q.options.length > 0) {
+            // セレクトボックスの作成
             const options = q.options.split(',');
             const select = document.createElement('select');
-            select.name = `question_${index}`;
+            select.name = `question_${q.company_id}_${q.question_type}`;
             select.id = `question_${index}`;
             select.required = true;
             select.className = 'form-control';
             select.innerHTML = `<option value="">選択してください</option>`;
+            
             options.forEach(opt => {
                 const option = document.createElement('option');
-                option.value = opt;
-                option.textContent = opt;
+                option.value = opt.trim();
+                option.textContent = opt.trim();
                 select.appendChild(option);
             });
+            
             formGroup.appendChild(select);
         } else {
+            // テキストエリアの作成
             const textarea = document.createElement('textarea');
-            textarea.name = `question_${index}`;
+            textarea.name = `question_${q.company_id}_${q.question_type}`;
             textarea.id = `question_${index}`;
             textarea.required = true;
             textarea.className = 'form-control';
@@ -1425,6 +1441,7 @@ function renderSurveyForm(questions) {
             formGroup.appendChild(charCountDiv);
         }
 
+        // 質問をグループに追加
         companyGroup.appendChild(formGroup);
     });
 }
