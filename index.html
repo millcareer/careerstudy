@@ -1329,7 +1329,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { type, eventid } = getUrlParams();
     console.log('URL Parameters:', type, eventid);
     
-    if (type === 'survey') {
+    let mode = type || 'register'; // ★パラメータがなければ、強制的に'register'にする
+
+    if (mode === 'survey') {
         console.log('Survey mode detected');
         document.querySelector('.survey-only').classList.add('show');
         document.querySelector('.register-only').classList.remove('show');
@@ -1356,7 +1358,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('アンケートデータの取得に失敗しました: ' + error.message);
         }
         
-    } else if (type === 'register') {
+    } else if (mode === 'register') {
         console.log('Register mode detected');
         document.querySelector('.register-only').classList.add('show');
         document.querySelector('.survey-only').classList.remove('show');
@@ -1364,6 +1366,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Invalid type parameter:', type);
         alert('URLのtypeパラメータが正しくありません');
     }
+});
+
 
     // 既存の文字数カウント機能
     const feedbackTextarea = document.getElementById('form_feedback');
