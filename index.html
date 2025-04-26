@@ -1383,137 +1383,67 @@ document.querySelector('.btn').addEventListener('click', function(event) {
             }
         });
 
-        // ④ アンケートをレンダリングする関数
+       // 最もシンプルなバージョン
 function renderSurveyForm(questions) {
     const formContainer = document.querySelector('.survey-only');
-    formContainer.innerHTML = ''; // 既存内容リセット
-
-    // デバッグ用
+    formContainer.innerHTML = ''; // リセット
+    
     console.log('質問データ:', questions);
     
-    // 送信フォーム作成
+    // 単純なフォーム
     const form = document.createElement('form');
-    form.id = 'survey-form';
-    form.onsubmit = function(e) {
-        e.preventDefault();
-        submitSurveyForm();
-    };
     formContainer.appendChild(form);
-
-    // 企業IDごとにグループ化
-    let currentCompanyId = '';
-    let companyGroup = null;
-
-    // company_idで並べ替え（fixed1, fixed2, fixed3を先頭に、その後c01, c02...）
-    questions.sort((a, b) => {
-        // fixed*は上部に配置
-        const aIsFixed = a.company_id.startsWith('fixed');
-        const bIsFixed = b.company_id.startsWith('fixed');
-        
-        if (aIsFixed && !bIsFixed) return -1;
-        if (!aIsFixed && bIsFixed) return 1;
-        
-        // 同じグループ内で比較
-        return a.company_id.localeCompare(b.company_id);
-    });
-
+    
+    let lastCompanyId = '';
+    
+    // 各質問を処理
     questions.forEach((q, index) => {
-        // 新しい企業のグループを開始
-        if (q.company_id !== currentCompanyId) {
-            // 最初の企業以外の場合、前の企業グループの後に水平線を追加
-            if (currentCompanyId !== '') {
-                const divider = document.createElement('hr');
-                divider.style.border = 'none';
-                divider.style.borderTop = '2px solid #fcac04';
-                divider.style.margin = '30px 0';
-                divider.style.width = '100%';
-                form.appendChild(divider);
-                
-                console.log('水平線を追加: 企業ID ' + currentCompanyId + ' の後');
+        // 企業IDが変わったら水平線と見出しを追加
+        if (q.company_id !== lastCompanyId) {
+            // 初回以外は水平線を追加
+            if (lastCompanyId !== '') {
+                form.appendChild(document.createElement('hr'));
             }
             
-            // 現在の企業IDを更新
-            currentCompanyId = q.company_id;
+            // 企業名見出し
+            const heading = document.createElement('h3');
+            heading.textContent = `[${q.company_name}]`;
+            form.appendChild(heading);
             
-            // 企業名を表示 (fixed1,2,3の場合は特別な表示)
-            let companyHeader = document.createElement('h3');
-            
-            if (q.company_id.startsWith('fixed')) {
-                if (q.company_id === 'fixed1') {
-                    companyHeader.textContent = '[イベントの振り返り]';
-                } else if (q.company_id === 'fixed2' || q.company_id === 'fixed3') {
-                    companyHeader.textContent = '[イベント全体の評価]';
-                }
-            } else {
-                companyHeader.textContent = `[${q.company_name}]`;
-            }
-            
-            companyHeader.style.color = '#fcac04';
-            companyHeader.style.marginTop = '20px';
-            form.appendChild(companyHeader);
-            
-            // 新しい企業グループを作成
-            companyGroup = document.createElement('div');
-            companyGroup.className = 'company-group';
-            companyGroup.dataset.companyId = q.company_id;
-            form.appendChild(companyGroup);
-            
-            console.log('新しい企業セクション開始: ' + q.company_name + ' (ID: ' + q.company_id + ')');
+            lastCompanyId = q.company_id;
         }
-
-        // 質問グループの作成
-        const formGroup = document.createElement('div');
-        formGroup.className = 'form-group';
         
-        const label = document.createElement('p');
-        label.className = 'form-text';
-        label.textContent = q.question_text;
-        formGroup.appendChild(label);
-
-        if (q.options && q.options.length > 0) {
-            // セレクトボックスの作成
-            const options = q.options.split(',');
+        // 質問グループ
+        const div = document.createElement('div');
+        
+        // 質問テキスト
+        const p = document.createElement('p');
+        p.textContent = q.question_text;
+        div.appendChild(p);
+        
+        // 入力欄（セレクトorテキストエリア）
+        if (q.options) {
             const select = document.createElement('select');
-            select.name = `question_${q.company_id}_${q.question_type}`;
-            select.id = `question_${index}`;
-            select.required = true;
-            select.className = 'form-control';
-            select.innerHTML = `<option value="">選択してください</option>`;
+            select.name = `q${index}`;
+            select.innerHTML = '<option value="">選択</option>';
             
-            options.forEach(opt => {
+            q.options.split(',').forEach(opt => {
                 const option = document.createElement('option');
-                option.value = opt.trim();
-                option.textContent = opt.trim();
+                option.value = opt;
+                option.textContent = opt;
                 select.appendChild(option);
             });
             
-            formGroup.appendChild(select);
+            div.appendChild(select);
         } else {
-            // テキストエリアの作成
             const textarea = document.createElement('textarea');
-            textarea.name = `question_${q.company_id}_${q.question_type}`;
-            textarea.id = `question_${index}`;
-            textarea.required = true;
-            textarea.className = 'form-control';
-            textarea.rows = 5;
-            textarea.placeholder = '簡単でもいいので、"自分に合いそうな点"、"合わなそうな点"を考えながら書いてみよう！';
-            textarea.minLength = 30;
-            
-            const charCountDiv = document.createElement('div');
-            charCountDiv.className = 'character-count';
-            charCountDiv.innerHTML = `文字数: <span id="current_count_${index}">0</span>`;
-
-            textarea.addEventListener('input', () => {
-                document.getElementById(`current_count_${index}`).textContent = textarea.value.length;
-            });
-
-            formGroup.appendChild(textarea);
-            formGroup.appendChild(charCountDiv);
+            textarea.name = `q${index}`;
+            div.appendChild(textarea);
         }
-
-        // 質問をグループに追加
-        companyGroup.appendChild(formGroup);
+        
+        form.appendChild(div);
     });
+
 }
         }
         // ⑤ 仮の送信処理
