@@ -1534,57 +1534,16 @@ function submitSurveyForm() {
         return; // 未入力がある場合は処理を中止
     }
     
-    // フォーム要素を取得
-    const form = document.getElementById('survey-form');
-    if (!form) {
-        console.error('フォームが見つかりません');
-        
-        // FormDataを使わずに直接データを収集する代替手段
-        const formDataObj = collectFormDataManually();
-        
-        if (Object.keys(formDataObj).length === 0) {
-            alert('フォームデータを取得できませんでした');
-            return;
-        }
-        
-        // URL パラメータからイベントIDを取得
-        const { eventid } = getUrlParams();
-        formDataObj.eventid = eventid;
-        
-        // タイムスタンプを追加
-        formDataObj.timestamp = new Date().toISOString();
-        
-        // LIFFが利用可能かつ初期化済みの場合はユーザーIDを取得
-        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-            liff.getProfile()
-                .then(profile => {
-                    formDataObj.userId = profile.userId;
-                    formDataObj.displayName = profile.displayName;
-                    sendFormData(formDataObj);
-                })
-                .catch(error => {
-                    console.error('プロフィール取得エラー:', error);
-                    sendFormData(formDataObj);
-                });
-        } else {
-            sendFormData(formDataObj);
-        }
-        
+    // FormDataを使わずに直接データを収集
+    const formDataObj = collectFormDataManually();
+    
+    if (Object.keys(formDataObj).length === 0) {
+        alert('フォームデータを取得できませんでした');
         return;
     }
     
-    // 以下は既存のフォームが見つかった場合の処理
-    // FormDataを使ってデータを収集
-    const formData = new FormData(form);
+    // URL パラメータからイベントIDを取得
     const { eventid } = getUrlParams();
-    
-    // FormDataをオブジェクトに変換
-    const formDataObj = {};
-    formData.forEach((value, key) => {
-        formDataObj[key] = value;
-    });
-    
-    // イベントIDを追加
     formDataObj.eventid = eventid;
     
     // タイムスタンプを追加
@@ -1659,19 +1618,19 @@ function validateAllAnswers() {
     return true; // すべての入力項目が有効
 }
 
-// FormDataを使わずにフォームデータを取得する代替関数
+// フォームデータを手動で収集する関数
 function collectFormDataManually() {
     const formDataObj = {};
     
     // 質問の回答を収集
-    // ここでは、select要素とtextarea要素を対象に
+    // セレクトボックスの値を取得
     const selects = document.querySelectorAll('select[name^="question_"]');
-    const textareas = document.querySelectorAll('textarea[name^="question_"]');
-    
     selects.forEach(select => {
         formDataObj[select.name] = select.value;
     });
     
+    // テキストエリアの値を取得
+    const textareas = document.querySelectorAll('textarea[name^="question_"]');
     textareas.forEach(textarea => {
         formDataObj[textarea.name] = textarea.value;
     });
@@ -1680,7 +1639,7 @@ function collectFormDataManually() {
     return formDataObj;
 }
 
-// 実際にデータを送信する関数（変更なし）
+// 実際にデータを送信する関数
 function sendFormData(formDataObj) {
     console.log('送信データ:', formDataObj);
     
