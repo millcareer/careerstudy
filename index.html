@@ -52,9 +52,6 @@
     <!-- アンケートフォーム -->
     <div class="form survey-only" id="survey-form">
         <!-- 質問がここに動的に追加されます -->
-	<div class="btn-block">
-        	<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>
-    	</div>
     </div>
 
     <!-- 登録フォーム -->
@@ -1526,13 +1523,12 @@ function renderSurveyForm(questions) {
 
         // 質問をグループに追加
         companyGroup.appendChild(formGroup);
-
+});
 	// フォーム生成が完了した後、ボタンを1つだけ追加
 	const buttonArea = document.createElement('div');
 	buttonArea.className = 'button-area';
 	buttonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
 	formContainer.appendChild(buttonArea);
-});
 }
 
 // ⑤ アンケートフォーム送信処理
