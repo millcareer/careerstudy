@@ -1408,6 +1408,9 @@ function renderSurveyForm(questions) {
         console.error('Survey form container not found');
         return;
     }
+
+    // ボタンエリアを保存
+    const buttonArea = formContainer.querySelector('.button-area');
     
     formContainer.innerHTML = ''; // 既存内容リセット
 
@@ -1520,6 +1523,17 @@ function renderSurveyForm(questions) {
 
         // 質問をグループに追加
         companyGroup.appendChild(formGroup);
+
+	// フォーム作成後、保存したボタンエリアを再度追加
+	    if (buttonArea) {
+	        formContainer.appendChild(buttonArea);
+	    } else {
+	        // ボタンエリアが見つからない場合は新たに作成
+	        const newButtonArea = document.createElement('div');
+	        newButtonArea.className = 'button-area';
+	        newButtonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
+	        formContainer.appendChild(newButtonArea);
+	    }
     });
 }
 
