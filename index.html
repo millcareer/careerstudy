@@ -50,7 +50,7 @@
     </div>
     
     <!-- アンケートフォーム -->
-    <div class="form survey-only show" id="survey-form">
+    <div class="form survey-only" id="survey-form">
         <!-- 質問がここに動的に追加されます -->
 	<div class="btn-block">
         	<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>
@@ -1532,7 +1532,6 @@ function renderSurveyForm(questions) {
 	buttonArea.className = 'button-area';
 	buttonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
 	formContainer.appendChild(buttonArea);
-    });
 }
 
 // ⑤ アンケートフォーム送信処理
