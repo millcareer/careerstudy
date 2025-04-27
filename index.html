@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">ƒ
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./index.css">
     <style>
@@ -1409,8 +1409,11 @@ function renderSurveyForm(questions) {
         return;
     }
 
-    // ボタンエリアを保存
-    const buttonArea = formContainer.querySelector('.button-area');
+    // フォーム内容を空にする前に、ボタンエリアを削除
+    const oldButtonArea = formContainer.querySelector('.button-area');
+    if (oldButtonArea) {
+        oldButtonArea.remove();
+    }
     
     formContainer.innerHTML = ''; // 既存内容リセット
 
@@ -1524,16 +1527,11 @@ function renderSurveyForm(questions) {
         // 質問をグループに追加
         companyGroup.appendChild(formGroup);
 
-	// フォーム作成後、保存したボタンエリアを再度追加
-	    if (buttonArea) {
-	        formContainer.appendChild(buttonArea);
-	    } else {
-	        // ボタンエリアが見つからない場合は新たに作成
-	        const newButtonArea = document.createElement('div');
-	        newButtonArea.className = 'button-area';
-	        newButtonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
-	        formContainer.appendChild(newButtonArea);
-	    }
+	// フォーム生成が完了した後、ボタンを1つだけ追加
+	const buttonArea = document.createElement('div');
+	buttonArea.className = 'button-area';
+	buttonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
+	formContainer.appendChild(buttonArea);
     });
 }
 
