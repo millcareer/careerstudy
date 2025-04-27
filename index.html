@@ -1682,7 +1682,7 @@ function sendFormData(formDataObj) {
         } else {
             console.log('LIFF環境ではないか、初期化されていません');
             // LIFF環境でない場合は何らかの代替処理
-            window.location.href = 'index.html';
+            window.closeWindow();
         }
     })
     .catch(error => {
