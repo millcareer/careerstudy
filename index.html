@@ -1318,7 +1318,7 @@ function getUrlParams() {
 }
 
 // ② スプレッドシートAPI URL（GASのデプロイURLに置き換える）
-const API_URL = 'https://script.google.com/macros/s/AKfycbyNgeuhq1byS_YSbJLO2YNuhgr15h3WX6dl5OK3bj7u5yhjtImOXqHSpvQH0y2LUfwR/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyIsYEwnSfNxkoHydkccROYMnN_XUqC0QqcpC-zBkuFjK8kVWOyMGQKmlL2AzrnGULD/exec';
 
 // ③ ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1759,7 +1759,7 @@ function sendFormData(formDataObj) {
     .then(() => {
         showLoading('送信完了！');
         // LINEメッセージを送信
-        const messageText = `アンケートの回答ありがとうございました。\n\n【回答内容】\n企業数: ${formDataObj.companyResponses.length}社\n全体評価: ${formDataObj.satisfactionData.Event_Satisfaction}`;
+        const messageText = `アンケート回答ありがとうございました！`;
         sendText(messageText);
     })
     .catch((err) => {
