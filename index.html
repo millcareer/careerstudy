@@ -1747,17 +1747,14 @@ function sendFormData(formDataObj) {
         submitButton.textContent = '送信中...';
     }
     
-    // GASにデータを送信
+    // GASにデータを送信 - アクションとdataをラップするのではなく、直接companyResponsesとsatisfactionDataを送信
     fetch(API_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            action: 'submitSurvey',
-            data: formDataObj
-        })
+        body: JSON.stringify(formDataObj) // formDataObjをそのまま送信
     })
     .then(() => {
         showLoading('送信完了！');
