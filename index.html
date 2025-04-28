@@ -1558,61 +1558,90 @@ function renderSurveyForm(questions) {
     formContainer.appendChild(buttonArea);
 }
 
-// ⑤ アンケートフォーム送信処理
+//⑤ アンケートフォーム送信処理を修正
 function submitSurveyForm() {
-    console.log('送信処理を開始します');
-    
-    // 入力チェック - すべての質問に回答があるか確認
-    if (!validateAllAnswers()) {
-        alert('すべての質問に回答してください。');
-        return; // 未入力がある場合は処理を中止
-    }
-    
-    // FormDataを使わずに直接データを収集
-    const formDataObj = collectFormDataManually();
-    
-    if (Object.keys(formDataObj).length === 0) {
-        alert('フォームデータを取得できませんでした');
-        return;
-    }
-    
-    // URL パラメータからイベントIDを取得
-    const { eventid } = getUrlParams();
-    formDataObj.eventid = eventid;
-    
-    // タイムスタンプを追加
-    formDataObj.timestamp = new Date().toISOString();
-    
-    // 送信ボタンを無効化して二重送信防止
-    const submitButton = document.querySelector('.button-area .btn');
-    if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent = '送信中...';
-    }
-    
-    // LIFFが利用可能かつ初期化済みの場合はユーザーIDを取得
+  console.log('送信処理を開始します');
+  
+  // 入力チェック
+  if (!validateAllAnswers()) {
+    alert('すべての質問に回答してください。');
+    return;
+  }
+  
+  // 送信ボタンを無効化
+  const submitButton = document.querySelector('.button-area .btn');
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = '送信中...';
+  }
+  
+  // LIFFユーザーID取得を確実に行うため、Promiseベースの処理に変更
+  let userId = '';
+  let displayName = '';
+  
+  // UserID取得Promise作成
+  const getUserIdPromise = new Promise((resolve) => {
     if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-        liff.getProfile()
-            .then(profile => {
-                // ユーザーIDを追加
-                formDataObj.userId = profile.userId;
-                // オプション: 他のプロフィール情報も追加可能
-                formDataObj.displayName = profile.displayName;
-                
-                console.log('ユーザー情報を取得しました:', profile.userId);
-                // データを送信
-                sendFormData(formDataObj);
-            })
-            .catch(error => {
-                console.error('プロフィール取得エラー:', error);
-                // プロフィール取得失敗時も送信は続行
-                sendFormData(formDataObj);
-            });
+      liff.getProfile()
+        .then(profile => {
+          userId = profile.userId;
+          displayName = profile.displayName;
+          console.log('LIFF: ユーザー情報取得成功', userId);
+          resolve();
+        })
+        .catch(error => {
+          console.error('LIFF: プロフィール取得エラー', error);
+          resolve(); // エラーでも処理続行
+        });
     } else {
-        // LIFFでない場合はそのまま送信
-        console.log('LIFFが利用できないか、ログインしていません');
-        sendFormData(formDataObj);
+      console.log('LIFF: 利用不可またはログインなし');
+      resolve();
     }
+  });
+  
+  // UserID取得後にデータを送信
+  getUserIdPromise.then(() => {
+    // FormDataを収集
+    const formData = collectFormDataManually();
+    
+    // 全てのオブジェクトにUserIDをセット
+    formData.satisfactionData.UserID = userId;
+    
+    formData.companyResponses.forEach(response => {
+      response.UserID = userId;
+    });
+    
+    console.log('送信準備完了:', formData);
+    
+    // データを送信
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      console.log('送信レスポンス:', response);
+      showLoading('送信完了！');
+      
+      // LINEメッセージを送信
+      const messageText = `アンケートの回答ありがとうございました。\n\n【回答内容】\n企業数: ${formData.companyResponses.length}社\n全体評価: ${formData.satisfactionData.Event_Satisfaction}`;
+      if (typeof sendText === 'function') {
+        sendText(messageText);
+      }
+    })
+    .catch(error => {
+      console.error('送信エラー:', error);
+      alert('送信に失敗しました: ' + error.message);
+      
+      // エラー時はボタンを再度有効化
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = '送信';
+      }
+    });
+  });
 }
 
 // すべての質問に回答があるかチェックする関数
@@ -1654,86 +1683,84 @@ function validateAllAnswers() {
 
 // フォームデータを手動で収集する関数
 function collectFormDataManually() {
-    const companyResponses = [];
-    const satisfactionData = {};
-    const timestamp = new Date().toISOString();
-    const { eventid } = getUrlParams();
-    const userId = typeof liff !== 'undefined' && liff.isLoggedIn() ? liff.getProfile().userId : '';
-
-    // 企業ごとの回答を収集
-    const companyGroups = document.querySelectorAll('.company-group');
-    companyGroups.forEach(group => {
-        const companyHeading = group.previousElementSibling;
-        if (!companyHeading || companyHeading.tagName !== 'H3') return;
-        
-        const companyName = companyHeading.textContent;
-        
-        // fixed1, fixed2, fixed3は全体評価なのでスキップ
-        if (companyName === 'イベントの振り返り' || companyName === 'イベント全体の評価') {
-            const selects = group.querySelectorAll('select');
-            const textareas = group.querySelectorAll('textarea');
-            
-            selects.forEach(select => {
-                if (select.name.includes('GD_Level')) {
-                    satisfactionData.GD_Level = select.value;
-                } else if (select.name.includes('Event_Satisfaction')) {
-                    satisfactionData.Event_Satisfaction = select.value;
-                }
-            });
-            
-            textareas.forEach(textarea => {
-                if (textarea.name.includes('Satisfaction_Reason')) {
-                    satisfactionData.Satisfaction_Reason = textarea.value;
-                }
-            });
-            
-            return;
-        }
-        
-        // 企業ごとの回答を構築
-        const companyResponse = {
-            Timestamp: timestamp,
-            UserID: userId,
-            EventId: eventid,
-            Company: companyName,
-            Pre_Awareness: '',
-            Post_Impression: '',
-            Comment: '',
-            Reservation: ''
-        };
-        
-        // 各質問の回答を収集
-        const selects = group.querySelectorAll('select');
-        const textareas = group.querySelectorAll('textarea');
-        
-        selects.forEach(select => {
-            if (select.name.includes('awareness')) {
-                companyResponse.Pre_Awareness = select.value;
-            } else if (select.name.includes('impression')) {
-                companyResponse.Post_Impression = select.value;
-            } else if (select.name.includes('reservation')) {
-                companyResponse.Reservation = select.value;
-            }
-        });
-        
-        textareas.forEach(textarea => {
-            if (textarea.name.includes('comment')) {
-                companyResponse.Comment = textarea.value;
-            }
-        });
-        
-        companyResponses.push(companyResponse);
-    });
+  const companyResponses = [];
+  const satisfactionData = {
+    Timestamp: new Date().toISOString(),
+    UserID: '',
+    EventId: getUrlParams().eventid || '',
+    GD_Level: '',
+    Event_Satisfaction: '',
+    Satisfaction_Reason: ''
+  };
+  
+  // 企業ごとの回答を収集
+  const companyGroups = document.querySelectorAll('.company-group');
+  companyGroups.forEach(group => {
+    const companyHeading = group.previousElementSibling;
+    if (!companyHeading || companyHeading.tagName !== 'H3') return;
     
-    // 全体の満足度データを構築
-    satisfactionData.Timestamp = timestamp;
-    satisfactionData.UserID = userId;
-    satisfactionData.EventId = eventid;
+    const companyName = companyHeading.textContent;
     
-    return {
-        companyResponses,
-        satisfactionData
+    // fixed1, fixed2, fixed3は全体評価なのでスキップ
+    if (companyName === 'イベントの振り返り' || companyName === 'イベント全体の評価') {
+      // 満足度データの収集
+      const gdLevelSelect = group.querySelector('select[name*="GD_Level"], select[name*="gd_level"]');
+      const satisfactionSelect = group.querySelector('select[name*="Event_Satisfaction"], select[name*="event_satisfaction"]');
+      const reasonTextarea = group.querySelector('textarea[name*="Satisfaction_Reason"], textarea[name*="satisfaction_reason"]');
+      
+      if (gdLevelSelect) satisfactionData.GD_Level = gdLevelSelect.value;
+      if (satisfactionSelect) satisfactionData.Event_Satisfaction = satisfactionSelect.value;
+      if (reasonTextarea) satisfactionData.Satisfaction_Reason = reasonTextarea.value;
+      
+      return;
+    }
+    
+    // 企業ごとの回答を構築
+    const companyResponse = {
+      Timestamp: new Date().toISOString(),
+      UserID: '',
+      EventId: getUrlParams().eventid || '',
+      Company: companyName,
+      Pre_Awareness: '',
+      Post_Impression: '',
+      Comment: '',
+      Reservation: ''
     };
+    
+    // 各質問の回答を収集 - セレクターを改善
+    const preAwarenessSelect = group.querySelector('select[name*="awareness"], select[name*="Awareness"], select:nth-of-type(1)');
+    const postImpressionSelect = group.querySelector('select[name*="impression"], select[name*="Impression"], select:nth-of-type(2)');
+    const reservationSelect = group.querySelector('select[name*="reservation"], select[name*="Reservation"], select:nth-of-type(3)');
+    const commentTextarea = group.querySelector('textarea');
+    
+    // 値の取得と検証
+    if (preAwarenessSelect) {
+      companyResponse.Pre_Awareness = preAwarenessSelect.value;
+      console.log(`${companyName} - Pre_Awareness:`, preAwarenessSelect.value);
+    }
+    
+    if (postImpressionSelect) {
+      companyResponse.Post_Impression = postImpressionSelect.value;
+      console.log(`${companyName} - Post_Impression:`, postImpressionSelect.value);
+    }
+    
+    if (commentTextarea) {
+      companyResponse.Comment = commentTextarea.value;
+      console.log(`${companyName} - Comment:`, commentTextarea.value.substring(0, 20) + '...');
+    }
+    
+    if (reservationSelect) {
+      companyResponse.Reservation = reservationSelect.value;
+      console.log(`${companyName} - Reservation:`, reservationSelect.value);
+    }
+    
+    companyResponses.push(companyResponse);
+  });
+  
+  return {
+    companyResponses,
+    satisfactionData
+  };
 }
 
 // 実際にデータを送信する関数
