@@ -38,16 +38,17 @@ function sendText(text) {
     const prefix = formType === 'register' ? '[登録]' : '[アンケート]';
     const finalText = `${prefix} ${text}`;
 
-    if (!liff.isInClient()) {
-        shareTargetPicker(finalText);
-    } else {
-        sendMessages(finalText);
-    }
+    sendMessages(finalText);
 }
 
 // LINEトーク画面上でメッセージ送信
 function sendMessages(text) {
     console.log('in sendMessages()');
+    if (!liff.isInClient()) {
+        console.log('外部ブラウザからの実行なのでメッセージ送信をスキップ');
+        return;
+    }
+
     liff.sendMessages([{
         'type': 'text',
         'text': text

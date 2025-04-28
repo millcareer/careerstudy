@@ -502,29 +502,8 @@ function onSubmit() {
                 
                 try {
                     // LINEメッセージの送信を試みる
-                    if (liff.isApiAvailable('shareTargetPicker')) {
-                        // shareTargetPickerが利用可能な場合
-                        liff.shareTargetPicker([
-                            {
-                                type: "text",
-                                text: msg
-                            }
-                        ]).then(() => {
-                            // 成功時の処理
-                            setTimeout(() => {
-                                hideLoading();
-                                liff.closeWindow();
-                            }, 1000);
-                        }).catch(err => {
-                            // エラー時は送信成功メッセージだけ表示
-                            setTimeout(() => {
-                                hideLoading();
-                                alert("送信が完了しました。");
-                                liff.closeWindow();
-                            }, 1000);
-                        });
-                    } else if (liff.isInClient()) {
-                        // 通常のLIFFブラウザ内
+                    if (liff.isInClient()) {
+                        // LIFF内ブラウザの場合
                         liff.sendMessages([
                             {
                                 type: "text",
@@ -544,7 +523,7 @@ function onSubmit() {
                             }, 1000);
                         });
                     } else {
-                        // 外部ブラウザなど
+                        // 外部ブラウザの場合
                         setTimeout(() => {
                             hideLoading();
                             alert("送信が完了しました。");
@@ -552,7 +531,7 @@ function onSubmit() {
                         }, 1000);
                     }
                 } catch (e) {
-                    // どのLIFF機能も使えない場合
+                    // エラー発生時
                     setTimeout(() => {
                         hideLoading();
                         alert("送信が完了しました。");
