@@ -1489,45 +1489,47 @@ function renderSurveyForm(questions) {
             const select = document.createElement('select');
             
             // 質問タイプに基づいて名前を設定
-            if (q.company_id === 'fixed1' || q.company_id === 'fixed2' || q.company_id === 'fixed3') {
-                if (q.question_text.includes('グループディスカッション')) {
-                    select.name = 'GD_Level';
-                } else if (q.question_text.includes('満足度')) {
-                    select.name = 'Event_Satisfaction';
-                }
-            } else {
-                if (q.question_text.includes('認知度')) {
-                    select.name = `awareness_${q.company_id}`;
-                } else if (q.question_text.includes('印象')) {
-                    select.name = `impression_${q.company_id}`;
-                } else if (q.question_text.includes('予約')) {
-                    select.name = `reservation_${q.company_id}`;
-                }
-            }
-            
-            select.required = true;
-            select.className = 'form-control';
-            select.innerHTML = '<option value="">選択してください</option>';
-            
-            options.forEach(opt => {
-                const option = document.createElement('option');
-                option.value = opt.trim();
-                option.textContent = opt.trim();
-                select.appendChild(option);
-            });
-            
-            formGroup.appendChild(select);
-        } else {
-            const textarea = document.createElement('textarea');
-            
-            // 質問タイプに基づいて名前を設定
-            if (q.company_id === 'fixed1' || q.company_id === 'fixed2' || q.company_id === 'fixed3') {
-                if (q.question_text.includes('理由') || q.question_text.includes('感想')) {
-                    textarea.name = 'Satisfaction_Reason';
-                }
-            } else {
-                textarea.name = `comment_${q.company_id}`;
-            }
+	if (q.company_id === 'fixed1') {
+	    // fixed1はグループディスカッションのレベル質問と想定
+	    	select.name = 'GD_Level';
+	} else if (q.company_id === 'fixed2') {
+		select.name = 'Event_Satisfaction';
+	} else if (q.company_id === 'fixed3') {
+	    	select.name = 'Satisfaction_Reason';
+	} else {
+	    // 企業ごとの質問の場合
+	    // 質問の順番に応じて名前を設定
+	    const selectsInGroup = group.querySelectorAll('select').length;
+	    
+	    if (selectsInGroup === 0) {
+	        // 最初のセレクトは認知度
+	        select.name = `pre_awareness_${q.company_id}`;
+	    } else if (selectsInGroup === 1) {
+	        // 2番目のセレクトは印象
+	        select.name = `post_impression_${q.company_id}`;
+	    } else if (selectsInGroup === 2) {
+	        // 3番目のセレクトは予約
+	        select.name = `comment_${q.company_id}`;
+	    } else if (selectsInGroup === 3) {
+	        // 4番目のセレクトは予約
+	        select.name = `reservation_${q.company_id}`;
+	    }
+	}
+	
+	select.required = true;
+	select.className = 'form-control';
+	select.innerHTML = '<option value="">選択してください</option>';
+	
+	options.forEach(opt => {
+	    const option = document.createElement('option');
+	    option.value = opt.trim();
+	    option.textContent = opt.trim();
+	    select.appendChild(option);
+	});
+	
+	formGroup.appendChild(select);
+	} else {
+	    const textarea = document.createElement('textarea');
             
             textarea.required = true;
             textarea.className = 'form-control';
