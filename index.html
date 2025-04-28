@@ -1762,7 +1762,7 @@ function sendFormData(formDataObj) {
     .then(() => {
         showLoading('送信完了！');
         // LINEメッセージを送信
-        const messageText = `アンケートの回答ありがとうございました。\n\n【回答内容】\n企業数: ${formDataObj.companyResponses.length}社\n全体評価: ${formDataObj.satisfactionData.Event_Satisfaction}`;
+        const messageText = `アンケート回答ありがとうございました！`;
         sendText(messageText);
     })
     .catch((err) => {
