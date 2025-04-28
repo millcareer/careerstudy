@@ -1616,7 +1616,7 @@ function submitSurveyForm() {
     // データを送信
     fetch(API_URL, {
       method: 'POST',
-	mode: 'no-cors',
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -1626,10 +1626,40 @@ function submitSurveyForm() {
       console.log('送信レスポンス:', response);
       showLoading('送信完了！');
       
-      // LINEメッセージを送信
-      const messageText = `アンケートの回答ありがとうございました。\n\n【回答内容】\n企業数: ${formData.companyResponses.length}社\n全体評価: ${formData.satisfactionData.Event_Satisfaction}`;
-      if (typeof sendText === 'function') {
-        sendText(messageText);
+      // メッセージテキストを作成
+      const messageText = `アンケートの回答ありがとうございました。`;
+      
+      // LINEで送信処理（シェアターゲットピッカーを使用）
+      if (typeof liff !== 'undefined' && liff.isInClient()) {
+        // LIFFブラウザ内の場合は直接送信
+        if (typeof sendText === 'function') {
+          sendText(messageText);
+        }
+      } else {
+        // 外部ブラウザの場合はシェアターゲットピッカーを使用
+        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+          const message = {
+            type: 'text',
+            text: messageText
+          };
+          
+          liff.shareTargetPicker([message])
+            .then(result => {
+              console.log('シェアターゲットピッカー結果:', result);
+              if (result) {
+                console.log('メッセージが送信されました');
+              } else {
+                console.log('シェアターゲットピッカーがキャンセルされました');
+              }
+            })
+            .catch(error => {
+              console.error('シェアターゲットピッカーエラー:', error);
+            });
+        } else {
+          console.log('LIFF：ブラウザ環境でログインしていないため、シェアターゲットピッカーは利用できません');
+          // 必要に応じて通知を表示
+          alert('LINE送信機能を利用するにはLINEログインが必要です');
+        }
       }
     })
     .catch(error => {
@@ -1764,38 +1794,6 @@ function collectFormDataManually() {
     companyResponses,
     satisfactionData
   };
-}
-
-// 実際にデータを送信する関数
-function sendFormData(formDataObj) {
-    console.log('送信データ:', formDataObj);
-    
-    // 送信ボタンを無効化して二重送信防止
-    const submitButton = document.querySelector('.button-area .btn');
-    if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent = '送信中...';
-    }
-    
-    // GASにデータを送信 - アクションとdataをラップするのではなく、直接companyResponsesとsatisfactionDataを送信
-    fetch(API_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataObj) // formDataObjをそのまま送信
-    })
-    .then(() => {
-        showLoading('送信完了！');
-        // LINEメッセージを送信
-        const messageText = `アンケート回答ありがとうございました！`;
-        sendText(messageText);
-    })
-    .catch((err) => {
-        hideLoading();
-        alert("送信に失敗しました。" + err);
-    });
 }
 	
 </script>
