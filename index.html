@@ -1461,9 +1461,9 @@ function renderSurveyForm(questions) {
             }
             
             const heading = document.createElement('h3');
-            heading.textContent = `${headingText}`;
+            heading.textContent = headingText;
             heading.style.color = '#fcac04';
-		heading.style.fontWeight = 'bold';
+            heading.style.fontWeight = 'bold';
             heading.style.marginTop = '20px';
             form.appendChild(heading);
             
@@ -1487,10 +1487,27 @@ function renderSurveyForm(questions) {
         if (q.options && q.options.length > 0) {
             const options = q.options.split(',');
             const select = document.createElement('select');
-            select.name = `question_${index}`;
+            
+            // 質問タイプに基づいて名前を設定
+            if (q.company_id === 'fixed1' || q.company_id === 'fixed2' || q.company_id === 'fixed3') {
+                if (q.question_text.includes('グループディスカッション')) {
+                    select.name = 'GD_Level';
+                } else if (q.question_text.includes('満足度')) {
+                    select.name = 'Event_Satisfaction';
+                }
+            } else {
+                if (q.question_text.includes('認知度')) {
+                    select.name = `awareness_${q.company_id}`;
+                } else if (q.question_text.includes('印象')) {
+                    select.name = `impression_${q.company_id}`;
+                } else if (q.question_text.includes('予約')) {
+                    select.name = `reservation_${q.company_id}`;
+                }
+            }
+            
             select.required = true;
             select.className = 'form-control';
-            select.innerHTML = `<option value="">選択してください</option>`;
+            select.innerHTML = '<option value="">選択してください</option>';
             
             options.forEach(opt => {
                 const option = document.createElement('option');
@@ -1502,7 +1519,16 @@ function renderSurveyForm(questions) {
             formGroup.appendChild(select);
         } else {
             const textarea = document.createElement('textarea');
-            textarea.name = `question_${index}`;
+            
+            // 質問タイプに基づいて名前を設定
+            if (q.company_id === 'fixed1' || q.company_id === 'fixed2' || q.company_id === 'fixed3') {
+                if (q.question_text.includes('理由') || q.question_text.includes('感想')) {
+                    textarea.name = 'Satisfaction_Reason';
+                }
+            } else {
+                textarea.name = `comment_${q.company_id}`;
+            }
+            
             textarea.required = true;
             textarea.className = 'form-control';
             textarea.rows = 5;
@@ -1523,12 +1549,13 @@ function renderSurveyForm(questions) {
 
         // 質問をグループに追加
         companyGroup.appendChild(formGroup);
-});
-	// フォーム生成が完了した後、ボタンを1つだけ追加
-	const buttonArea = document.createElement('div');
-	buttonArea.className = 'button-area';
-	buttonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
-	formContainer.appendChild(buttonArea);
+    });
+
+    // フォーム生成が完了した後、ボタンを1つだけ追加
+    const buttonArea = document.createElement('div');
+    buttonArea.className = 'button-area';
+    buttonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
+    formContainer.appendChild(buttonArea);
 }
 
 // ⑤ アンケートフォーム送信処理
@@ -1627,23 +1654,86 @@ function validateAllAnswers() {
 
 // フォームデータを手動で収集する関数
 function collectFormDataManually() {
-    const formDataObj = {};
-    
-    // 質問の回答を収集
-    // セレクトボックスの値を取得
-    const selects = document.querySelectorAll('select[name^="question_"]');
-    selects.forEach(select => {
-        formDataObj[select.name] = select.value;
+    const companyResponses = [];
+    const satisfactionData = {};
+    const timestamp = new Date().toISOString();
+    const { eventid } = getUrlParams();
+    const userId = typeof liff !== 'undefined' && liff.isLoggedIn() ? liff.getProfile().userId : '';
+
+    // 企業ごとの回答を収集
+    const companyGroups = document.querySelectorAll('.company-group');
+    companyGroups.forEach(group => {
+        const companyHeading = group.previousElementSibling;
+        if (!companyHeading || companyHeading.tagName !== 'H3') return;
+        
+        const companyName = companyHeading.textContent;
+        
+        // fixed1, fixed2, fixed3は全体評価なのでスキップ
+        if (companyName === 'イベントの振り返り' || companyName === 'イベント全体の評価') {
+            const selects = group.querySelectorAll('select');
+            const textareas = group.querySelectorAll('textarea');
+            
+            selects.forEach(select => {
+                if (select.name.includes('GD_Level')) {
+                    satisfactionData.GD_Level = select.value;
+                } else if (select.name.includes('Event_Satisfaction')) {
+                    satisfactionData.Event_Satisfaction = select.value;
+                }
+            });
+            
+            textareas.forEach(textarea => {
+                if (textarea.name.includes('Satisfaction_Reason')) {
+                    satisfactionData.Satisfaction_Reason = textarea.value;
+                }
+            });
+            
+            return;
+        }
+        
+        // 企業ごとの回答を構築
+        const companyResponse = {
+            Timestamp: timestamp,
+            UserID: userId,
+            EventId: eventid,
+            Company: companyName,
+            Pre_Awareness: '',
+            Post_Impression: '',
+            Comment: '',
+            Reservation: ''
+        };
+        
+        // 各質問の回答を収集
+        const selects = group.querySelectorAll('select');
+        const textareas = group.querySelectorAll('textarea');
+        
+        selects.forEach(select => {
+            if (select.name.includes('awareness')) {
+                companyResponse.Pre_Awareness = select.value;
+            } else if (select.name.includes('impression')) {
+                companyResponse.Post_Impression = select.value;
+            } else if (select.name.includes('reservation')) {
+                companyResponse.Reservation = select.value;
+            }
+        });
+        
+        textareas.forEach(textarea => {
+            if (textarea.name.includes('comment')) {
+                companyResponse.Comment = textarea.value;
+            }
+        });
+        
+        companyResponses.push(companyResponse);
     });
     
-    // テキストエリアの値を取得
-    const textareas = document.querySelectorAll('textarea[name^="question_"]');
-    textareas.forEach(textarea => {
-        formDataObj[textarea.name] = textarea.value;
-    });
+    // 全体の満足度データを構築
+    satisfactionData.Timestamp = timestamp;
+    satisfactionData.UserID = userId;
+    satisfactionData.EventId = eventid;
     
-    console.log('手動で収集したフォームデータ:', formDataObj);
-    return formDataObj;
+    return {
+        companyResponses,
+        satisfactionData
+    };
 }
 
 // 実際にデータを送信する関数
@@ -1670,29 +1760,14 @@ function sendFormData(formDataObj) {
         })
     })
     .then(() => {
-        // no-corsモードでは、レスポンスの内容にアクセスできないので
-        // 成功したと仮定して処理を続ける
-        console.log('リクエストは送信されました（レスポンスの詳細は不明）');
-        alert('アンケートの回答ありがとうございました！');
-        
-        // LIFFが初期化されているか確認してから閉じる
-        if (typeof liff !== 'undefined' && liff.isInClient()) {
-            // LIFFブラウザを閉じる
-            liff.closeWindow();
-        } else {
-            console.log('LIFF環境ではないか、初期化されていません');
-            // LIFF環境でない場合は何らかの代替処理
-            window.closeWindow();
-        }
+        showLoading('送信完了！');
+        // LINEメッセージを送信
+        const messageText = `アンケートの回答ありがとうございました。\n\n【回答内容】\n企業数: ${formDataObj.companyResponses.length}社\n全体評価: ${formDataObj.satisfactionData.Event_Satisfaction}`;
+        sendText(messageText);
     })
-    .catch(error => {
-        console.error('送信エラー:', error);
-        alert('送信中にエラーが発生しました: ' + error.message);
-        // 送信ボタンを再度有効化
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.textContent = '送信';
-        }
+    .catch((err) => {
+        hideLoading();
+        alert("送信に失敗しました。" + err);
     });
 }
 	
