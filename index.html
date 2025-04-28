@@ -1647,24 +1647,26 @@ function submitSurveyForm() {
 
 // すべての質問に回答があるかチェックする関数
 function validateAllAnswers() {
-    // セレクトボックスの検証
-    const selects = document.querySelectorAll('select[name^="question_"]');
+    // アンケートフォーム内の全てのセレクトボックスを検証
+    const selects = document.querySelectorAll('.company-group select');
     for (let i = 0; i < selects.length; i++) {
-        if (!selects[i].value) {
+        if (!selects[i].value || selects[i].value === "選択してください") {
             console.log('未入力の選択肢があります:', selects[i].name);
             // スクロールして未入力の項目を表示
             selects[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            alert('すべての選択肢を選んでください');
             return false;
         }
     }
     
-    // テキストエリアの検証
-    const textareas = document.querySelectorAll('textarea[name^="question_"]');
+    // アンケートフォーム内の全てのテキストエリアを検証
+    const textareas = document.querySelectorAll('.company-group textarea');
     for (let i = 0; i < textareas.length; i++) {
         if (!textareas[i].value.trim()) {
             console.log('未入力のテキスト欄があります:', textareas[i].name);
             // スクロールして未入力の項目を表示
             textareas[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            alert('すべてのテキスト欄に入力してください');
             return false;
         }
         
