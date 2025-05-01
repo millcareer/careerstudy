@@ -419,22 +419,22 @@ const ENDPOINTS = {
 // フォーム送信関数
 function onSubmit() {
     // 「日程が合わない」が選択されているか
-    const noScheduleSelected = window.selectedEvents.some(e => e.value === '日程が合わない');
+    //const noScheduleSelected = window.selectedEvents.some(e => e.value === '日程が合わない');
     
     // 通常のイベント選択数をカウント
-    const normalEventCount = window.selectedEvents.filter(e => e.value !== '日程が合わない').length;
+    //const normalEventCount = window.selectedEvents.filter(e => e.value !== '日程が合わない').length;
     
     // 日程が合わないが選択されていない場合は、通常のイベントが2つ必要
-    if (!noScheduleSelected && normalEventCount !== 2) {
-        window.alert('イベントは必ず2つ選択してください。または「日程が合わない」を選択してください。');
-        return false;
-    }
+    //if (!noScheduleSelected && normalEventCount !== 2) {
+        //window.alert('イベントは必ず2つ選択してください。または「日程が合わない」を選択してください。');
+        //return false;
+    //}
     
     // 何も選択されていない場合はエラー
-    if (window.selectedEvents.length === 0) {
-        window.alert('少なくとも1つのイベントか「日程が合わない」を選択してください。');
-        return false;
-    }
+    //if (window.selectedEvents.length === 0) {
+    //    window.alert('少なくとも1つのイベントか「日程が合わない」を選択してください。');
+    //    return false;
+    //}
     
     // フォームの値を配列に格納
     let text_list = [];
