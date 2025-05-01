@@ -460,8 +460,8 @@ function onSubmit() {
     text_list.push(document.getElementById('form_answer17').value);
     text_list.push(document.getElementById('form_answer18').value);
     text_list.push(document.getElementById('form_answer19').value);
-    text_list.push(document.getElementById('form_answer22').value);
-    text_list.push(document.getElementById('form_answer23').value);
+    //text_list.push(document.getElementById('form_answer22').value);
+    //text_list.push(document.getElementById('form_answer23').value);
     
     // 入力チェック
     let msg = "【送信内容】";
