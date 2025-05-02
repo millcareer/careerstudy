@@ -117,7 +117,7 @@ function onSubmit() {
     .then(profile => {
       const answers = { mailadress, password, phoneNumber, lastName, firstName, lastNameRead, firstNameRead,
                         birthYear: Number(birthYear), birthMonth: Number(birthMonth), birthDay: Number(birthDay),
-                        universityName, clubActivity, grade, gender, birthPlace, position, faculty, department, academicType };
+                        universityName, clubActivity, grade, gender, birthPlace, position, faculty, department, academicType};
       return fetch(`${API_ENDPOINT}/api/register`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ userId:profile.userId, displayName:profile.displayName, answers })
