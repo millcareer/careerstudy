@@ -1,228 +1,141 @@
-// DOMが読み込まれたら実行される関数
-document.addEventListener('DOMContentLoaded', (event) => {
-    // ローディングを確実に非表示にする
-    const loadingElement = document.getElementById('loading');
-    if (loadingElement) {
-        loadingElement.style.display = 'none';
-    }
-    
-    // カスタムローディングインジケーターを準備（非表示で）
-    createLoadingIndicator();
-    
-    // 生年月日の選択肢を作成
-    setupBirthdaySelects();
+// LIFF → バックエンドのベースURL（末尾にスラッシュ不要）
+const API_ENDPOINT = 'https://backend-service-694729750061.asia-northeast1.run.app';
+
+// DOM読み込み時の初期化
+document.addEventListener('DOMContentLoaded', () => {
+  // 既存ローディング要素を隠す
+  const loadingElem = document.getElementById('loading');
+  if (loadingElem) loadingElem.style.display = 'none';
+
+  // カスタムローディングを準備
+  createLoadingIndicator();
+
+  // 生年月日セレクトを生成
+  setupBirthdaySelects();
 });
 
-// ローディングインジケーターを作成する関数
+// カスタムローディング作成
 function createLoadingIndicator() {
-    // すでに存在する場合は作成しない
-    if (document.getElementById('custom-loading')) return;
-    
-    // ローディングインジケーター要素の作成
-    const loadingContainer = document.createElement('div');
-    loadingContainer.id = 'custom-loading';
-    loadingContainer.style.display = 'none'; // 初期状態は非表示
-    loadingContainer.style.position = 'fixed';
-    loadingContainer.style.top = '0';
-    loadingContainer.style.left = '0';
-    loadingContainer.style.width = '100%';
-    loadingContainer.style.height = '100%';
-    loadingContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-    loadingContainer.style.zIndex = '9999';
-    loadingContainer.style.flexDirection = 'column';
-    loadingContainer.style.justifyContent = 'center';
-    loadingContainer.style.alignItems = 'center';
-    
-    // スピナー要素の作成
-    const spinner = document.createElement('div');
-    spinner.className = 'loading-spinner';
-    spinner.style.width = '40px';
-    spinner.style.height = '40px';
-    spinner.style.border = '4px solid #f3f3f3';
-    spinner.style.borderTop = '4px solid #fcac04';
-    spinner.style.borderRadius = '50%';
-    spinner.style.animation = 'spin 1s linear infinite';
-    
-    // スピナーのアニメーションスタイルを追加
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // メッセージ要素の作成
-    const message = document.createElement('p');
-    message.id = 'loading-message';
-    message.textContent = '送信中...';
-    message.style.marginTop = '10px';
-    message.style.color = '#333';
-    message.style.fontWeight = 'bold';
-    
-    // 要素を組み合わせる
-    loadingContainer.appendChild(spinner);
-    loadingContainer.appendChild(message);
-    document.body.appendChild(loadingContainer);
+  if (document.getElementById('custom-loading')) return;
+  const container = document.createElement('div');
+  container.id = 'custom-loading';
+  Object.assign(container.style, {
+    display: 'none', position: 'fixed', top: 0, left: 0,
+    width: '100%', height: '100%', backgroundColor: 'rgba(255,255,255,0.8)',
+    zIndex: 9999, justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex'
+  });
+  const spinner = document.createElement('div');
+  Object.assign(spinner.style, {
+    width: '40px', height: '40px', border: '4px solid #f3f3f3',
+    borderTop: '4px solid #fcac04', borderRadius: '50%', animation: 'spin 1s linear infinite'
+  });
+  const style = document.createElement('style');
+  style.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+  document.head.appendChild(style);
+  const msg = document.createElement('p');
+  msg.id = 'loading-message'; msg.textContent = '送信中...';
+  Object.assign(msg.style, { marginTop: '10px', fontWeight: 'bold', color: '#333' });
+  container.append(spinner, msg);
+  document.body.appendChild(container);
 }
 
-// ローディングインジケーターの表示・非表示を制御する関数
 function showLoading(message = '送信中...') {
-    const loadingElement = document.getElementById('custom-loading');
-    if (loadingElement) {
-        // メッセージを更新
-        const messageElement = document.getElementById('loading-message');
-        if (messageElement) {
-            messageElement.textContent = message;
-        }
-        
-        // 表示設定
-        loadingElement.style.display = 'flex';
-    }
+  const container = document.getElementById('custom-loading');
+  if (!container) return;
+  const msgElem = document.getElementById('loading-message');
+  if (msgElem) msgElem.textContent = message;
+  container.style.display = 'flex';
 }
 
 function hideLoading() {
-    const loadingElement = document.getElementById('custom-loading');
-    if (loadingElement) {
-        loadingElement.style.display = 'none';
-    }
+  const container = document.getElementById('custom-loading');
+  if (container) container.style.display = 'none';
 }
 
-// 生年月日選択セットアップ関数
+// 生年月日プルダウン生成
 function setupBirthdaySelects() {
-    let yearSelect = document.getElementById('form_answer07');
-    let monthSelect = document.getElementById('form_answer08');
-    let daySelect = document.getElementById('form_answer09');
-
-    if (yearSelect && monthSelect && daySelect) {
-        // 年の選択肢を生成
-        for(let i = 1900; i <= new Date().getFullYear(); i++) {
-            let option = document.createElement('option');
-            option.value = i;
-            option.text = i;
-            yearSelect.add(option);
-        }
-
-        // 月の選択肢を生成
-        for(let i = 1; i <= 12; i++) {
-            let option = document.createElement('option');
-            option.value = i;
-            option.text = i;
-            monthSelect.add(option);
-        }
-
-        // 日数を設定する関数
-        function setDayOptions() {
-            daySelect.innerHTML = '';
-            let year = yearSelect.value;
-            let month = monthSelect.value;
-            let lastDay = new Date(year, month, 0).getDate();
-            for(let i = 1; i <= lastDay; i++) {
-                let option = document.createElement('option');
-                option.value = i;
-                option.text = i;
-                daySelect.add(option);
-            }
-        }
-
-        // イベントリスナーを設定
-        yearSelect.addEventListener('change', setDayOptions);
-        monthSelect.addEventListener('change', setDayOptions);
-
-        // 初期設定
-        setDayOptions();
-    }
+  const yearEl  = document.getElementById('form_answer07');
+  const monthEl = document.getElementById('form_answer08');
+  const dayEl   = document.getElementById('form_answer09');
+  if (!yearEl || !monthEl || !dayEl) return;
+  for (let y = 1900; y <= new Date().getFullYear(); y++) {
+    yearEl.add(new Option(y, y));
+  }
+  for (let m = 1; m <= 12; m++) {
+    monthEl.add(new Option(m, m));
+  }
+  function updateDays() {
+    dayEl.innerHTML = '';
+    const y = parseInt(yearEl.value), m = parseInt(monthEl.value);
+    const last = new Date(y, m, 0).getDate();
+    for (let d = 1; d <= last; d++) dayEl.add(new Option(d, d));
+  }
+  yearEl.addEventListener('change', updateDays);
+  monthEl.addEventListener('change', updateDays);
+  updateDays();
 }
-
-// APIエンドポイント
-// 注意: 実際のGCPエンドポイントURLに置き換える必要があります
-const API_ENDPOINT = "https://backend-service-694729750061.asia-northeast1.run.app";
 
 // フォーム送信関数
 function onSubmit() {
-    // フォームの値を配列に格納
-    let text_list = [];
-    const form01 = document.getElementById('form_answer01');
-    if (form01) text_list.push(form01.value);
-    
-    text_list.push(document.getElementById('form_answer20').value);
-    text_list.push(document.getElementById('form_answer02').value);
-    text_list.push(document.getElementById('form_answer03').value);
-    text_list.push(document.getElementById('form_answer04').value);
-    text_list.push(document.getElementById('form_answer05').value);
-    text_list.push(document.getElementById('form_answer06').value);
-    text_list.push(document.getElementById('form_answer07').value);
-    text_list.push(document.getElementById('form_answer08').value);
-    text_list.push(document.getElementById('form_answer09').value);
-    text_list.push(document.getElementById('form_answer10').value);
-    text_list.push(document.getElementById('form_answer11').value);
-    text_list.push(document.getElementById('form_answer12').value);
-    text_list.push(document.getElementById('form_answer13').value);
-    text_list.push(document.getElementById('form_answer14').value);
-    text_list.push(document.getElementById('form_answer15').value);
-    text_list.push(document.getElementById('form_answer16').value);
-    text_list.push(document.getElementById('form_answer17').value);
-    text_list.push(document.getElementById('form_answer18').value);
-    text_list.push(document.getElementById('form_answer19').value);
-    
-    // パスワード確認
-    const password = document.getElementById('form_answer20').value;
-    const confirmPassword = document.getElementById('form_answer21').value;
-    
-    if (password !== confirmPassword) {
-        window.alert('パスワードと確認用パスワードが一致しません。');
-        return false;
-    }
-    
-    // 入力チェック＆rawMessage作成
-  let msg = "【送信内容】";
-  for (let i = 0; i < text_list.length; i++) {
-    if (!text_list[i]) {
-      alert('入力項目に漏れがあります。全ての項目への入力をお願い致します。');
-      return false;
-    }
-    msg += "\n" + text_list[i];
+  // ローディング要素非表示確認
+  hideLoading();
+
+  // 必須項目を個別取得
+  const academicType   = document.getElementById('form_answer01')?.value || '';
+  const mailadress     = document.getElementById('form_answer20')?.value.trim() || '';
+  const password       = document.getElementById('form_answer21')?.value || '';
+  const agreement      = document.getElementById('form_answer02')?.checked === true;
+  const birthDay       = document.getElementById('form_answer03')?.value || '';
+  const birthMonth     = document.getElementById('form_answer04')?.value || '';
+  const birthYear      = document.getElementById('form_answer05')?.value || '';
+  const birthPlace     = document.getElementById('form_answer06')?.value || '';
+  const clubActivity   = document.getElementById('form_answer07')?.value || '';
+  const department     = document.getElementById('form_answer08')?.value || '';
+  const faculty        = document.getElementById('form_answer09')?.value || '';
+  const firstName      = document.getElementById('form_answer10')?.value || '';
+  const firstNameRead  = document.getElementById('form_answer11')?.value || '';
+  const gender         = document.getElementById('form_answer12')?.value || '';
+  const grade          = document.getElementById('form_answer13')?.value || '';
+  const lastName       = document.getElementById('form_answer14')?.value || '';
+  const lastNameRead   = document.getElementById('form_answer15')?.value || '';
+  const phoneNumber    = document.getElementById('form_answer16')?.value || '';
+  const position       = document.getElementById('form_answer17')?.value || '';
+  const universityName = document.getElementById('form_answer18')?.value || '';
+  const extraField     = document.getElementById('form_answer19')?.value || '';
+
+  // バリデーション
+  if (!mailadress || !password || !academicType) {
+    alert('メールアドレス、パスワード、学科などの必須項目を入力してください。');
+    return false;
+  }
+  if (!agreement) {
+    alert('利用規約への同意が必要です。');
+    return false;
+  }
+
+  // 入力チェック＆rawMessage作成
+  const fields = [academicType, mailadress, password, agreement, birthDay, birthMonth, birthYear,
+                  birthPlace, clubActivity, department, faculty, firstName, firstNameRead,
+                  gender, grade, lastName, lastNameRead, phoneNumber, position, universityName];
+  let msg = '【送信内容】';
+  for (const val of fields) {
+    msg += '\n' + val;
   }
 
   // ローディング表示
   showLoading('送信中...しばらくお待ちください');
 
-  // LINEプロフィール取得＆送信
+  // LIFFプロファイル取得＆API呼び出し
   liff.getProfile()
     .then(profile => {
-      // text_list をキー付きオブジェクトにマッピング
-      const [
-        academicType,    // form_answer01
-        mailadress,      // form_answer20
-        passwordValue,   // form_answer21
-        agreement,       // form_answer02
-        birthDay,        // form_answer03
-        birthMonth,      // form_answer04
-        birthYear,       // form_answer05
-        birthPlace,      // form_answer06
-        clubActivity,    // form_answer07
-        department,      // form_answer08
-        faculty,         // form_answer09
-        firstName,       // form_answer10
-        firstNameRead,   // form_answer11
-        gender,          // form_answer12
-        grade,           // form_answer13
-        lastName,        // form_answer14
-        lastNameRead,    // form_answer15
-        phoneNumber,     // form_answer16
-        position,        // form_answer17
-        universityName   // form_answer18
-      ] = text_list;
-
       const answers = {
         mailadress,
-        password: passwordValue,
+        password,
         academicType,
-        agreement:       Boolean(agreement),
-        birthDay:        Number(birthDay),
-        birthMonth:      Number(birthMonth),
-        birthYear:       Number(birthYear),
+        agreement,
+        birthDay: Number(birthDay),
+        birthMonth: Number(birthMonth),
+        birthYear: Number(birthYear),
         birthPlace,
         clubActivity,
         department,
@@ -230,33 +143,27 @@ function onSubmit() {
         firstName,
         firstNameRead,
         gender,
-        grade:           Number(grade),
+        grade: Number(grade),
         lastName,
         lastNameRead,
         phoneNumber,
         position,
         universityName
       };
-
-      const payload = {
-        userId:      profile.userId,
-        displayName: profile.displayName,
-        answers
-      };
-
-      // APIコール
-      return fetch(API_ENDPOINT + '/api/register', {
-        method:  'POST',
+      return fetch(`${API_ENDPOINT}/api/register`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload)
+        body: JSON.stringify({ userId: profile.userId, displayName: profile.displayName, answers })
       });
     })
-    .then(res => res.json())
-    .then(data => {
+    .then(res => res.json().then(body => {
+      if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+      return body;
+    }))
+    .then(() => {
       showLoading('送信完了！');
-      // LINEメッセージ送信 or 終了
       if (liff.isInClient()) {
-        return liff.sendMessages([{ type: 'text', text: msg }])
+        liff.sendMessages([{ type: 'text', text: msg }])
           .then(() => setTimeout(() => { hideLoading(); liff.closeWindow(); }, 1000))
           .catch(() => setTimeout(() => { hideLoading(); alert('送信が完了しました。'); liff.closeWindow(); }, 1000));
       } else {
