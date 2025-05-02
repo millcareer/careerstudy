@@ -135,35 +135,36 @@ function setupBirthdaySelects() {
     }
 }
 
-// APIエンドポイント - 本番環境URLに設定
-const API_ENDPOINT = "/api/register";
+// APIエンドポイント
+// 注意: 実際のGCPエンドポイントURLに置き換える必要があります
+const API_ENDPOINT = "backend-sa@millcareer-app.iam.gserviceaccount.com";
 
 // フォーム送信関数
 function onSubmit() {
     // フォームの値を配列に格納
     let text_list = [];
-    const form01 = document.getElementById('form_answer01');        //mailadress
+    const form01 = document.getElementById('form_answer01');
     if (form01) text_list.push(form01.value);
     
-    text_list.push(document.getElementById('form_answer20').value); //password
-    text_list.push(document.getElementById('form_answer02').value); //phoneNumber
-    text_list.push(document.getElementById('form_answer03').value); //lastName
-    text_list.push(document.getElementById('form_answer04').value); //firstName
-    text_list.push(document.getElementById('form_answer05').value); //lastNameRead
-    text_list.push(document.getElementById('form_answer06').value); //firstNameRead
-    text_list.push(document.getElementById('form_answer07').value); //birthYear
-    text_list.push(document.getElementById('form_answer08').value); //birthMonth
-    text_list.push(document.getElementById('form_answer09').value); //birthDay
-    text_list.push(document.getElementById('form_answer10').value); //universityName
-    text_list.push(document.getElementById('form_answer11').value); //clubActivity
-    text_list.push(document.getElementById('form_answer12').value); //grade
-    text_list.push(document.getElementById('form_answer13').value); //gender
-    text_list.push(document.getElementById('form_answer14').value); //birthPlace
-    text_list.push(document.getElementById('form_answer15').value); //position
-    text_list.push(document.getElementById('form_answer16').value); //faculty
-    text_list.push(document.getElementById('form_answer17').value); //department
-    text_list.push(document.getElementById('form_answer18').value); //academicType
-    text_list.push(document.getElementById('form_answer19').value); //agreement
+    text_list.push(document.getElementById('form_answer20').value);
+    text_list.push(document.getElementById('form_answer02').value);
+    text_list.push(document.getElementById('form_answer03').value);
+    text_list.push(document.getElementById('form_answer04').value);
+    text_list.push(document.getElementById('form_answer05').value);
+    text_list.push(document.getElementById('form_answer06').value);
+    text_list.push(document.getElementById('form_answer07').value);
+    text_list.push(document.getElementById('form_answer08').value);
+    text_list.push(document.getElementById('form_answer09').value);
+    text_list.push(document.getElementById('form_answer10').value);
+    text_list.push(document.getElementById('form_answer11').value);
+    text_list.push(document.getElementById('form_answer12').value);
+    text_list.push(document.getElementById('form_answer13').value);
+    text_list.push(document.getElementById('form_answer14').value);
+    text_list.push(document.getElementById('form_answer15').value);
+    text_list.push(document.getElementById('form_answer16').value);
+    text_list.push(document.getElementById('form_answer17').value);
+    text_list.push(document.getElementById('form_answer18').value);
+    text_list.push(document.getElementById('form_answer19').value);
     
     // パスワード確認
     const password = document.getElementById('form_answer20').value;
@@ -183,7 +184,7 @@ function onSubmit() {
             window.alert('入力項目に漏れがあります。全ての項目への入力をお願い致します。');
             break;
         }
-        msg = msg + "\\n" + text_list[i];
+        msg = msg + "\n" + text_list[i];
     }
 
     if (form_check_flag == 1) {
@@ -206,60 +207,51 @@ function onSubmit() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(payload)
-            }).then(response => {
-                // レスポンスのJSONを解析
-                return response.json();
-            }).then(data => {
+            }).then(() => {
                 // データ送信完了後の処理（ローディングメッセージを更新）
-                if (data.success) {
-                    showLoading('登録完了！');
-                    
-                    try {
-                        // LINEメッセージの送信を試みる
-                        if (liff.isInClient()) {
-                            // LIFF内ブラウザの場合
-                            liff.sendMessages([
-                                {
-                                    type: "text",
-                                    text: msg
-                                }
-                            ]).then(() => {
-                                setTimeout(() => {
-                                    hideLoading();
-                                    liff.closeWindow();
-                                }, 1000);
-                            }).catch(err => {
-                                // エラー時は送信成功メッセージだけ表示
-                                setTimeout(() => {
-                                    hideLoading();
-                                    alert("送信が完了しました。");
-                                    liff.closeWindow();
-                                }, 1000);
-                            });
-                        } else {
-                            // 外部ブラウザの場合
+                showLoading('送信完了！');
+                
+                try {
+                    // LINEメッセージの送信を試みる
+                    if (liff.isInClient()) {
+                        // LIFF内ブラウザの場合
+                        liff.sendMessages([
+                            {
+                                type: "text",
+                                text: msg
+                            }
+                        ]).then(() => {
+                            setTimeout(() => {
+                                hideLoading();
+                                liff.closeWindow();
+                            }, 1000);
+                        }).catch(err => {
+                            // エラー時は送信成功メッセージだけ表示
                             setTimeout(() => {
                                 hideLoading();
                                 alert("送信が完了しました。");
-                                window.close();
+                                liff.closeWindow();
                             }, 1000);
-                        }
-                    } catch (e) {
-                        // エラー発生時
+                        });
+                    } else {
+                        // 外部ブラウザの場合
                         setTimeout(() => {
                             hideLoading();
                             alert("送信が完了しました。");
-                            try {
-                                liff.closeWindow();
-                            } catch (e) {
-                                window.close();
-                            }
+                            window.close();
                         }, 1000);
                     }
-                } else {
-                    // エラーレスポンスの場合
-                    hideLoading();
-                    alert("送信に失敗しました。" + (data.error || ""));
+                } catch (e) {
+                    // エラー発生時
+                    setTimeout(() => {
+                        hideLoading();
+                        alert("送信が完了しました。");
+                        try {
+                            liff.closeWindow();
+                        } catch (e) {
+                            window.close();
+                        }
+                    }, 1000);
                 }
             }).catch((err) => {
                 hideLoading();
