@@ -197,7 +197,6 @@ function onSubmit() {
                 userId: profile.userId,
                 displayName: profile.displayName,
                 answers: text_list,
-                rawMessage: msg
             };
 
             // データ送信を実行
