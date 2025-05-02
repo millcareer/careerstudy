@@ -135,9 +135,8 @@ function setupBirthdaySelects() {
     }
 }
 
-// APIエンドポイント
-// 注意: 実際のGCPエンドポイントURLに置き換える必要があります
-const API_ENDPOINT = "backend-sa@millcareer-app.iam.gserviceaccount.com";
+// APIエンドポイント - 本番環境URLに設定
+const API_ENDPOINT = "/api/register";
 
 // フォーム送信関数
 function onSubmit() {
@@ -184,7 +183,7 @@ function onSubmit() {
             window.alert('入力項目に漏れがあります。全ての項目への入力をお願い致します。');
             break;
         }
-        msg = msg + "\n" + text_list[i];
+        msg = msg + "\\n" + text_list[i];
     }
 
     if (form_check_flag == 1) {
@@ -207,51 +206,60 @@ function onSubmit() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(payload)
-            }).then(() => {
+            }).then(response => {
+                // レスポンスのJSONを解析
+                return response.json();
+            }).then(data => {
                 // データ送信完了後の処理（ローディングメッセージを更新）
-                showLoading('登録完了！');
-                
-                try {
-                    // LINEメッセージの送信を試みる
-                    if (liff.isInClient()) {
-                        // LIFF内ブラウザの場合
-                        liff.sendMessages([
-                            {
-                                type: "text",
-                                text: msg
-                            }
-                        ]).then(() => {
-                            setTimeout(() => {
-                                hideLoading();
-                                liff.closeWindow();
-                            }, 1000);
-                        }).catch(err => {
-                            // エラー時は送信成功メッセージだけ表示
+                if (data.success) {
+                    showLoading('登録完了！');
+                    
+                    try {
+                        // LINEメッセージの送信を試みる
+                        if (liff.isInClient()) {
+                            // LIFF内ブラウザの場合
+                            liff.sendMessages([
+                                {
+                                    type: "text",
+                                    text: msg
+                                }
+                            ]).then(() => {
+                                setTimeout(() => {
+                                    hideLoading();
+                                    liff.closeWindow();
+                                }, 1000);
+                            }).catch(err => {
+                                // エラー時は送信成功メッセージだけ表示
+                                setTimeout(() => {
+                                    hideLoading();
+                                    alert("送信が完了しました。");
+                                    liff.closeWindow();
+                                }, 1000);
+                            });
+                        } else {
+                            // 外部ブラウザの場合
                             setTimeout(() => {
                                 hideLoading();
                                 alert("送信が完了しました。");
-                                liff.closeWindow();
+                                window.close();
                             }, 1000);
-                        });
-                    } else {
-                        // 外部ブラウザの場合
+                        }
+                    } catch (e) {
+                        // エラー発生時
                         setTimeout(() => {
                             hideLoading();
                             alert("送信が完了しました。");
-                            window.close();
+                            try {
+                                liff.closeWindow();
+                            } catch (e) {
+                                window.close();
+                            }
                         }, 1000);
                     }
-                } catch (e) {
-                    // エラー発生時
-                    setTimeout(() => {
-                        hideLoading();
-                        alert("送信が完了しました。");
-                        try {
-                            liff.closeWindow();
-                        } catch (e) {
-                            window.close();
-                        }
-                    }, 1000);
+                } else {
+                    // エラーレスポンスの場合
+                    hideLoading();
+                    alert("送信に失敗しました。" + (data.error || ""));
                 }
             }).catch((err) => {
                 hideLoading();
