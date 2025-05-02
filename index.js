@@ -143,28 +143,28 @@ const API_ENDPOINT = "backend-sa@millcareer-app.iam.gserviceaccount.com";
 function onSubmit() {
     // フォームの値を配列に格納
     let text_list = [];
-    const form01 = document.getElementById('form_answer01');
+    const form01 = document.getElementById('form_answer01');        //mailadress
     if (form01) text_list.push(form01.value);
     
-    text_list.push(document.getElementById('form_answer20').value);
-    text_list.push(document.getElementById('form_answer02').value);
-    text_list.push(document.getElementById('form_answer03').value);
-    text_list.push(document.getElementById('form_answer04').value);
-    text_list.push(document.getElementById('form_answer05').value);
-    text_list.push(document.getElementById('form_answer06').value);
-    text_list.push(document.getElementById('form_answer07').value);
-    text_list.push(document.getElementById('form_answer08').value);
-    text_list.push(document.getElementById('form_answer09').value);
-    text_list.push(document.getElementById('form_answer10').value);
-    text_list.push(document.getElementById('form_answer11').value);
-    text_list.push(document.getElementById('form_answer12').value);
-    text_list.push(document.getElementById('form_answer13').value);
-    text_list.push(document.getElementById('form_answer14').value);
-    text_list.push(document.getElementById('form_answer15').value);
-    text_list.push(document.getElementById('form_answer16').value);
-    text_list.push(document.getElementById('form_answer17').value);
-    text_list.push(document.getElementById('form_answer18').value);
-    text_list.push(document.getElementById('form_answer19').value);
+    text_list.push(document.getElementById('form_answer20').value); //password
+    text_list.push(document.getElementById('form_answer02').value); //phoneNumber
+    text_list.push(document.getElementById('form_answer03').value); //lastName
+    text_list.push(document.getElementById('form_answer04').value); //firstName
+    text_list.push(document.getElementById('form_answer05').value); //lastNameRead
+    text_list.push(document.getElementById('form_answer06').value); //firstNameRead
+    text_list.push(document.getElementById('form_answer07').value); //birthYear
+    text_list.push(document.getElementById('form_answer08').value); //birthMonth
+    text_list.push(document.getElementById('form_answer09').value); //birthDay
+    text_list.push(document.getElementById('form_answer10').value); //universityName
+    text_list.push(document.getElementById('form_answer11').value); //clubActivity
+    text_list.push(document.getElementById('form_answer12').value); //grade
+    text_list.push(document.getElementById('form_answer13').value); //gender
+    text_list.push(document.getElementById('form_answer14').value); //birthPlace
+    text_list.push(document.getElementById('form_answer15').value); //position
+    text_list.push(document.getElementById('form_answer16').value); //faculty
+    text_list.push(document.getElementById('form_answer17').value); //department
+    text_list.push(document.getElementById('form_answer18').value); //academicType
+    text_list.push(document.getElementById('form_answer19').value); //agreement
     
     // パスワード確認
     const password = document.getElementById('form_answer20').value;
@@ -209,7 +209,7 @@ function onSubmit() {
                 body: JSON.stringify(payload)
             }).then(() => {
                 // データ送信完了後の処理（ローディングメッセージを更新）
-                showLoading('送信完了！');
+                showLoading('登録完了！');
                 
                 try {
                     // LINEメッセージの送信を試みる
