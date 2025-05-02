@@ -137,7 +137,7 @@ function setupBirthdaySelects() {
 
 // APIエンドポイント
 // 注意: 実際のGCPエンドポイントURLに置き換える必要があります
-const API_ENDPOINT = "https://backend-service-694729750061.asia-northeast1.run.app";
+const API_ENDPOINT = "https://backend-service-694729750061.asia-northeast1.run.app/api/register";
 
 // フォーム送信関数
 function onSubmit() {
