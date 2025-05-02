@@ -136,7 +136,8 @@ function setupBirthdaySelects() {
 }
 
 // APIエンドポイント
-const API_ENDPOINT = "https://your-gcp-endpoint-url-here"; // ここをGCPのエンドポイントURLに置き換える
+// 注意: 実際のGCPエンドポイントURLに置き換える必要があります
+const API_ENDPOINT = "https://your-gcp-endpoint-url-here";
 
 // フォーム送信関数
 function onSubmit() {
