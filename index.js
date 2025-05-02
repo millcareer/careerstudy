@@ -137,7 +137,7 @@ function setupBirthdaySelects() {
 
 // APIエンドポイント
 // 注意: 実際のGCPエンドポイントURLに置き換える必要があります
-const API_ENDPOINT = "https://your-gcp-endpoint-url-here";
+const API_ENDPOINT = "backend-sa@millcareer-app.iam.gserviceaccount.com";
 
 // フォーム送信関数
 function onSubmit() {
