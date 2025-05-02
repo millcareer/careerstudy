@@ -175,91 +175,99 @@ function onSubmit() {
         return false;
     }
     
-    // 入力チェック
-    let msg = "【送信内容】";
-    let form_check_flag = 1;
-    for (let i = 0; i < text_list.length; i++) {
-        if (text_list[i] == "") {
-            form_check_flag = 0;
-            window.alert('入力項目に漏れがあります。全ての項目への入力をお願い致します。');
-            break;
-        }
-        msg = msg + "\n" + text_list[i];
+    // 入力チェック＆rawMessage作成
+  let msg = "【送信内容】";
+  for (let i = 0; i < text_list.length; i++) {
+    if (!text_list[i]) {
+      alert('入力項目に漏れがあります。全ての項目への入力をお願い致します。');
+      return false;
     }
+    msg += "\n" + text_list[i];
+  }
 
-    if (form_check_flag == 1) {
-        // 送信中の表示を開始
-        showLoading('送信中...しばらくお待ちください');
+  // ローディング表示
+  showLoading('送信中...しばらくお待ちください');
 
-        // LINEプロフィールを取得
-        liff.getProfile().then(profile => {
-            const payload = {
-                userId: profile.userId,
-                displayName: profile.displayName,
-                answers: text_list,
-            };
+  // LINEプロフィール取得＆送信
+  liff.getProfile()
+    .then(profile => {
+      // text_list をキー付きオブジェクトにマッピング
+      const [
+        academicType,    // form_answer01
+        mailadress,      // form_answer20
+        passwordValue,   // form_answer21
+        agreement,       // form_answer02
+        birthDay,        // form_answer03
+        birthMonth,      // form_answer04
+        birthYear,       // form_answer05
+        birthPlace,      // form_answer06
+        clubActivity,    // form_answer07
+        department,      // form_answer08
+        faculty,         // form_answer09
+        firstName,       // form_answer10
+        firstNameRead,   // form_answer11
+        gender,          // form_answer12
+        grade,           // form_answer13
+        lastName,        // form_answer14
+        lastNameRead,    // form_answer15
+        phoneNumber,     // form_answer16
+        position,        // form_answer17
+        universityName   // form_answer18
+      ] = text_list;
 
-            // データ送信を実行
-            fetch(API_ENDPOINT, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                // データ送信完了後の処理（ローディングメッセージを更新）
-                showLoading('送信完了！');
-                
-                try {
-                    // LINEメッセージの送信を試みる
-                    if (liff.isInClient()) {
-                        // LIFF内ブラウザの場合
-                        liff.sendMessages([
-                            {
-                                type: "text",
-                                text: msg
-                            }
-                        ]).then(() => {
-                            setTimeout(() => {
-                                hideLoading();
-                                liff.closeWindow();
-                            }, 1000);
-                        }).catch(err => {
-                            // エラー時は送信成功メッセージだけ表示
-                            setTimeout(() => {
-                                hideLoading();
-                                alert("送信が完了しました。");
-                                liff.closeWindow();
-                            }, 1000);
-                        });
-                    } else {
-                        // 外部ブラウザの場合
-                        setTimeout(() => {
-                            hideLoading();
-                            alert("送信が完了しました。");
-                            window.close();
-                        }, 1000);
-                    }
-                } catch (e) {
-                    // エラー発生時
-                    setTimeout(() => {
-                        hideLoading();
-                        alert("送信が完了しました。");
-                        try {
-                            liff.closeWindow();
-                        } catch (e) {
-                            window.close();
-                        }
-                    }, 1000);
-                }
-            }).catch((err) => {
-                hideLoading();
-                alert("送信に失敗しました。" + err);
-            });
-        }).catch(err => {
-            hideLoading();
-            alert("LINEプロフィールの取得に失敗しました。" + err);
-        });
-    }
-    return false;
+      const answers = {
+        mailadress,
+        password: passwordValue,
+        academicType,
+        agreement:       Boolean(agreement),
+        birthDay:        Number(birthDay),
+        birthMonth:      Number(birthMonth),
+        birthYear:       Number(birthYear),
+        birthPlace,
+        clubActivity,
+        department,
+        faculty,
+        firstName,
+        firstNameRead,
+        gender,
+        grade:           Number(grade),
+        lastName,
+        lastNameRead,
+        phoneNumber,
+        position,
+        universityName
+      };
+
+      const payload = {
+        userId:      profile.userId,
+        displayName: profile.displayName,
+        answers
+      };
+
+      // APIコール
+      return fetch(API_ENDPOINT + '/api/register', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+    })
+    .then(res => res.json())
+    .then(data => {
+      showLoading('送信完了！');
+      // LINEメッセージ送信 or 終了
+      if (liff.isInClient()) {
+        return liff.sendMessages([{ type: 'text', text: msg }])
+          .then(() => setTimeout(() => { hideLoading(); liff.closeWindow(); }, 1000))
+          .catch(() => setTimeout(() => { hideLoading(); alert('送信が完了しました。'); liff.closeWindow(); }, 1000));
+      } else {
+        setTimeout(() => { hideLoading(); alert('送信が完了しました。'); window.close(); }, 1000);
+      }
+    })
+    .catch(err => {
+      hideLoading();
+      alert('送信に失敗しました: ' + err.message);
+    });
+
+  return false;
+}
 }
