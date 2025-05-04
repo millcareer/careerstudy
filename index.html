@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>キャリアスタディ</title>1
+    <title>キャリアスタディ</title>
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -24,14 +24,6 @@
         .title hr {
             border-top: 8px solid #fcac04;
         }
-        /* フォームの初期状態 */
-        .form {
-            display: none;
-        }
-        /* JavaScriptで制御される表示状態 */
-        .form.show {
-            display: block !important;
-        }
     </style>
 </head>
 
@@ -49,13 +41,8 @@
         </div>
     </div>
     
-    <!-- アンケートフォーム -->
-    <div class="form survey-only" id="survey-form">
-        <!-- 質問がここに動的に追加されます -->
-    </div>
-
     <!-- 登録フォーム -->
-    <div class="form register-only">
+    <div class="form" id="register-form">
         <p class="form-text">メールアドレス</p>
         <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required" placeholder="例：example@example.com">
 	<div class="form-group">
@@ -117,780 +104,9 @@
                 <option>青森公立大学</option>
                 <option>青森中央学院大学</option>
                 <option>青山学院大学</option>
-                <option>秋田大学</option>
-                <option>秋田看護福祉大学</option>
-                <option>秋田県立大学</option>
-                <option>秋田公立美術大学</option>
-                <option>朝日大学</option>
-                <option>旭川医科大学</option>
-                <option>旭川市立大学</option>
-                <option>麻布大学</option>
-                <option>亜細亜大学</option>
-                <option>足利大学</option>
-                <option>芦屋大学</option>
-                <option>跡見学園女子大学</option>
-                <option>育英大学</option>
-                <option>育英館大学</option>
-                <option>石川県立大学</option>
-                <option>石川県立看護大学</option>
-                <option>石巻専修大学</option>
-                <option>一宮研伸大学</option>
-                <option>茨城大学</option>
-                <option>茨城キリスト教大学</option>
-                <option>茨城県立医療大学</option>
-                <option>医療創生大学</option>
-                <option>岩手大学</option>
-                <option>岩手医科大学</option>
-                <option>岩手県立大学</option>
-                <option>岩手保健医療大学</option>
-                <option>植草学園大学</option>
-                <option>上野学園大学</option>
-                <option>宇都宮大学</option>
-                <option>宇都宮共和大学</option>
-                <option>宇部フロンティア大学</option>
-                <option>浦和大学</option>
-                <option>叡啓大学公</option>
-                <option>SBI大学院大学</option>
-                <option>江戸川大学</option>
-                <option>愛媛大学</option>
-                <option>愛媛県立医療技術大学</option>
-                <option>エリザベト音楽大学</option>
-                <option>奥羽大学</option>
-                <option>桜花学園大学</option>
-                <option>追手門学院大学</option>
-                <option>桜美林大学</option>
-                <option>大分大学</option>
-                <option>大分県立看護科学大学</option>
-                <option>大阪大学</option>
-                <option>大阪青山大学</option>
-                <option>大阪医科薬科大学</option>
-                <option>大阪大谷大学</option>
-                <option>大阪音楽大学</option>
-                <option>大阪学院大学</option>
-                <option>大阪河﨑リハビリテーション大学</option>
-                <option>大阪観光大学</option>
-                <option>大阪教育大学</option>
-                <option>大阪経済大学</option>
-                <option>大阪経済法科大学</option>
-                <option>大阪芸術大学</option>
-                <option>大阪工業大学</option>
-                <option>大阪公立大学</option>
-                <option>大阪国際大学</option>
-                <option>大阪産業大学</option>
-                <option>大阪歯科大学</option>
-                <option>大阪樟蔭女子大学</option>
-                <option>大阪商業大学</option>
-                <option>大阪女学院大学</option>
-                <option>大阪信愛学院大学</option>
-                <option>大阪成蹊大学</option>
-                <option>大阪総合保育大学</option>
-                <option>大阪体育大学</option>
-                <option>大阪電気通信大学</option>
-                <option>大阪人間科学大学</option>
-                <option>大阪保健医療大学</option>
-                <option>大阪物療大学</option>
-                <option>大阪行岡医療大学</option>
-                <option>大谷大学</option>
-                <option>大妻女子大学</option>
-                <option>大手前大学</option>
-                <option>大原大学院大学</option>
-                <option>岡崎女子大学</option>
-                <option>岡山大学</option>
-                <option>岡山学院大学</option>
-                <option>岡山県立大学</option>
-                <option>岡山商科大学</option>
-                <option>岡山理科大学</option>
-                <option>沖縄大学</option>
-                <option>沖縄キリスト教学院大学</option>
-                <option>沖縄県立看護大学</option>
-                <option>沖縄県立芸術大学</option>
-                <option>沖縄国際大学</option>
-                <option>沖縄科学技術大学院大学</option>
-                <option>小樽商科大学</option>
-                <option>お茶の水女子大学</option>
-                <option>尾道市立大学</option>
-                <option>帯広畜産大学</option>
-                <option>開智国際大学</option>
-                <option>嘉悦大学</option>
-                <option>香川大学</option>
-                <option>香川県立保健医療大学</option>
-                <option>学習院大学</option>
-                <option>学習院女子大学</option>
-                <option>鹿児島大学</option>
-                <option>鹿児島国際大学</option>
-                <option>鹿児島純心女子大学</option>
-                <option>活水女子大学</option>
-                <option>神奈川大学</option>
-                <option>神奈川県立保健福祉大学</option>
-                <option>神奈川工科大学</option>
-                <option>神奈川歯科大学</option>
-                <option>金沢大学</option>
-                <option>金沢医科大学</option>
-                <option>金沢学院大学</option>
-                <option>金沢工業大学</option>
-                <option>金沢星稜大学</option>
-                <option>金沢美術工芸大学</option>
-                <option>鹿屋体育大学</option>
-                <option>鎌倉女子大学</option>
-                <option>亀田医療大学</option>
-                <option>川崎医科大学</option>
-                <option>川崎医療福祉大学</option>
-                <option>川崎市立看護大学</option>
-                <option>川村学園女子大学</option>
-                <option>関西大学</option>
-                <option>関西医科大学</option>
-                <option>関西医療大学</option>
-                <option>関西外国語大学</option>
-                <option>関西看護医療大学</option>
-                <option>関西国際大学</option>
-                <option>関西福祉大学</option>
-                <option>関西福祉科学大学</option>
-                <option>関西学院大学</option>
-                <option>環太平洋大学</option>
-                <option>神田外語大学</option>
-                <option>関東学院大学</option>
-                <option>関東学園大学</option>
-                <option>畿央大学</option>
-                <option>北九州市立大学</option>
-                <option>北里大学</option>
-                <option>北見工業大学</option>
-                <option>吉備国際大学</option>
-                <option>岐阜大学</option>
-                <option>岐阜医療科学大学</option>
-                <option>岐阜協立大学</option>
-                <option>岐阜県立看護大学</option>
-                <option>岐阜聖徳学園大学</option>
-                <option>岐阜女子大学</option>
-                <option>岐阜保健大学</option>
-                <option>岐阜薬科大学</option>
-                <option>九州大学</option>
-                <option>九州栄養福祉大学</option>
-                <option>九州看護福祉大学</option>
-                <option>九州共立大学</option>
-                <option>九州工業大学</option>
-                <option>九州国際大学</option>
-                <option>九州産業大学</option>
-                <option>九州歯科大学</option>
-                <option>九州情報大学</option>
-                <option>九州女子大学</option>
-                <option>九州保健福祉大学</option>
-                <option>九州ルーテル学院大学</option>
-                <option>共愛学園前橋国際大学</option>
-                <option>共栄大学</option>
-                <option>京都大学</option>
-                <option>京都医療科学大学</option>
-                <option>京都外国語大学</option>
-                <option>京都華頂大学</option>
-                <option>京都看護大学</option>
-                <option>京都教育大学</option>
-                <option>京都芸術大学</option>
-                <option>京都光華女子大学</option>
-                <option>京都工芸繊維大学</option>
-                <option>京都産業大学</option>
-                <option>京都情報大学院大学</option>
-                <option>京都女子大学</option>
-                <option>京都市立芸術大学</option>
-                <option>京都精華大学</option>
-                <option>京都先端科学大学</option>
-                <option>京都橘大学</option>
-                <option>京都ノートルダム女子大学</option>
-                <option>京都美術工芸大学</option>
-                <option>京都府立大学</option>
-                <option>京都府立医科大学</option>
-                <option>京都文教大学</option>
-                <option>京都薬科大学</option>
-                <option>共立女子大学</option>
-                <option>杏林大学</option>
-                <option>桐生大学</option>
-                <option>近畿大学</option>
-                <option>金城大学</option>
-                <option>金城学院大学</option>
-                <option>釧路公立大学</option>
-                <option>国立音楽大学</option>
-                <option>熊本大学</option>
-                <option>熊本学園大学</option>
-                <option>熊本県立大学</option>
-                <option>熊本保健科学大学</option>
-                <option>倉敷芸術科学大学</option>
-                <option>くらしき作陽大学</option>
-                <option>久留米大学</option>
-                <option>久留米工業大学</option>
-                <option>グロービス経営大学院大学</option>
-                <option>群馬大学</option>
-                <option>群馬医療福祉大学</option>
-                <option>群馬県立県民健康科学大学</option>
-                <option>群馬県立女子大学</option>
-                <option>群馬パース大学</option>
-                <option>敬愛大学</option>
-                <option>慶應義塾大学</option>
-                <option>恵泉女学園大学</option>
-                <option>敬和学園大学</option>
-                <option>健康科学大学</option>
-                <option>県立広島大学</option>
-                <option>工学院大学</option>
-                <option>皇學館大学</option>
-                <option>甲子園大学</option>
-                <option>高知大学</option>
-                <option>高知学園大学</option>
-                <option>高知県立大学</option>
-                <option>高知工科大学</option>
-                <option>甲南大学</option>
-                <option>甲南女子大学</option>
-                <option>神戸大学</option>
-                <option>神戸医療未来大学</option>
-                <option>神戸海星女子学院大学</option>
-                <option>神戸学院大学</option>
-                <option>神戸芸術工科大学</option>
-                <option>神戸国際大学</option>
-                <option>神戸市外国語大学</option>
-                <option>神戸市看護大学</option>
-                <option>神戸松蔭女子学院大学</option>
-                <option>神戸情報大学院大学</option>
-                <option>神戸女学院大学</option>
-                <option>神戸女子大学</option>
-                <option>神戸親和大学</option>
-                <option>神戸常盤大学</option>
-                <option>神戸薬科大学</option>
-                <option>高野山大学</option>
-                <option>公立小松大学</option>
-                <option>公立諏訪東京理科大学</option>
-                <option>公立千歳科学技術大学</option>
-                <option>公立鳥取環境大学</option>
-                <option>公立はこだて未来大学</option>
-                <option>郡山女子大学</option>
-                <option>國學院大学</option>
-                <option>国際大学（大学院大学）</option>
-                <option>国際医療福祉大学</option>
-                <option>国際教養大学</option>
-                <option>国際基督教大学</option>
-                <option>国際仏教学大学院大学</option>
-                <option>国際武道大学</option>
-                <option>国士舘大学</option>
-                <option>こども教育宝仙大学</option>
-                <option>駒澤大学</option>
-                <option>駒沢女子大学</option>
-                <option>埼玉大学</option>
-                <option>埼玉医科大学</option>
-                <option>埼玉学園大学</option>
-                <option>埼玉県立大学</option>
-                <option>埼玉工業大学</option>
-                <option>サイバー大学</option>
-                <option>佐賀大学</option>
-                <option>嵯峨美術大学</option>
-                <option>相模女子大学</option>
-                <option>佐久大学</option>
-                <option>作新学院大学</option>
-                <option>札幌大学</option>
-                <option>札幌医科大学</option>
-                <option>札幌大谷大学</option>
-                <option>札幌学院大学</option>
-                <option>札幌国際大学</option>
-                <option>札幌市立大学</option>
-                <option>札幌保健医療大学</option>
-                <option>三育学院大学</option>
-                <option>産業医科大学</option>
-                <option>産業能率大学</option>
-                <option>三条市立大学</option>
-                <option>山陽小野田市立山口東京理科大学</option>
-                <option>山陽学園大学</option>
-                <option>滋賀大学</option>
-                <option>滋賀医科大学</option>
-                <option>志學館大学</option>
-                <option>至学館大学</option>
-                <option>滋賀県立大学</option>
-                <option>事業創造大学院大学</option>
-                <option>事業構想大学院大学</option>
-                <option>滋慶医療科学大学</option>
-                <option>四国大学</option>
-                <option>四国学院大学</option>
-                <option>四條畷学園大学</option>
-                <option>静岡大学</option>
-                <option>静岡英和学院大学</option>
-                <option>静岡県立大学</option>
-                <option>静岡産業大学</option>
-                <option>静岡社会健康医学大学院大学公</option>
-                <option>静岡福祉大学</option>
-                <option>静岡文化芸術大学</option>
-                <option>静岡理工科大学</option>
-                <option>至誠館大学</option>
-                <option>自治医科大学</option>
-                <option>実践女子大学</option>
-                <option>四天王寺大学</option>
-                <option>芝浦工業大学</option>
-                <option>柴田学園大学</option>
-                <option>島根大学</option>
-                <option>島根県立大学</option>
-                <option>下関市立大学</option>
-                <option>社会構想大学院大学</option>
-                <option>就実大学</option>
-                <option>修文大学</option>
-                <option>秀明大学</option>
-                <option>十文字学園女子大学</option>
-                <option>淑徳大学</option>
-                <option>種智院大学</option>
-                <option>純真学園大学</option>
-                <option>周南公立大学</option>
-                <option>順天堂大学</option>
-                <option>松蔭大学</option>
-                <option>上越教育大学</option>
-                <option>尚絅大学</option>
-                <option>尚絅学院大学</option>
-                <option>城西大学</option>
-                <option>城西国際大学</option>
-                <option>上智大学</option>
-                <option>湘南医療大学</option>
-                <option>湘南鎌倉医療大学</option>
-                <option>湘南工科大学</option>
-                <option>尚美学園大学</option>
-                <option>上武大学</option>
-                <option>情報科学芸術大学院大学</option>
-                <option>情報セキュリティ大学院大学</option>
-                <option>昭和大学</option>
-                <option>昭和音楽大学</option>
-                <option>昭和女子大学</option>
-                <option>昭和薬科大学</option>
-                <option>女子栄養大学</option>
-                <option>女子美術大学</option>
-                <option>白梅学園大学</option>
-                <option>白百合女子大学</option>
-                <option>仁愛大学</option>
-                <option>信州大学</option>
-                <option>杉野服飾大学</option>
-                <option>椙山女学園大学</option>
-                <option>鈴鹿大学</option>
-                <option>鈴鹿医療科学大学</option>
-                <option>駿河台大学</option>
-                <option>成安造形大学</option>
-                <option>聖学院大学</option>
-                <option>聖カタリナ大学</option>
-                <option>成蹊大学</option>
-                <option>星槎大学</option>
-                <option>政策研究大学院大学</option>
-                <option>星槎道都大学</option>
-                <option>成城大学</option>
-                <option>星城大学</option>
-                <option>聖心女子大学</option>
-                <option>聖泉大学</option>
-                <option>清泉女学院大学</option>
-                <option>清泉女子大学</option>
-                <option>聖徳大学</option>
-                <option>西南学院大学</option>
-                <option>西南女学院大学</option>
-                <option>西武文理大学</option>
-                <option>聖マリア学院大学</option>
-                <option>聖マリアンナ医科大学</option>
-                <option>聖隷クリストファー大学</option>
-                <option>聖路加国際大学</option>
-                <option>清和大学</option>
-                <option>摂南大学</option>
-                <option>専修大学</option>
-                <option>洗足学園音楽大学</option>
-                <option>仙台大学</option>
-                <option>仙台白百合女子大学</option>
-                <option>千里金蘭大学</option>
-                <option>相愛大学</option>
-                <option>創価大学</option>
-                <option>総合研究大学院大学</option>
-                <option>崇城大学</option>
-                <option>園田学園女子大学</option>
-                <option>第一工科大学</option>
-                <option>第一薬科大学</option>
-                <option>大学院大学至善館</option>
-                <option>大正大学</option>
-                <option>太成学院大学</option>
-                <option>大同大学</option>
-                <option>大東文化大学</option>
-                <option>高岡法科大学</option>
-                <option>高崎経済大学</option>
-                <option>高崎健康福祉大学</option>
-                <option>高崎商科大学</option>
-                <option>高千穂大学</option>
-                <option>高松大学</option>
-                <option>宝塚大学</option>
-                <option>宝塚医療大学</option>
-                <option>拓殖大学</option>
-                <option>多摩大学</option>
-                <option>玉川大学</option>
-                <option>多摩美術大学</option>
-                <option>筑紫女学園大学</option>
-                <option>千葉大学</option>
-                <option>千葉科学大学</option>
-                <option>千葉経済大学</option>
-                <option>千葉県立保健医療大学</option>
-                <option>千葉工業大学</option>
-                <option>千葉商科大学</option>
-                <option>中央大学</option>
-                <option>中央学院大学</option>
-                <option>中京大学</option>
-                <option>中京学院大学</option>
-                <option>中国学園大学</option>
-                <option>中部大学</option>
-                <option>中部学院大学</option>
-                <option>鎮西学院大学</option>
-                <option>筑波大学</option>
-                <option>筑波学院大学</option>
-                <option>筑波技術大学</option>
-                <option>つくば国際大学</option>
-                <option>津田塾大学</option>
-                <option>敦賀市立看護大学</option>
-                <option>都留文科大学</option>
-                <option>鶴見大学</option>
-                <option>帝京大学</option>
-                <option>帝京科学大学</option>
-                <option>帝京平成大学</option>
-                <option>デジタルハリウッド大学</option>
-                <option>帝塚山大学</option>
-                <option>帝塚山学院大学</option>
-                <option>田園調布学園大学</option>
-                <option>電気通信大学</option>
-                <option>天使大学</option>
-                <option>天理大学</option>
-                <option>東亜大学</option>
-                <option>桐蔭横浜大学</option>
-                <option>東海大学</option>
-                <option>東海学園大学</option>
-                <option>東海学院大学</option>
-                <option>東京大学</option>
-                <option>東京有明医療大学</option>
-                <option>東京医科大学</option>
-                <option>東京医科歯科大学</option>
-                <option>東京医療学院大学</option>
-                <option>東京医療保健大学</option>
-                <option>東京音楽大学</option>
-                <option>東京外国語大学</option>
-                <option>東京海洋大学</option>
-                <option>東京学芸大学</option>
-                <option>東京家政大学</option>
-                <option>東京家政学院大学</option>
-                <option>東京基督教大学</option>
-                <option>東京経済大学</option>
-                <option>東京芸術大学</option>
-                <option>東京工科大学</option>
-                <option>東京工業大学</option>
-                <option>東京工芸大学</option>
-                <option>東京国際大学</option>
-                <option>東京歯科大学</option>
-                <option>東京慈恵会医科大学</option>
-                <option>東京純心大学</option>
-                <option>東京聖栄大学</option>
-                <option>東京情報大学</option>
-                <option>東京女子大学</option>
-                <option>東京女子医科大学</option>
-                <option>東京女子体育大学</option>
-                <option>東京神学大学</option>
-                <option>東京成徳大学</option>
-                <option>東京造形大学</option>
-                <option>東京通信大学</option>
-                <option>東京電機大学</option>
-                <option>東京都市大学</option>
-                <option>東京都立大学</option>
-                <option>東京都立産業技術大学院大学</option>
-                <option>東京農業大学</option>
-                <option>東京農工大学</option>
-                <option>東京福祉大学</option>
-                <option>東京富士大学</option>
-                <option>東京未来大学</option>
-                <option>東京薬科大学</option>
-                <option>東京理科大学</option>
-                <option>同志社大学</option>
-                <option>同志社女子大学</option>
-                <option>東都大学</option>
-                <option>東邦大学</option>
-                <option>同朋大学</option>
-                <option>東邦音楽大学</option>
-                <option>桐朋学園大学</option>
-                <option>桐朋学園大学院大学</option>
-                <option>東北大学</option>
-                <option>東北医科薬科大学</option>
-                <option>東北学院大学</option>
-                <option>東北芸術工科大学</option>
-                <option>東北公益文科大学</option>
-                <option>東北工業大学</option>
-                <option>東北生活文化大学</option>
-                <option>東北福祉大学</option>
-                <option>東北文化学園大学</option>
-                <option>東北文教大学</option>
-                <option>東洋大学</option>
-                <option>東洋英和女学院大学</option>
-                <option>東洋学園大学</option>
-                <option>常磐大学</option>
-                <option>常磐会学園大学</option>
-                <option>徳島大学</option>
-                <option>徳島文理大学</option>
-                <option>常葉大学</option>
-                <option>獨協大学</option>
-                <option>獨協医科大学</option>
-                <option>鳥取大学</option>
-                <option>鳥取看護大学</option>
-                <option>富山大学</option>
-                <option>富山県立大学</option>
-                <option>富山国際大学</option>
-                <option>豊田工業大学</option>
-                <option>豊橋技術科学大学</option>
-                <option>豊橋創造大学</option>
-                <option>長岡大学</option>
-                <option>長岡技術科学大学</option>
-                <option>長岡崇徳大学</option>
-                <option>長岡造形大学</option>
-                <option>長崎大学</option>
-                <option>長崎外国語大学</option>
-                <option>長崎県立大学</option>
-                <option>長崎国際大学</option>
-                <option>長崎純心大学</option>
-                <option>長崎総合科学大学</option>
-                <option>長野大学</option>
-                <option>長野県看護大学</option>
-                <option>長野県立大学</option>
-                <option>長野保健医療大学</option>
-                <option>長浜バイオ大学</option>
-                <option>中村学園大学</option>
-                <option>名古屋大学</option>
-                <option>名古屋音楽大学</option>
-                <option>名古屋外国語大学</option>
-                <option>名古屋学院大学</option>
-                <option>名古屋学芸大学</option>
-                <option>名古屋経済大学</option>
-                <option>名古屋芸術大学</option>
-                <option>名古屋工業大学</option>
-                <option>名古屋産業大学</option>
-                <option>名古屋商科大学</option>
-                <option>名古屋女子大学</option>
-                <option>名古屋市立大学</option>
-                <option>名古屋造形大学</option>
-                <option>名古屋文理大学</option>
-                <option>名古屋柳城女子大学</option>
-                <option>名寄市立大学</option>
-                <option>奈良大学</option>
-                <option>奈良学園大学</option>
-                <option>奈良教育大学</option>
-                <option>奈良県立大学</option>
-                <option>奈良県立医科大学</option>
-                <option>奈良女子大学</option>
-                <option>奈良先端科学技術大学院大学</option>
-                <option>鳴門教育大学</option>
-                <option>南山大学</option>
-                <option>新潟大学</option>
-                <option>新潟医療福祉大学</option>
-                <option>新潟経営大学</option>
-                <option>新潟県立大学</option>
-                <option>新潟県立看護大学</option>
-                <option>新潟工科大学</option>
-                <option>新潟国際情報大学</option>
-                <option>新潟産業大学</option>
-                <option>新潟食料農業大学</option>
-                <option>新潟青陵大学</option>
-                <option>新潟薬科大学</option>
-                <option>新潟リハビリテーション大学</option>
-                <option>新見公立大学</option>
-                <option>西九州大学</option>
-                <option>西日本工業大学</option>
-                <option>二松學舍大学</option>
-                <option>日本大学</option>
-                <option>日本医科大学</option>
-                <option>日本医療大学</option>
-                <option>日本医療科学大学</option>
-                <option>日本ウェルネススポーツ大学</option>
-                <option>日本映画大学</option>
-                <option>日本経済大学</option>
-                <option>日本工業大学</option>
-                <option>日本歯科大学</option>
-                <option>日本社会事業大学</option>
-                <option>日本獣医生命科学大学</option>
-                <option>日本女子大学</option>
-                <option>日本女子体育大学</option>
-                <option>日本赤十字看護大学</option>
-                <option>日本赤十字秋田看護大学</option>
-                <option>日本赤十字九州国際看護大学</option>
-                <option>日本赤十字豊田看護大学</option>
-                <option>日本赤十字広島看護大学</option>
-                <option>日本赤十字北海道看護大学</option>
-                <option>日本体育大学</option>
-                <option>日本福祉大学</option>
-                <option>日本文化大学</option>
-                <option>日本文理大学</option>
-                <option>日本保健医療大学</option>
-                <option>日本薬科大学</option>
-                <option>人間環境大学</option>
-                <option>人間総合科学大学</option>
-                <option>ノースアジア大学</option>
-                <option>ノートルダム清心女子大学</option>
-                <option>梅花女子大学</option>
-                <option>梅光学院大学</option>
-                <option>白鷗大学</option>
-                <option>函館大学</option>
-                <option>羽衣国際大学</option>
-                <option>八戸学院大学</option>
-                <option>八戸工業大学</option>
-                <option>花園大学</option>
-                <option>浜松医科大学</option>
-                <option>浜松学院大学</option>
-                <option>ハリウッド大学院大学</option>
-                <option>阪南大学</option>
-                <option>東大阪大学</option>
-                <option>東日本国際大学</option>
-                <option>光産業創成大学院大学</option>
-                <option>ビジネス・ブレークスルー大学</option>
-                <option>比治山大学</option>
-                <option>一橋大学</option>
-                <option>姫路大学</option>
-                <option>姫路獨協大学</option>
-                <option>兵庫大学</option>
-                <option>兵庫医科大学</option>
-                <option>兵庫教育大学</option>
-                <option>兵庫県立大学</option>
-                <option>弘前大学</option>
-                <option>弘前医療福祉大学</option>
-                <option>弘前学院大学</option>
-                <option>広島大学</option>
-                <option>広島経済大学</option>
-                <option>広島工業大学</option>
-                <option>広島国際大学</option>
-                <option>広島国際学院大学</option>
-                <option>広島修道大学</option>
-                <option>広島女学院大学</option>
-                <option>広島市立大学</option>
-                <option>広島都市学園大学</option>
-                <option>広島文化学園大学</option>
-                <option>広島文教大学</option>
-                <option>びわこ学院大学</option>
-                <option>びわこ成蹊スポーツ大学</option>
-                <option>フェリス女学院大学</option>
-                <option>福井大学</option>
-                <option>福井医療大学</option>
-                <option>福井県立大学</option>
-                <option>福井工業大学</option>
-                <option>福岡大学</option>
-                <option>福岡看護大学</option>
-                <option>福岡教育大学</option>
-                <option>福岡県立大学</option>
-                <option>福岡工業大学</option>
-                <option>福岡国際医療福祉大学</option>
-                <option>福岡歯科大学</option>
-                <option>福岡女学院大学</option>
-                <option>福岡女学院看護大学</option>
-                <option>福岡女子大学</option>
-                <option>福島大学</option>
-                <option>福島学院大学</option>
-                <option>福島県立医科大学</option>
-                <option>福知山公立大学</option>
-                <option>福山大学</option>
-                <option>福山市立大学</option>
-                <option>福山平成大学</option>
-                <option>富士大学</option>
-                <option>藤女子大学</option>
-                <option>藤田医科大学</option>
-                <option>佛教大学</option>
-                <option>文化学園大学</option>
-                <option>文化ファッション大学院大学</option>
-                <option>文教大学</option>
-                <option>文京学院大学</option>
-                <option>文星芸術大学</option>
-                <option>平安女学院大学</option>
-                <option>平成音楽大学</option>
-                <option>平成国際大学</option>
-                <option>別府大学</option>
-                <option>法政大学</option>
-                <option>放送大学</option>
-                <option>北翔大学</option>
-                <option>北星学園大学</option>
-                <option>北洋大学</option>
-                <option>北陸大学</option>
-                <option>北陸学院大学</option>
-                <option>北陸先端科学技術大学院大学</option>
-                <option>星薬科大学</option>
-                <option>北海学園大学</option>
-                <option>北海商科大学</option>
-                <option>北海道大学</option>
-                <option>北海道医療大学</option>
-                <option>北海道科学大学</option>
-                <option>北海道教育大学</option>
-                <option>北海道情報大学</option>
-                <option>北海道千歳リハビリテーション大学</option>
-                <option>北海道文教大学</option>
-                <option>前橋工科大学</option>
-                <option>松本大学</option>
-                <option>松本看護大学</option>
-                <option>松本歯科大学</option>
-                <option>松山大学</option>
-                <option>松山東雲女子大学</option>
-                <option>三重大学</option>
-                <option>三重県立看護大学</option>
-                <option>南九州大学</option>
-                <option>身延山大学</option>
-                <option>美作大学</option>
-                <option>宮城大学</option>
-                <option>宮城学院女子大学</option>
-                <option>宮城教育大学</option>
-                <option>宮崎大学</option>
-                <option>宮崎県立看護大学</option>
-                <option>宮崎公立大学</option>
-                <option>宮崎国際大学</option>
-                <option>宮崎産業経営大学</option>
-                <option>武庫川女子大学</option>
-                <option>武蔵大学</option>
-                <option>武蔵野大学</option>
-                <option>武蔵野音楽大学</option>
-                <option>武蔵野学院大学</option>
-                <option>武蔵野美術大学</option>
-                <option>室蘭工業大学</option>
-                <option>名桜大学</option>
-                <option>明海大学</option>
-                <option>明治大学</option>
-                <option>明治学院大学</option>
-                <option>明治国際医療大学</option>
-                <option>明治薬科大学</option>
-                <option>名城大学</option>
-                <option>明星大学</option>
-                <option>目白大学</option>
-                <option>ものつくり大学</option>
-                <option>桃山学院大学</option>
-                <option>桃山学院教育大学</option>
-                <option>盛岡大学</option>
-                <option>森ノ宮医療大学</option>
-                <option>八洲学園大学</option>
-                <option>安田女子大学</option>
-                <option>山形大学</option>
-                <option>山形県立保健医療大学</option>
-                <option>山形県立米沢栄養大学</option>
-                <option>山口大学</option>
-                <option>山口学芸大学</option>
-                <option>山口県立大学</option>
-                <option>ヤマザキ動物看護大学</option>
-                <option>大和大学</option>
-                <option>山梨大学</option>
-                <option>山梨英和大学</option>
-                <option>山梨学院大学</option>
-                <option>山梨県立大学</option>
-                <option>横浜国立大学</option>
-                <option>横浜商科大学</option>
-                <option>横浜市立大学</option>
-                <option>横浜創英大学</option>
-                <option>横浜美術大学</option>
-                <option>横浜薬科大学</option>
-                <option>四日市大学</option>
-                <option>四日市看護医療大学</option>
-                <option>酪農学園大学</option>
-                <option>立教大学</option>
-                <option>立正大学</option>
-                <option>立命館大学</option>
-                <option>立命館アジア太平洋大学</option>
-                <option>琉球大学</option>
-                <option>龍谷大学</option>
-                <option>流通科学大学</option>
-                <option>流通経済大学</option>
-                <option>了徳寺大学</option>
-                <option>ルーテル学院大学</option>
-                <option>麗澤大学</option>
-                <option>令和健康科学大学</option>
-                <option>LEC東京リーガルマインド大学院大学</option>
-                <option>和歌山大学</option>
-                <option>和歌山県立医科大学</option>
-                <option>和歌山信愛大学</option>
-                <option>和光大学</option>
                 <option>早稲田大学</option>
                 <option>和洋女子大学</option>
-	　</datalist>
-	</select>
+	</datalist>
 
             <p class="form-text">部活名</p>
             <select name="club-name" id="form_answer11" required="required">
@@ -956,7 +172,7 @@
                     <option>射撃</option>
                     <option>ボウリング</option>
                   </optgroup>
-                　　　　<optgroup label="水泳・水上">
+                <optgroup label="水泳・水上">
                     <option>カヌー</option>
                     <option>水泳・競泳</option>
                     <option>水球</option>
@@ -966,8 +182,8 @@
                     <option>ボードセーリング</option>
                     <option>ライフセービング</option>
                     <option>ヨット</option>
-                　　</optgroup>
-                　　<optgroup label="その他">
+                </optgroup>
+                <optgroup label="その他">
                     <option>スキー</option>
                     <option>スケート</option>
                     <option>体操</option>
@@ -985,11 +201,11 @@
                     <option>ワンダーフォーゲル</option>
                     <option>トライアスロン</option>
                     <option>無所属</option>
-                　　</optgroup>
-		  <optgroup label="学生団体・ドーミー">
+                </optgroup>
+                <optgroup label="学生団体・ドーミー">
                     <option>JNSA基金</option>
                     <option>ドーミー</option>
-                　　</optgroup>
+                </optgroup>
             </select>
 
             <p class="form-text">学年</p>
@@ -1018,6 +234,7 @@
                     <option value="秋田県">秋田県</option>
                     <option value="山形県">山形県</option>
                     <option value="福島県">福島県</option>
+                </optgroup>
                 <optgroup label="関東">
                     <option value="茨城県">茨城県</option>
                     <option value="栃木県">栃木県</option>
@@ -1026,6 +243,7 @@
                     <option value="千葉県">千葉県</option>
                     <option value="東京都">東京都</option>
                     <option value="神奈川県">神奈川県</option>
+                </optgroup>
                 <optgroup label="中部">
                     <option value="新潟県">新潟県</option>
                     <option value="富山県">富山県</option>
@@ -1036,6 +254,7 @@
                     <option value="岐阜県">岐阜県</option>
                     <option value="静岡県">静岡県</option>
                     <option value="愛知県">愛知県</option>
+                </optgroup>
                 <optgroup label="近畿">
                     <option value="三重県">三重県</option>
                     <option value="滋賀県">滋賀県</option>
@@ -1044,6 +263,7 @@
                     <option value="兵庫県">兵庫県</option>
                     <option value="奈良県">奈良県</option>
                     <option value="和歌山県">和歌山県</option>
+                </optgroup>
                 <optgroup label="中国・四国">
                     <option value="鳥取県">鳥取県</option>
                     <option value="島根県">島根県</option>
@@ -1054,6 +274,7 @@
                     <option value="香川県">香川県</option>
                     <option value="愛媛県">愛媛県</option>
                     <option value="高知県">高知県</option>
+                </optgroup>
                 <optgroup label="九州・沖縄">
                     <option value="福岡県">福岡県</option>
                     <option value="佐賀県">佐賀県</option>
@@ -1063,9 +284,11 @@
                     <option value="宮崎県">宮崎県</option>
                     <option value="鹿児島県">鹿児島県</option>
                     <option value="沖縄県">沖縄県</option>
+                </optgroup>
                 <optgroup label="その他">
                     <option value="日本国外">日本国外</option>
-                </select>
+                </optgroup>
+            </select>
 
             <p class="form-text">役職</p>
             <select name="role" id="form_answer15" required="required">
@@ -1084,135 +307,43 @@
             <p class="form-text">学科</p>
             <input type="text" name="department" id="form_answer17" required="required" minlength="1">
             <p class="form-text">学業種別</p>
-            <select name="role" id="form_answer18" required="required">
+            <select name="academic_field" id="form_answer18" required="required">
                 <option>文系</option>
                 <option>体育・スポーツ系</option>
                 <option>理系（機械系）</option>
                 <option>理系（電気系）</option>
                 <option>理系（建築・土木系）</option>
                 <option>理系（情報系）</option>
-		<option>理系（化学系）</option>
+                <option>理系（化学系）</option>
                 <option>理系（農学・水産系）</option>
                 <option>理系（その他）</option>
             </select>
-			    
-<p class="form-text">個人情報同意</p>
-<div style="height: 150px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
-    <p style="text-align: left;">
-  個人情報保護方針<br>
-【1】個人情報取り扱いに関する基本方針<br>
-株式会社Mill Career（以下「当社」という）は、以下のとおり個人情報保護方針を定め、個人情報保護の仕組みを構築し、全従業員に個人情報保護の重要性の認識と取組みを徹底させることにより、個人情報の保護を推進することを宣言いたします。<br>
-当社は利用目的を明確にした上で個人情報を取得し、目的の範囲内に限り、個人情報を利用いたします。また、利用目的の範囲を超えて個人情報の利用を行わないよう、社内の管理体制の整備および安全管理措置を講じます。<br>
-個人情報の管理は、厳重に行うこととし、お客様にご承諾いただいた場合を除き、第三者に対しデータを開示・提供することは原則いたしません。また個人情報 の漏洩、滅失又は毀損を防ぐため、安全管理措置を規定し実施いたします。また問題発生の予防のための手順を設け実施するとともに、万が一の問題発生に対 しては速やかに再発防止のための是正を行います。<br>
-当社は、当社が保有する個人情報の取扱いに関して適用される法令、国が定める指針及びその他の規範を遵守いたします。<br>
-当社は、当社が保有する個人情報に対するお問い合わせや苦情に対して、受付、対応の体制と手順を整備し、迅速に対応いたします。 当社は、個人情報保護に関する管理の体制と仕組みについて継続的改善を実施いたします。<br>
-当社は、下記の方針に従い、個人情報の取り扱いに細心の注意を払います。<br>
-<br>
-【2】定義<br>
-個人情報とは、個人に関する情報であって、その情報を構成する氏名、住所、電話番号、メールアドレス、所属組織、生年月日その他の記述等により個人を識別できるものをいいます。また、その情報のみでは識別できない場合でも、他の情報と容易に照合することができ、結果的に個人を識別できる情報も個人情報に含まれます。<br>
-<br>
-【3】個人情報の利用目的<br>
-個人情報の取得と利用の目的および活用範囲は以下の通りです。<br>
-当社によるお客様への本サービス提供 　お客様の承諾に基づく、本サービス利用企業への個人情報開示(本サービスを通じた利用企業へのエントリー・イベントへの参加をもって、当該利用企業ないしイベント参加企業への個人情報開示の承諾とみなします)<br>
-　1.当社および当社の関係会社が提供するサービスのご案内や資料の送付<br>
-　2.アンケートのご協力依頼やアンケート結果の報告、キャンペーンの告知、モニター等への応募、プレゼント発送等<br>
-　3.属性情報・端末情報・位置情報・行動履歴等に基づく広告・コンテンツの配信・表示<br>
-　4.記事コンテンツ作成の為の取材対象者の募集<br>
-　5.本サービスの改善・新規サービスの開発およびマーケティング 当社サービス提供、お客様からのお問合せへの対応のために必要な業務遂行<br>
-　6.利用規約等で禁じている、商用・転用目的での各種申込行為、各種多重申込、権利譲渡、虚偽情報登録などの調査と、それに基づく当該申込内容の詳細確認。<br>
-　7.その他上記業務に関連・付随する業務<br>
-<br>
-【4】個人情報の第三者提供について<br>
-お客様の個人情報について、お客様ご本人の同意を得ずに第三者に提供することは、原則いたしません。提供先・提供情報内容を特定した上で、お客様ご本人の同意を得た場合に限り、提供いたします。ただし、以下の場合は、お客様の同意なくお客様の個人情報を提供することがあります。<br>
-　1.法令に基づく場合<br>
-　2.人の生命、身体または財産の保護のために必要がある場合であって、お客様ご本人の同意を得ることが困難である場合<br>
-　3.公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合であって、お客様ご本人の同意を得ることが困難である場合<br>
-　4.国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力する必要がある場合であって、お客様ご本人の同意を得ることによってその事務の遂行に支障を及ぼすおそれがあると当社が判断した場合<br>
-　5.裁判所、検察庁、警察、弁護士会、消費者センターまたはこれらに準じた権限を有する機関から、お客様の個人情報についての開示を求められた場合<br>
-　6.お客様ご本人から明示的に第三者への提供を求められた場合<br>
-　7.合併その他の事由による事業の承継に伴って個人情報が提供される場合<br>
-<br>
-【5】第三者提供に関する免責事項<br>
-以下の場合は、第三者による個人情報の取得に関し、当社は何らの責任を負いません。<br>
-　1.ユーザー自らが本サービスの機能または別の手段を用いて利用企業等に個人情報を明らかにする場合（なお、利用企業等における個人情報の取扱いについては、各利用企業に直接お問合せください）<br>
-　2.本サービスに入力した情報により、期せずして第三者において本人が特定できてしまった場合<br>
-　3.本サービスからリンクされる外部サイトにおいて、ユーザーより個人情報が提供され、またそれが利用された場合<br>
-<br>
-【6】応募先企業における個人情報管理<br>
-ユーザーがサービスを利用して応募先企業に提供した個人情報については、応募先企業の定める個人情報管理に関する規程に則って取り扱われます。応募先企業における個人情報の取扱いについて、当社は責任を負いかねますので、ユーザご自身のご判断で応募先企業に個人情報を提供していただくようにお願い致します。また、会員の採用選考状況などの情報については、当社が応募先企業等から委託を受け、会員の情報の管理等を行う限度で、これを取り扱うものとします。<br>
-<br>
-【7】統計処理されたデータの利用<br>
-当社は提供を受けたお客様の個人情報をもとに、お客様個人を特定できないよう加工した統計データを作成することがあります。お客様個人を特定できない統計データについては、当社は何ら制限なく利用することができるものとします。<br>
-<br>
-【8】個人データの開示、訂正等の手続きについて<br>
-当社は、保有する個人データ（個人情報の保護に関する法律2条6項に定めるものをいいます。）に関し、法令に従い、ユーザーまたはその代理人からの開示・変更等（内容の訂正、追加または削除）、利用停止等（利用の停止または消去）、第三者への提供の停止、「個人情報の利用目的」の通知の求めに対応させていただきます。 当社は、個人情報の開示・変更等・利用停止等の求めに対し、ユーザ個人を識別できる情報（氏名、住所、電話番号、生年月日、メールアドレス、会員番号、パスワード等）により、本人であることを確認します。ただし、本人確認の正確さを期すため、運転免許証またはパスポートその他の公的書類の写しを求める場合があります。また、当該求めを代理人が行う場合、当社は、以上に定めるところに加え、代理権の存在を証する書類を求める場合があります。 なお、ユーザは、サービス内で登録した個人情報に関し、自らサービス内で確認および訂正することができます。 ただし、以下の場合は個人情報の変更等に応じないことがあります。<br>
-　1.ユーザー本人または第三者の生命、身体、財産その他の権利・利益を害するおそれがある場合<br>
-　2.本サービスの適正な実施に著しい支障を及ぼすおそれがある場合 他の法令に違反することとなる場合<br>
-なお、当該個人情報の変更等に多額の費用を要する場合､その他の、個人情報の変更等を行うことが困難な場合であって、ユーザーの権利・利益を保護するため必要なこれに代わるべき措置をとるときは、個人情報の変更等に応じないことがあります。<br>
-<br>
-【9】個人情報提供の任意性<br>
-当社が提供を求める全ての項目にお答えいただく必要はございませんが、必要となる情報が不足している場合は、本サービスを受けられないことがあります。<br>
-<br>
-【10】本人が容易に認識できない方法による個人情報の取得について<br>
-本サイトにおいて、サイトの使い勝手を向上させる目的や、アクセス状況などの統計的情報を取得する目的で、クッキーやウェブビーコン、携帯端末の個体識別番 号等の技術を使用することがありますが、そのような技術の使用により、ユーザーが入力していない個人情報を取得することはありません。<br>
-(1) クッキー<br>
-● クッキーとは<br>
-クッキーとは、ウェブページを利用したときに、ブラウザとサーバーとの間で送受信した利用履歴や入力内容などを、お客様のコンピュータにファイルとして保存しておく仕組みです。次回、同じページにアクセスすると、クッキーの情報を使って、ページの運営者はお客様ごとに表示を変えたりすることができます。なお、お客様のブラウザは、プライバシー保護のため、そのウェブサイトのサーバーが送受信したクッキーのみを送信します。<br>
-● クッキーの設定について<br>
-お客様は、クッキーの送受信に関する設定を「すべてのクッキーを許可する」、「すべてのクッキーを拒否する」、「クッキーを受信したら ユーザーに通知する」などから選択できます。設定方法は、ブラウザにより異なります。クッキーに関する設定方法は、お使いのブラウザの「ヘルプ」メニューでご確認ください。すべてのクッキーを拒否する設定を選択されますと、認証が必要なサービスを受けられなくなる等、インターネット上の各種サービスの利用上、制約を受ける場合がありますのでご注意ください。<br>
-● クッキーを使用して行っていること<br>
-以下の目的のため、当社はクッキーを利用する可能性があります。<br>
-　1.お客様が認証サービスにログインされるとき、保存されているお客様の登録情報を参照して、お客様ごとにカスタマイズされたサービスを提供できるようにするため<br>
-　2.お客様が興味を持っている内容や、当社のサイト上での利用状況をもとに、最も適切な広告を他社サイト上で表示するため<br>
-　3.本サイトの利用者数やトラフィックを調査するため<br>
-　4.当社のサービスを改善するため<br>
-　5.セキュリティー保持のため、ご利用から一定の時間が経過したお客様に対してパスワードの再入力（再認証）を促すため<br>
-なお、当社は、当社の広告の配信を委託する他社サイトへの委託に基づき、他社サイトを経由して、当社のクッキーを保存し、参照する場合があります。これは、本サイトをより便利にご利用いただく目的で、お客様を 識別するために利用しているデータです。ご利用のインターネット閲覧ソフト（ブラウザ）の設定を変 更することによりクッキーを拒否するように設定することもできますが、その場合には本サービスを正常にご 利用頂けない場合がございます。<br>
-(2) ウェブビーコン<br>
-当社のウェブサイトでは、本サイトの利用状況に関する統計情報の取得や、サービスをより良いものに改 善することを目的として、ウェブビーコンを使用しているページがあります。ウェブビーコンを用いて取得された 情報には、個人を特定するような情報は含まれておりません。<br>
-(3) 携帯端末の個体識別番号<br>
-携帯端末の個体識別番号とは、携帯端末で本サイトにアクセスした際に、携帯端末を区別するためにお 客様の携帯端末が送信する番号のことで、アクセス管理などに利用しております。個体識別番号には、 お客様の携帯電話番号やメールアドレス、氏名など、お客様のプライバシーに関する情報は含まれており ません。また個体識別番号のみでは、お客様個人を特定する事はできません。<br>
-<br>
-【11】プライバシーポリシーの改定について<br>
-当社は、個人情報の取扱いに関する運用状況を適宜見直し、継続的な改善に努めるものとし、法令等の定めがある場合を除き、必要に応じて本ポリシーの全部または一部を改定することがあります。この場合、改定後の内容は、当サイトでお知らせします。本ポリシーの改定は、当サイトに掲載された時点から適用されるものとします。<br>
-<br>
-【12】個人情報の取扱いに関する相談や連絡先<br>
-名称 株式会社Mill Career 個人情報対応窓口 連絡先 info@millcareer.com<br>
-最終改訂 2023 年 04 月 1 日<br>
-  </p>
-</div>
-<p>
-  <input type="checkbox" name="agreement" id="form_answer19" value="同意する" required="required">
-  <label for="form_answer19">同意する</label>
-</p>
-
-
-<div class="form-group">
-  <p class="form-text">INTERN QUEST参加予約</p>
-  <div style="margin-bottom: 10px;">
-    <p>下記から希望する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
-    
-    <!-- イベント選択エリア -->
-    <div id="event-selection-area">
-      <!-- 選択済みイベント表示 -->
-      <div id="selected-events-list" style="margin-bottom: 10px;"></div>
-      
-      <!-- 選択肢リスト -->
-      <div id="event-options-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;"></div>
-      
-      <!-- 選択数表示 -->
-      <p id="selection_count" style="color: #fcac04; font-size: 14px;">選択数: 0/2</p>
-    </div>
-    
-    <!-- 隠しフィールド -->
-    <input type="hidden" id="form_answer22" name="event_choice1" value="">
-    <input type="hidden" id="form_answer23" name="event_choice2" value="">
-  </div>
-</div>
 	    
-	<br>    
-        <div class="btn-block">
-        <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
+            <p class="form-text">個人情報同意</p>
+            <div style="height: 150px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+                <p style="text-align: left;">
+                個人情報保護方針<br>
+                【1】個人情報取り扱いに関する基本方針<br>
+                株式会社Mill Career（以下「当社」という）は、以下のとおり個人情報保護方針を定め、個人情報保護の仕組みを構築し、全従業員に個人情報保護の重要性の認識と取組みを徹底させることにより、個人情報の保護を推進することを宣言いたします。<br>
+                当社は利用目的を明確にした上で個人情報を取得し、目的の範囲内に限り、個人情報を利用いたします。また、利用目的の範囲を超えて個人情報の利用を行わないよう、社内の管理体制の整備および安全管理措置を講じます。<br>
+                個人情報の管理は、厳重に行うこととし、お客様にご承諾いただいた場合を除き、第三者に対しデータを開示・提供することは原則いたしません。また個人情報 の漏洩、滅失又は毀損を防ぐため、安全管理措置を規定し実施いたします。また問題発生の予防のための手順を設け実施するとともに、万が一の問題発生に対 しては速やかに再発防止のための是正を行います。<br>
+                当社は、当社が保有する個人情報の取扱いに関して適用される法令、国が定める指針及びその他の規範を遵守いたします。<br>
+                当社は、当社が保有する個人情報に対するお問い合わせや苦情に対して、受付、対応の体制と手順を整備し、迅速に対応いたします。 当社は、個人情報保護に関する管理の体制と仕組みについて継続的改善を実施いたします。<br>
+                当社は、下記の方針に従い、個人情報の取り扱いに細心の注意を払います。<br>
+                <br>
+                【2】定義<br>
+                個人情報とは、個人に関する情報であって、その情報を構成する氏名、住所、電話番号、メールアドレス、所属組織、生年月日その他の記述等により個人を識別できるものをいいます。また、その情報のみでは識別できない場合でも、他の情報と容易に照合することができ、結果的に個人を識別できる情報も個人情報に含まれます。<br>
+                </p>
+            </div>
+            <p>
+                <input type="checkbox" name="agreement" id="form_answer19" value="同意する" required="required">
+                <label for="form_answer19">同意する</label>
+            </p>
+	    
+	    <br>    
+            <div class="btn-block">
+                <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
+            </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -1222,582 +353,79 @@
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="liff.js"></script>
     <script src="index.js"></script>
-    <!-- Bootstrap JavaScript (もし使っているなら) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-// Get password input elements
-const passwordInput = document.getElementById('form_answer20');
-const confirmPasswordInput = document.getElementById('form_answer21');
+    <script>
+    // パスワード検証機能
+    const passwordInput = document.getElementById('form_answer20');
+    const confirmPasswordInput = document.getElementById('form_answer21');
 
-// Password validation function
-function validatePassword() {
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
-    
-    // Create or get error message elements
-    let passwordError = document.getElementById('password-error');
-    if (!passwordError) {
-        passwordError = document.createElement('p');
-        passwordError.id = 'password-error';
-        passwordError.style.color = 'red';
-        passwordError.style.fontSize = '14px';
-        passwordInput.parentNode.appendChild(passwordError);
+    // パスワード検証関数
+    function validatePassword() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        
+        // エラーメッセージ要素の作成・取得
+        let passwordError = document.getElementById('password-error');
+        if (!passwordError) {
+            passwordError = document.createElement('p');
+            passwordError.id = 'password-error';
+            passwordError.style.color = 'red';
+            passwordError.style.fontSize = '14px';
+            passwordInput.parentNode.appendChild(passwordError);
+        }
+        
+        let confirmError = document.getElementById('confirm-password-error');
+        if (!confirmError) {
+            confirmError = document.createElement('p');
+            confirmError.id = 'confirm-password-error';
+            confirmError.style.color = 'red';
+            confirmError.style.fontSize = '14px';
+            confirmPasswordInput.parentNode.appendChild(confirmError);
+        }
+        
+        // エラーメッセージのリセット
+        passwordError.textContent = '';
+        confirmError.textContent = '';
+        
+        // パスワードの長さのバリデーション
+        if (password.length < 8) {
+            passwordError.textContent = 'パスワードは8文字以上で入力してください';
+            return false;
+        }
+        
+        // パスワードに英字と数字が含まれているかのバリデーション
+        const hasLetter = /[a-zA-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        
+        if (!hasLetter || !hasNumber) {
+            passwordError.textContent = 'パスワードは英字と数字を含む必要があります';
+            return false;
+        }
+        
+        // パスワードの一致確認
+        if (password !== confirmPassword && confirmPassword.length > 0) {
+            confirmError.textContent = 'パスワードが一致しません';
+            return false;
+        }
+        
+        return true;
     }
-    
-    let confirmError = document.getElementById('confirm-password-error');
-    if (!confirmError) {
-        confirmError = document.createElement('p');
-        confirmError.id = 'confirm-password-error';
-        confirmError.style.color = 'red';
-        confirmError.style.fontSize = '14px';
-        confirmPasswordInput.parentNode.appendChild(confirmError);
-    }
-    
-    // Reset error messages
-    passwordError.textContent = '';
-    confirmError.textContent = '';
-    
-    // Validate password length
-    if (password.length < 8) {
-        passwordError.textContent = 'パスワードは8文字以上で入力してください';
-        return false;
-    }
-    
-    // Validate password contains both letters and numbers
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    
-    if (!hasLetter || !hasNumber) {
-        passwordError.textContent = 'パスワードは英字と数字を含む必要があります';
-        return false;
-    }
-    
-    // Validate passwords match
-    if (password !== confirmPassword && confirmPassword.length > 0) {
-        confirmError.textContent = 'パスワードが一致しません';
-        return false;
-    }
-    
-    return true;
-}
 
-// Add event listeners
-passwordInput.addEventListener('input', validatePassword);
-confirmPasswordInput.addEventListener('input', validatePassword);
+    // イベントリスナーの追加
+    passwordInput.addEventListener('input', validatePassword);
+    confirmPasswordInput.addEventListener('input', validatePassword);
 
-// Update form submission to validate passwords
-const originalSubmitFunction = window.onSubmit || function(){};
-
-window.onSubmit = function(event) {
-    if (!validatePassword()) {
-        // If we're using a real form submission, prevent it
-        if (event) {
+    // 送信ボタンのクリックイベントハンドラ
+    document.querySelector('.btn').addEventListener('click', function(event) {
+        if (!validatePassword()) {
             event.preventDefault();
         }
-        return false;
-    }
-    
-    // Call the original submit function if validation passes
-    return originalSubmitFunction(event);
-};
-
-// Add this code to the existing button click handler
-document.querySelector('.btn').addEventListener('click', function(event) {
-    if (!validatePassword()) {
-        event.preventDefault();
-    }
-});
-
-    // ① URLパラメータを取得する関数
-function getUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-        type: params.get('type'),     // type=survey or type=register
-        eventid: params.get('eventid') // eventid=xxxx（surveyのとき）
-    };
-}
-
-// ② スプレッドシートAPI URL（GASのデプロイURLに置き換える）
-const API_URL = 'https://script.google.com/macros/s/AKfycbzkOsqoKEWRJ9gJxLpd1MAPNQwuuqB4ZVqmb4MWFkJDkEmIaZQDYOffQydxHBxM0aZU/exec';
-
-// ③ ページ読み込み時の処理
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('DOM Content Loaded');
-    const { type, eventid } = getUrlParams();
-    console.log('URL Parameters:', type, eventid);
-    
-    let mode = type || 'register'; // ★パラメータがなければ、強制的に'register'にする
-
-    if (mode === 'survey') {
-        console.log('Survey mode detected');
-        document.querySelector('.survey-only').classList.add('show');
-        document.querySelector('.register-only').classList.remove('show');
-        
-        if (!eventid) {
-            alert('イベントIDが見つかりませんでした');
-            return;
-        }
-
-        try {
-            console.log('Fetching survey data from:', `${API_URL}?eventid=${eventid}`);
-            const response = await fetch(`${API_URL}?eventid=${eventid}`);
-            console.log('Response received:', response);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const questions = await response.json();
-            console.log('Questions parsed:', questions);
-            renderSurveyForm(questions);
-        } catch (error) {
-            console.error('アンケートデータ取得エラー:', error);
-            alert('アンケートデータの取得に失敗しました: ' + error.message);
-        }
-        
-    } else if (mode === 'register') {
-        console.log('Register mode detected');
-        document.querySelector('.register-only').classList.add('show');
-        document.querySelector('.survey-only').classList.remove('show');
-    } 
-});
-
-
-    // 既存の文字数カウント機能
-    const feedbackTextarea = document.getElementById('form_feedback');
-    const currentCount = document.getElementById('current_count');
-    const countMessage = document.getElementById('count_message');
-    const minLength = 50;
-
-    if (feedbackTextarea) {
-        console.log('Feedback textarea found');
-        feedbackTextarea.addEventListener('input', function() {
-            const length = this.value.length;
-            currentCount.textContent = length;
-            
-            if (length < minLength) {
-                this.classList.remove('valid');
-                this.classList.add('invalid');
-                countMessage.classList.remove('success');
-                countMessage.classList.add('error');
-                countMessage.textContent = `あと${minLength - length}文字必要です`;
-            } else {
-                this.classList.remove('invalid');
-                this.classList.add('valid');
-                countMessage.classList.remove('error');
-                countMessage.classList.add('success');
-                countMessage.textContent = '必要文字数を満たしています';
-            }
-        });
-
-        // 初期表示時のカウント表示
-        feedbackTextarea.dispatchEvent(new Event('input'));
-    } else {
-        console.log('Feedback textarea not found');
-    }
-
-// ④ アンケートをレンダリングする関数
-function renderSurveyForm(questions) {
-    console.log('Rendering survey form');
-    const formContainer = document.querySelector('.survey-only');
-    
-    if (!formContainer) {
-        console.error('Survey form container not found');
-        return;
-    }
-
-    // フォーム内容を空にする前に、ボタンエリアを削除
-    const oldButtonArea = formContainer.querySelector('.button-area');
-    if (oldButtonArea) {
-        oldButtonArea.remove();
-    }
-    
-    formContainer.innerHTML = ''; // 既存内容リセット
-
-    // 質問データのチェック
-    if (!Array.isArray(questions) || questions.length === 0) {
-        console.error('Invalid questions data:', questions);
-        formContainer.innerHTML = '<p>アンケートデータが正しくありません</p>';
-        return;
-    }
-
-    // デバッグ用
-    console.log('質問データ受信:', questions.length + '件');
-
-    let currentCompanyId = '';
-    let companyGroup = null;
-
-    // フォーム作成
-    const form = document.createElement('form');
-    form.id = 'survey-form';
-    form.onsubmit = function(e) {
-        e.preventDefault();
-        submitSurveyForm();
-    };
-    formContainer.appendChild(form);
-
-    questions.forEach((q, index) => {
-        console.log('Processing question:', q);
-        // 企業IDが変わったら新しいセクションを作成
-        if (q.company_id !== currentCompanyId) {
-            // 最初でない場合は区切り線を追加
-            if (currentCompanyId !== '') {
-                const divider = document.createElement('hr');
-                divider.style.borderTop = '2px solid #fcac04';
-                divider.style.margin = '30px 0';
-                form.appendChild(divider);
-            }
-            
-            // 企業ID更新
-            currentCompanyId = q.company_id;
-            
-            // 企業名見出し
-            let headingText = q.company_name;
-            // fixed特殊処理
-            if (q.company_id === 'fixed1') {
-                headingText = 'イベントの振り返り';
-            } else if (q.company_id === 'fixed2' || q.company_id === 'fixed3') {
-                headingText = 'イベント全体の評価';
-            }
-            
-            const heading = document.createElement('h3');
-            heading.textContent = headingText;
-            heading.style.color = '#fcac04';
-            heading.style.fontWeight = 'bold';
-            heading.style.marginTop = '20px';
-            form.appendChild(heading);
-            
-            // 新しいグループ作成
-            companyGroup = document.createElement('div');
-            companyGroup.className = 'company-group';
-            form.appendChild(companyGroup);
-        }
-
-        // 質問グループ作成
-        const formGroup = document.createElement('div');
-        formGroup.className = 'form-group';
-        
-        // 質問テキスト
-        const label = document.createElement('p');
-        label.className = 'form-text';
-        label.textContent = q.question_text;
-        formGroup.appendChild(label);
-
-        // 選択肢かテキストエリアを作成
-        if (q.options && q.options.length > 0) {
-            const options = q.options.split(',');
-            const select = document.createElement('select');
-            
-            // 質問タイプに基づいて名前を設定
-	if (q.company_id === 'fixed1') {
-	    // fixed1はグループディスカッションのレベル質問と想定
-	    	select.name = 'GD_Level';
-	} else if (q.company_id === 'fixed2') {
-		select.name = 'Event_Satisfaction';
-	} else if (q.company_id === 'fixed3') {
-	    	select.name = 'Satisfaction_Reason';
-	} else {
-	    // 企業ごとの質問の場合
-	    // 質問の順番に応じて名前を設定
-	    const selectsInGroup = group.querySelectorAll('select').length;
-	    
-	    if (selectsInGroup === 0) {
-	        // 最初のセレクトは認知度
-	        select.name = `pre_awareness_${q.company_id}`;
-	    } else if (selectsInGroup === 1) {
-	        // 2番目のセレクトは印象
-	        select.name = `post_impression_${q.company_id}`;
-	    } else if (selectsInGroup === 2) {
-	        // 3番目のセレクトは予約
-	        select.name = `comment_${q.company_id}`;
-	    } else if (selectsInGroup === 3) {
-	        // 4番目のセレクトは予約
-	        select.name = `reservation_${q.company_id}`;
-	    }
-	}
-	
-	select.required = true;
-	select.className = 'form-control';
-	select.innerHTML = '<option value="">選択してください</option>';
-	
-	options.forEach(opt => {
-	    const option = document.createElement('option');
-	    option.value = opt.trim();
-	    option.textContent = opt.trim();
-	    select.appendChild(option);
-	});
-	
-	formGroup.appendChild(select);
-	} else {
-	    const textarea = document.createElement('textarea');
-            
-            textarea.required = true;
-            textarea.className = 'form-control';
-            textarea.rows = 5;
-            textarea.placeholder = '簡単でもいいので、"自分に合いそうな点"、"合わなそうな点"を考えながら書いてみよう！';
-            textarea.minLength = 30;
-            
-            const charCountDiv = document.createElement('div');
-            charCountDiv.className = 'character-count';
-            charCountDiv.innerHTML = `文字数: <span id="current_count_${index}">0</span>`;
-
-            textarea.addEventListener('input', () => {
-                document.getElementById(`current_count_${index}`).textContent = textarea.value.length;
-            });
-
-            formGroup.appendChild(textarea);
-            formGroup.appendChild(charCountDiv);
-        }
-
-        // 質問をグループに追加
-        companyGroup.appendChild(formGroup);
-    });
-
-    // フォーム生成が完了した後、ボタンを1つだけ追加
-    const buttonArea = document.createElement('div');
-    buttonArea.className = 'button-area';
-    buttonArea.innerHTML = '<button class="btn" onclick="submitSurveyForm()" style="background-color:#fcac04;">送信</button>';
-    formContainer.appendChild(buttonArea);
-}
-
-//⑤ アンケートフォーム送信処理を修正
-function submitSurveyForm() {
-  console.log('送信処理を開始します');
-  
-  // 入力チェック
-  if (!validateAllAnswers()) {
-    alert('すべての質問に回答してください。');
-    return;
-  }
-  
-  // 送信ボタンを無効化
-  const submitButton = document.querySelector('.button-area .btn');
-  if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.textContent = '送信中...';
-  }
-  
-  // LIFFユーザーID取得を確実に行うため、Promiseベースの処理に変更
-  let userId = '';
-  let displayName = '';
-  
-  // UserID取得Promise作成
-  const getUserIdPromise = new Promise((resolve) => {
-    if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-      liff.getProfile()
-        .then(profile => {
-          userId = profile.userId;
-          displayName = profile.displayName;
-          console.log('LIFF: ユーザー情報取得成功', userId);
-          resolve();
-        })
-        .catch(error => {
-          console.error('LIFF: プロフィール取得エラー', error);
-          resolve(); // エラーでも処理続行
-        });
-    } else {
-      console.log('LIFF: 利用不可またはログインなし');
-      resolve();
-    }
-  });
-  
-  // UserID取得後にデータを送信
-  getUserIdPromise.then(() => {
-    // FormDataを収集
-    const formData = collectFormDataManually();
-    
-    // 全てのオブジェクトにUserIDをセット
-    formData.satisfactionData.UserID = userId;
-    
-    formData.companyResponses.forEach(response => {
-      response.UserID = userId;
     });
     
-    console.log('送信準備完了:', formData);
-    
-    // データを送信
-    fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => {
-      console.log('送信レスポンス:', response);
-      showLoading('送信完了！');
-      
-      // メッセージテキストを作成
-      const messageText = `アンケートの回答ありがとうございました。`;
-      
-      // LINEで送信処理（シェアターゲットピッカーを使用）
-      if (typeof liff !== 'undefined' && liff.isInClient()) {
-        // LIFFブラウザ内の場合は直接送信
-        if (typeof sendText === 'function') {
-          sendText(messageText);
-        }
-      } else {
-        // 外部ブラウザの場合はシェアターゲットピッカーを使用
-        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-          const message = {
-            type: 'text',
-            text: messageText
-          };
-          
-          liff.shareTargetPicker([message])
-            .then(result => {
-              console.log('シェアターゲットピッカー結果:', result);
-              if (result) {
-                console.log('メッセージが送信されました');
-              } else {
-                console.log('シェアターゲットピッカーがキャンセルされました');
-              }
-            })
-            .catch(error => {
-              console.error('シェアターゲットピッカーエラー:', error);
-            });
-        } else {
-          console.log('LIFF：ブラウザ環境でログインしていないため、シェアターゲットピッカーは利用できません');
-          // 必要に応じて通知を表示
-          alert('LINE送信機能を利用するにはLINEログインが必要です');
-        }
-      }
-    })
-    .catch(error => {
-      console.error('送信エラー:', error);
-      alert('送信に失敗しました: ' + error.message);
-      
-      // エラー時はボタンを再度有効化
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = '送信';
-      }
+    // 初期表示設定
+    document.addEventListener('DOMContentLoaded', function() {
+        // フォームを表示
+        document.getElementById('register-form').style.display = 'block';
     });
-  });
-}
-
-// すべての質問に回答があるかチェックする関数
-function validateAllAnswers() {
-  // アンケートフォーム内の全てのセレクトボックスを検証
-  const selects = document.querySelectorAll('.company-group select');
-  for (let i = 0; i < selects.length; i++) {
-    if (!selects[i].value || selects[i].value === "選択してください") {
-      console.log('未入力の選択肢があります:', selects[i].name);
-      // スクロールして未入力の項目を表示
-      selects[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-      alert('すべての選択肢を選んでください');
-      return false;
-    }
-  }
-  
-  // アンケートフォーム内の全てのテキストエリアを検証
-  const textareas = document.querySelectorAll('.company-group textarea');
-  for (let i = 0; i < textareas.length; i++) {
-    if (!textareas[i].value.trim()) {
-      console.log('未入力のテキスト欄があります:', textareas[i].name);
-      // スクロールして未入力の項目を表示
-      textareas[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-      alert('すべてのテキスト欄に入力してください');
-      return false;
-    }
-    
-    // 最小文字数のチェック（textareaに最小文字数が設定されている場合）
-    const minLength = textareas[i].getAttribute('minLength');
-    if (minLength && textareas[i].value.length < minLength) {
-      console.log('文字数が不足しています:', textareas[i].name, `(${textareas[i].value.length}/${minLength})`);
-      // スクロールして未入力の項目を表示
-      textareas[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-      alert(`回答が短すぎます。${minLength}文字以上入力してください。`);
-      return false;
-    }
-  }
-  
-  return true; // すべての入力項目が有効
-}
-
-// フォームデータを手動で収集する関数
-function collectFormDataManually() {
-  const companyResponses = [];
-  const satisfactionData = {
-    Timestamp: new Date().toISOString(),
-    UserID: '',
-    EventId: getUrlParams().eventid || '',
-    GD_Level: '',
-    Event_Satisfaction: '',
-    Satisfaction_Reason: ''
-  };
-  
-  // 企業ごとの回答を収集
-  const companyGroups = document.querySelectorAll('.company-group');
-  companyGroups.forEach(group => {
-    const companyHeading = group.previousElementSibling;
-    if (!companyHeading || companyHeading.tagName !== 'H3') return;
-    
-    const companyName = companyHeading.textContent;
-    
-    // fixed1, fixed2, fixed3は全体評価なのでスキップ
-    if (companyName === 'イベントの振り返り' || companyName === 'イベント全体の評価') {
-      // 満足度データの収集
-      const gdLevelSelect = group.querySelector('select[name*="GD_Level"], select[name*="gd_level"]');
-      const satisfactionSelect = group.querySelector('select[name*="Event_Satisfaction"], select[name*="event_satisfaction"]');
-      const reasonTextarea = group.querySelector('textarea[name*="Satisfaction_Reason"], textarea[name*="satisfaction_reason"]');
-      
-      if (gdLevelSelect) satisfactionData.GD_Level = gdLevelSelect.value;
-      if (satisfactionSelect) satisfactionData.Event_Satisfaction = satisfactionSelect.value;
-      if (reasonTextarea) satisfactionData.Satisfaction_Reason = reasonTextarea.value;
-      
-      return;
-    }
-    
-    // 企業ごとの回答を構築
-    const companyResponse = {
-      Timestamp: new Date().toISOString(),
-      UserID: '',
-      EventId: getUrlParams().eventid || '',
-      Company: companyName,
-      Pre_Awareness: '',
-      Post_Impression: '',
-      Comment: '',
-      Reservation: ''
-    };
-    
-    // 各質問の回答を収集 - セレクターを改善
-    const preAwarenessSelect = group.querySelector('select[name*="awareness"], select[name*="Awareness"], select:nth-of-type(1)');
-    const postImpressionSelect = group.querySelector('select[name*="impression"], select[name*="Impression"], select:nth-of-type(2)');
-    const reservationSelect = group.querySelector('select[name*="reservation"], select[name*="Reservation"], select:nth-of-type(3)');
-    const commentTextarea = group.querySelector('textarea');
-    
-    // 値の取得と検証
-    if (preAwarenessSelect) {
-      companyResponse.Pre_Awareness = preAwarenessSelect.value;
-      console.log(`${companyName} - Pre_Awareness:`, preAwarenessSelect.value);
-    }
-    
-    if (postImpressionSelect) {
-      companyResponse.Post_Impression = postImpressionSelect.value;
-      console.log(`${companyName} - Post_Impression:`, postImpressionSelect.value);
-    }
-    
-    if (commentTextarea) {
-      companyResponse.Comment = commentTextarea.value;
-      console.log(`${companyName} - Comment:`, commentTextarea.value.substring(0, 20) + '...');
-    }
-    
-    if (reservationSelect) {
-      companyResponse.Reservation = reservationSelect.value;
-      console.log(`${companyName} - Reservation:`, reservationSelect.value);
-    }
-    
-    companyResponses.push(companyResponse);
-  });
-  
-  return {
-    companyResponses,
-    satisfactionData
-  };
-}
-	
-</script>
+    </script>
 </body>
 </html>
