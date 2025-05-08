@@ -103,10 +103,28 @@ header {
     padding: 30px;
     border-radius: 8px;
     box-shadow: var(--shadow);
-    display: block; /* 常に表示 */
+    display: none; /* デフォルトで非表示 */
 }
 
-/* ===== ボタンエリア ===== */
+/* フォーム表示制御 */
+.form.show {
+    display: block !important;
+}
+
+/* アンケートフォーム特有のスタイル */
+.form.survey-only select[name="satisfaction"] {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.form.survey-only textarea[name="feedback"] {
+    width: 100%;
+    min-height: 150px;
+    resize: vertical;
+    margin-bottom: 20px;
+}
+
+/* ボタンエリア */
 .button-area {
   text-align: center;
   margin: 30px 0;
@@ -322,4 +340,40 @@ font[size="1"] {
     width: 90%;
     padding: 8px 16px;
   }
+}
+
+/* 文字数カウンター */
+.character-count {
+    text-align: right;
+    margin-top: 5px;
+    font-size: 14px;
+    color: var(--gray-dark);
+}
+
+.character-count.invalid {
+    color: #dc3545;
+}
+
+.count-message {
+    margin-left: 10px;
+    font-size: 12px;
+}
+
+.count-message.error {
+    color: #dc3545;
+}
+
+.count-message.success {
+    color: #198754;
+}
+
+/* テキストエリアのスタイル更新 */
+.form textarea.invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form textarea.valid {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
 }
