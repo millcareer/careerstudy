@@ -107,7 +107,6 @@ function setupBirthdaySelects() {
   updateDays();
 }
 
-// GASからイベントオプションを取得
 async function fetchEventOptions() {
   try {
     // イベント選択エリアのローディング表示
@@ -116,8 +115,8 @@ async function fetchEventOptions() {
     
     optionsList.innerHTML = '<div style="padding: 15px; text-align: center;">イベント日程を読み込み中...</div>';
     
-    // イベントデータを取得
-    const response = await fetch(EVENT_API_URL);
+    // イベントデータを取得（パラメータ追加：type=events）
+    const response = await fetch(`${EVENT_API_URL}?type=events`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -127,13 +126,26 @@ async function fetchEventOptions() {
     
     // APIからのレスポンス形式に応じて調整
     let eventOptions = [];
+    
     if (Array.isArray(data)) {
-      eventOptions = data;
-    } else if (data.events && Array.isArray(data.events)) {
-      eventOptions = data.events;
+      // 各イベントからdate_strだけを抽出して選択肢として使用
+      eventOptions = data.map(event => event.date_str || '日程情報なし');
+    } else if (data && typeof data === 'object') {
+      // オブジェクトの場合（以前のバージョンとの互換性のため）
+      if (data.events && Array.isArray(data.events)) {
+        eventOptions = data.events.map(event => {
+          if (typeof event === 'object' && event !== null) {
+            return event.date_str || '日程情報なし';
+          }
+          return String(event);
+        });
+      } else {
+        console.error('予期しないAPIレスポンス形式:', data);
+        eventOptions = [];
+      }
     } else {
       console.error('予期しないAPIレスポンス形式:', data);
-      eventOptions = []; // 空の配列をデフォルトとする
+      eventOptions = [];
     }
     
     // "日程が合わない"オプションを追加
