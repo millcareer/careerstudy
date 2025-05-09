@@ -12,16 +12,34 @@
 //   - ボタンに onclick="onSubmit()" を設定
 //   - liff.init() を完了してあること
 
+// index.js
+// GASのエンドポイントURL
+const EVENT_API_URL = 'https://script.google.com/macros/s/AKfycbzkOsqoKEWRJ9gJxLpd1MAPNQwuuqB4ZVqmb4MWFkJDkEmIaZQDYOffQydxHBxM0aZU/exec';
 const API_ENDPOINT = 'https://backend-service-694729750061.asia-northeast1.run.app';
 
+// ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', () => {
   // 初期ローディング要素を隠す
   const loadingElem = document.getElementById('loading');
   if (loadingElem) loadingElem.style.display = 'none';
-  // 生年月日プルダウン
+  
+  // 生年月日プルダウン設定
   setupBirthdaySelects();
+  
+  // イベントデータを取得して選択エリアを初期化
+  fetchEventOptions();
+  
+  // パスワード入力フィールドのイベントリスナー設定
+  const passwordInput = document.getElementById('form_answer20');
+  const confirmPasswordInput = document.getElementById('form_answer21');
+  
+  if (passwordInput && confirmPasswordInput) {
+    passwordInput.addEventListener('input', validatePassword);
+    confirmPasswordInput.addEventListener('input', validatePassword);
+  }
 });
 
+// ローディングインジケーター作成
 function createLoadingIndicator() {
   if (document.getElementById('custom-loading')) return;
   const container = document.createElement('div');
@@ -46,6 +64,7 @@ function createLoadingIndicator() {
   document.body.appendChild(container);
 }
 
+// ローディング表示
 function showLoading(message = '送信中...') {
   const container = document.getElementById('custom-loading');
   if (!container) return;
@@ -53,30 +72,295 @@ function showLoading(message = '送信中...') {
   container.style.display = 'flex';
 }
 
+// ローディング非表示
 function hideLoading() {
   const c = document.getElementById('custom-loading'); if (c) c.style.display = 'none';
 }
 
+// 生年月日セレクトの設定
 function setupBirthdaySelects() {
   const yearEl = document.getElementById('form_answer07');
   const monthEl = document.getElementById('form_answer08');
   const dayEl = document.getElementById('form_answer09');
   if (!yearEl || !monthEl || !dayEl) return;
+  
+  // 年の選択肢を設定
   for (let y = 1900; y <= new Date().getFullYear(); y++) yearEl.add(new Option(y, y));
+  
+  // 月の選択肢を設定
   for (let m = 1; m <= 12; m++) monthEl.add(new Option(m, m));
+  
+  // 日の更新関数
   function updateDays() {
     dayEl.innerHTML = '';
-    const y = parseInt(yearEl.value), m = parseInt(monthEl.value);
+    const y = parseInt(yearEl.value) || new Date().getFullYear();
+    const m = parseInt(monthEl.value) || 1;
     const last = new Date(y, m, 0).getDate();
     for (let d = 1; d <= last; d++) dayEl.add(new Option(d, d));
   }
+  
+  // イベントリスナーを追加
   yearEl.addEventListener('change', updateDays);
   monthEl.addEventListener('change', updateDays);
+  
+  // 初期実行
   updateDays();
 }
 
+// GASからイベントオプションを取得
+async function fetchEventOptions() {
+  try {
+    // イベント選択エリアのローディング表示
+    const optionsList = document.getElementById('event-options-list');
+    if (!optionsList) return;
+    
+    optionsList.innerHTML = '<div style="padding: 15px; text-align: center;">イベント日程を読み込み中...</div>';
+    
+    // イベントデータを取得（パラメータ追加：type=events）
+    const response = await fetch(`${EVENT_API_URL}?type=events`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // APIからのレスポンス形式に応じて調整
+    let eventOptions = [];
+    if (Array.isArray(data)) {
+      eventOptions = data;
+    } else if (data.events && Array.isArray(data.events)) {
+      eventOptions = data.events;
+    } else {
+      console.error('予期しないAPIレスポンス形式:', data);
+      eventOptions = []; // 空の配列をデフォルトとする
+    }
+    
+    // "日程が合わない"オプションを追加
+    if (!eventOptions.includes("日程が合わない")) {
+      eventOptions.push("日程が合わない");
+    }
+    
+    // イベント選択エリアの初期化
+    initializeEventSelection(eventOptions);
+    
+  } catch (error) {
+    console.error('イベントデータ取得エラー:', error);
+    
+    // エラーメッセージのみを表示
+    const optionsList = document.getElementById('event-options-list');
+    if (optionsList) {
+      optionsList.innerHTML = '<div style="padding: 15px; text-align: center; color: #d9534f;">イベント日程の読み込みに失敗しました。<br>ページを再読み込みするか、しばらく経ってからお試しください。</div>';
+    }
+  }
+}
+
+// イベント選択エリアの初期化
+function initializeEventSelection(eventOptions) {
+  const optionsList = document.getElementById('event-options-list');
+  const selectedList = document.getElementById('selected-events-list');
+  const selectionCount = document.getElementById('selection_count');
+  const choice1Input = document.getElementById('form_answer22');
+  const choice2Input = document.getElementById('form_answer23');
+  
+  if (!optionsList || !selectedList || !selectionCount || !choice1Input || !choice2Input) return;
+  
+  // 選択済みイベント配列
+  let selectedEvents = [];
+  
+  // 選択リストをクリア
+  optionsList.innerHTML = '';
+  
+  // イベントオプションを表示
+  eventOptions.forEach((eventOption) => {
+    const optionItem = document.createElement('div');
+    optionItem.style.padding = '8px 12px';
+    optionItem.style.cursor = 'pointer';
+    optionItem.style.borderBottom = '1px solid #eee';
+    optionItem.textContent = eventOption;
+    
+    // "日程が合わない"オプションは特別な処理
+    if (eventOption === "日程が合わない") {
+      optionItem.addEventListener('click', function() {
+        // すべての選択をクリア
+        selectedEvents = ["日程が合わない"];
+        updateSelectedEvents();
+        choice1Input.value = "日程が合わない";
+        choice2Input.value = "日程が合わない";
+      });
+    } else {
+      // 通常のイベントオプションのクリック処理
+      optionItem.addEventListener('click', function() {
+        if (selectedEvents.includes("日程が合わない")) {
+          // "日程が合わない"が選択されている場合、それをクリアして新しい選択を追加
+          selectedEvents = [];
+        }
+        
+        const eventIndex = selectedEvents.indexOf(eventOption);
+        if (eventIndex === -1) {
+          // 選択されていない場合は追加（最大2つまで）
+          if (selectedEvents.length < 2) {
+            selectedEvents.push(eventOption);
+          } else {
+            alert('最大2つまで選択できます。別の日程を選択するには、まず選択済みの日程をクリックして解除してください。');
+          }
+        } else {
+          // すでに選択されている場合は解除
+          selectedEvents.splice(eventIndex, 1);
+        }
+        
+        // 選択状態を更新
+        updateSelectedEvents();
+        
+        // hidden入力に値を設定
+        choice1Input.value = selectedEvents[0] || "";
+        choice2Input.value = selectedEvents[1] || "";
+      });
+    }
+    
+    optionsList.appendChild(optionItem);
+  });
+  
+  // 選択状態を更新する関数
+  function updateSelectedEvents() {
+    // 選択リストをクリア
+    selectedList.innerHTML = '';
+    
+    if (selectedEvents.includes("日程が合わない")) {
+      // "日程が合わない"が選択されている場合
+      const selectedItem = document.createElement('div');
+      selectedItem.style.padding = '8px 12px';
+      selectedItem.style.backgroundColor = '#fcac04';
+      selectedItem.style.color = 'white';
+      selectedItem.style.borderRadius = '4px';
+      selectedItem.style.marginBottom = '5px';
+      selectedItem.textContent = "日程が合わない";
+      
+      selectedItem.addEventListener('click', function() {
+        selectedEvents = [];
+        updateSelectedEvents();
+        choice1Input.value = "";
+        choice2Input.value = "";
+      });
+      
+      selectedList.appendChild(selectedItem);
+      selectionCount.textContent = `選択: "日程が合わない"`;
+      
+      // オプションリストの項目を無効化
+      Array.from(optionsList.children).forEach(option => {
+        if (option.textContent !== "日程が合わない") {
+          option.style.opacity = "0.5";
+          option.style.backgroundColor = "#f5f5f5";
+        } else {
+          option.style.backgroundColor = "#fcac04";
+          option.style.color = "white";
+        }
+      });
+    } else {
+      // 通常の選択処理
+      selectedEvents.forEach(event => {
+        const selectedItem = document.createElement('div');
+        selectedItem.style.padding = '8px 12px';
+        selectedItem.style.backgroundColor = '#fcac04';
+        selectedItem.style.color = 'white';
+        selectedItem.style.borderRadius = '4px';
+        selectedItem.style.marginBottom = '5px';
+        selectedItem.textContent = event;
+        
+        // クリックでこの選択を解除
+        selectedItem.addEventListener('click', function() {
+          const index = selectedEvents.indexOf(event);
+          if (index !== -1) {
+            selectedEvents.splice(index, 1);
+            updateSelectedEvents();
+            
+            // hidden入力値を更新
+            choice1Input.value = selectedEvents[0] || "";
+            choice2Input.value = selectedEvents[1] || "";
+          }
+        });
+        
+        selectedList.appendChild(selectedItem);
+      });
+      
+      // 選択数を表示
+      selectionCount.textContent = `選択数: ${selectedEvents.length}/2`;
+      
+      // オプションリストの項目のスタイルを更新
+      Array.from(optionsList.children).forEach(option => {
+        const isSelected = selectedEvents.includes(option.textContent);
+        option.style.opacity = "1";
+        option.style.backgroundColor = isSelected ? "#fcac04" : "transparent";
+        option.style.color = isSelected ? "white" : "inherit";
+      });
+    }
+  }
+  
+  // 初期状態で選択数を表示
+  updateSelectedEvents();
+}
+
+// パスワード検証
+function validatePassword() {
+  const passwordInput = document.getElementById('form_answer20');
+  const confirmPasswordInput = document.getElementById('form_answer21');
+  
+  if (!passwordInput || !confirmPasswordInput) return true;
+  
+  const password = passwordInput.value;
+  const confirmPassword = confirmPasswordInput.value;
+  
+  // エラーメッセージ要素を取得または作成
+  let passwordError = document.getElementById('password-error');
+  if (!passwordError) {
+    passwordError = document.createElement('p');
+    passwordError.id = 'password-error';
+    passwordError.style.color = 'red';
+    passwordError.style.fontSize = '14px';
+    passwordInput.parentNode.appendChild(passwordError);
+  }
+  
+  let confirmError = document.getElementById('confirm-password-error');
+  if (!confirmError) {
+    confirmError = document.createElement('p');
+    confirmError.id = 'confirm-password-error';
+    confirmError.style.color = 'red';
+    confirmError.style.fontSize = '14px';
+    confirmPasswordInput.parentNode.appendChild(confirmError);
+  }
+  
+  // エラーメッセージをリセット
+  passwordError.textContent = '';
+  confirmError.textContent = '';
+  
+  // パスワード長さチェック
+  if (password.length < 8) {
+    passwordError.textContent = 'パスワードは8文字以上で入力してください';
+    return false;
+  }
+  
+  // 英字と数字を含むかチェック
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  
+  if (!hasLetter || !hasNumber) {
+    passwordError.textContent = 'パスワードは英字と数字を含む必要があります';
+    return false;
+  }
+  
+  // パスワード一致チェック
+  if (password !== confirmPassword && confirmPassword.length > 0) {
+    confirmError.textContent = 'パスワードが一致しません';
+    return false;
+  }
+  
+  return true;
+}
+
+// フォーム送信処理
 function onSubmit() {
   createLoadingIndicator();
+  
   // 各フォーム値取得
   const mailadress     = document.getElementById('form_answer01')?.value.trim() || '';
   const password       = document.getElementById('form_answer20')?.value || '';
@@ -106,11 +390,12 @@ function onSubmit() {
   if (!mailadress || !password) { alert('メールアドレス・パスワードは必須です'); return false; }
   if (password !== confirmPass) { alert('パスワードが一致しません'); return false; }
   if (!agreement) { alert('個人情報同意が必要です'); return false; }
+  if (!validatePassword()) { return false; }
 
   // rawMessage作成
   const fields = [mailadress, phoneNumber, lastName, firstName, lastNameRead, firstNameRead,
-                  birthYear+'-'+birthMonth+'-'+birthDay, universityName, clubActivity, grade,
-                  gender, birthPlace, position, faculty, department, academicType, reservation1, reservation2, "同意する"];
+                birthYear+'-'+birthMonth+'-'+birthDay, universityName, clubActivity, grade,
+                gender, birthPlace, position, faculty, department, academicType, reservation1, reservation2, "同意する"];
   let msg = '【送信内容】';
   fields.forEach(v=> msg += '\n'+v);
 
@@ -118,8 +403,8 @@ function onSubmit() {
   liff.getProfile()
     .then(profile => {
       const answers = { mailadress, password, phoneNumber, lastName, firstName, lastNameRead, firstNameRead,
-                        birthYear: Number(birthYear), birthMonth: Number(birthMonth), birthDay: Number(birthDay),
-                        universityName, clubActivity, grade, gender, birthPlace, position, faculty, department, academicType, reservation1, reservation2 };
+                      birthYear: Number(birthYear), birthMonth: Number(birthMonth), birthDay: Number(birthDay),
+                      universityName, clubActivity, grade, gender, birthPlace, position, faculty, department, academicType, reservation1, reservation2 };
       return fetch(`${API_ENDPOINT}/api/register`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ userId:profile.userId, displayName:profile.displayName, answers })
