@@ -60,8 +60,18 @@ async function handleLiffInitializationSuccess() {
         liff.login({ redirectUri: currentUrl.toString() });
     } else {
         console.log('Login Success');
-        // 単一フォームのため初期化処理は不要
-        document.getElementById('register-form').style.display = 'block';
+        // register-form要素への参照をHTMLで実際に存在する要素に変更
+        const formElement = document.querySelector('.form');
+        if (formElement) {
+            // フォームが既に表示されている可能性があるので、表示状態を確認
+            const displayStyle = window.getComputedStyle(formElement).display;
+            if (displayStyle === 'none') {
+                formElement.style.display = 'block';
+            }
+        } else {
+            console.warn('フォーム要素(.form)が見つかりません。');
+            // エラーを避けるためのフォールバック - 何もしない
+        }
     }
 }
 
