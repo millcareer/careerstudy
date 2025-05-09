@@ -42,7 +42,7 @@
     </div>
     
     <!-- 登録フォーム -->
-    <div class="form" id="register-form">
+    <div class="form">
         <p class="form-text">メールアドレス</p>
         <input type="email" name="email" id="form_answer01" pattern=".+@.+\..+" required="required" placeholder="例：example@example.com">
 	<div class="form-group">
@@ -81,8 +81,8 @@
         <p class="form-text">大学名
 	<font size="1">※入力すると候補が表示されます。</font></p>
 	<input type="text" name="university-name" id="form_answer10" list="university" placeholder="大学名" autocomplete="off" required="required">
-	　<datalist id="university">
-                <option>愛国学園大学</option>
+	<datalist id="university">
+            <option>愛国学園大学</option>
                 <option>愛知大学</option>
                 <option>愛知医科大学</option>
                 <option>愛知学院大学</option>
@@ -876,11 +876,11 @@
                 <option>和光大学</option>
                 <option>早稲田大学</option>
                 <option>和洋女子大学</option>
-	</datalist>
+        </datalist>
 
-            <p class="form-text">部活名</p>
-            <select name="club-name" id="form_answer11" required="required">
-                <optgroup label="無所属">
+        <p class="form-text">部活名</p>
+        <select name="club-name" id="form_answer11" required="required">
+            <optgroup label="無所属">
                     <option>無所属</option>
                 </optgroup>
                 <optgroup label="球技">
@@ -942,7 +942,7 @@
                     <option>射撃</option>
                     <option>ボウリング</option>
                   </optgroup>
-                <optgroup label="水泳・水上">
+                　　　　<optgroup label="水泳・水上">
                     <option>カヌー</option>
                     <option>水泳・競泳</option>
                     <option>水球</option>
@@ -952,8 +952,8 @@
                     <option>ボードセーリング</option>
                     <option>ライフセービング</option>
                     <option>ヨット</option>
-                </optgroup>
-                <optgroup label="その他">
+                　　</optgroup>
+                　　<optgroup label="その他">
                     <option>スキー</option>
                     <option>スケート</option>
                     <option>体操</option>
@@ -971,32 +971,33 @@
                     <option>ワンダーフォーゲル</option>
                     <option>トライアスロン</option>
                     <option>無所属</option>
-                </optgroup>
-                <optgroup label="学生団体・ドーミー">
+                　　</optgroup>
+		  <optgroup label="学生団体・ドーミー">
                     <option>JNSA基金</option>
                     <option>ドーミー</option>
-                </optgroup>
+                　　</optgroup>
             </select>
+        </select>
 
-            <p class="form-text">学年</p>
-            <select name="grade" id="form_answer12" required="required">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>院1</option>
-                <option>院2</option>
-            </select>
-            <p class="form-text">性別</p>
-            <select name="sex" id="form_answer13" required="required">
-                <option>男性</option>
-                <option>女性</option>
-                <option>その他</option>
-                <option>回答しない</option>
-            </select>
-            <p class="form-text">出身地</p>
-            <select name="from_area" id="form_answer14" required="required">
-                <optgroup label="北海道・東北">
+        <p class="form-text">学年</p>
+        <select name="grade" id="form_answer12" required="required">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>院1</option>
+            <option>院2</option>
+        </select>
+        <p class="form-text">性別</p>
+        <select name="sex" id="form_answer13" required="required">
+            <option>男性</option>
+            <option>女性</option>
+            <option>その他</option>
+            <option>回答しない</option>
+        </select>
+        <p class="form-text">出身地</p>
+        <select name="from_area" id="form_answer14" required="required">
+            <optgroup label="北海道・東北">
                     <option value="北海道">北海道</option>
                     <option value="青森県">青森県</option>
                     <option value="岩手県">岩手県</option>
@@ -1004,7 +1005,6 @@
                     <option value="秋田県">秋田県</option>
                     <option value="山形県">山形県</option>
                     <option value="福島県">福島県</option>
-                </optgroup>
                 <optgroup label="関東">
                     <option value="茨城県">茨城県</option>
                     <option value="栃木県">栃木県</option>
@@ -1013,7 +1013,6 @@
                     <option value="千葉県">千葉県</option>
                     <option value="東京都">東京都</option>
                     <option value="神奈川県">神奈川県</option>
-                </optgroup>
                 <optgroup label="中部">
                     <option value="新潟県">新潟県</option>
                     <option value="富山県">富山県</option>
@@ -1024,7 +1023,6 @@
                     <option value="岐阜県">岐阜県</option>
                     <option value="静岡県">静岡県</option>
                     <option value="愛知県">愛知県</option>
-                </optgroup>
                 <optgroup label="近畿">
                     <option value="三重県">三重県</option>
                     <option value="滋賀県">滋賀県</option>
@@ -1033,7 +1031,6 @@
                     <option value="兵庫県">兵庫県</option>
                     <option value="奈良県">奈良県</option>
                     <option value="和歌山県">和歌山県</option>
-                </optgroup>
                 <optgroup label="中国・四国">
                     <option value="鳥取県">鳥取県</option>
                     <option value="島根県">島根県</option>
@@ -1044,7 +1041,6 @@
                     <option value="香川県">香川県</option>
                     <option value="愛媛県">愛媛県</option>
                     <option value="高知県">高知県</option>
-                </optgroup>
                 <optgroup label="九州・沖縄">
                     <option value="福岡県">福岡県</option>
                     <option value="佐賀県">佐賀県</option>
@@ -1054,45 +1050,43 @@
                     <option value="宮崎県">宮崎県</option>
                     <option value="鹿児島県">鹿児島県</option>
                     <option value="沖縄県">沖縄県</option>
-                </optgroup>
                 <optgroup label="その他">
                     <option value="日本国外">日本国外</option>
-                </optgroup>
-            </select>
+        </select>
 
-            <p class="form-text">役職</p>
-            <select name="role" id="form_answer15" required="required">
-                <option>主将/代表</option>
-                <option>副将</option>
-                <option>主務</option>
-                <option>会計</option>
-                <option>広報</option>
-                <option>渉外</option>
-                <option>渉内</option>
-                <option>その他</option>
-                <option>特になし</option>
-            </select>
-            <p class="form-text">学部</p>
-            <input type="text" name="faculty" id="form_answer16" required="required" minlength="1">
-            <p class="form-text">学科</p>
-            <input type="text" name="department" id="form_answer17" required="required" minlength="1">
-            <p class="form-text">学業種別</p>
-            <select name="academic_field" id="form_answer18" required="required">
-                <option>文系</option>
-                <option>体育・スポーツ系</option>
-                <option>理系（機械系）</option>
-                <option>理系（電気系）</option>
-                <option>理系（建築・土木系）</option>
-                <option>理系（情報系）</option>
-                <option>理系（化学系）</option>
-                <option>理系（農学・水産系）</option>
-                <option>理系（その他）</option>
-            </select>
-	    
-            <p class="form-text">個人情報同意</p>
-            <div style="height: 150px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
-                <p style="text-align: left;">
-                個人情報保護方針<br>
+        <p class="form-text">役職</p>
+        <select name="role" id="form_answer15" required="required">
+            <option>主将/代表</option>
+            <option>副将</option>
+            <option>主務</option>
+            <option>会計</option>
+            <option>広報</option>
+            <option>渉外</option>
+            <option>渉内</option>
+            <option>その他</option>
+            <option>特になし</option>
+        </select>
+        <p class="form-text">学部</p>
+        <input type="text" name="faculty" id="form_answer16" required="required" minlength="1">
+        <p class="form-text">学科</p>
+        <input type="text" name="department" id="form_answer17" required="required" minlength="1">
+        <p class="form-text">学業種別</p>
+        <select name="role" id="form_answer18" required="required">
+            <option>文系</option>
+            <option>体育・スポーツ系</option>
+            <option>理系（機械系）</option>
+            <option>理系（電気系）</option>
+            <option>理系（建築・土木系）</option>
+            <option>理系（情報系）</option>
+            <option>理系（化学系）</option>
+            <option>理系（農学・水産系）</option>
+            <option>理系（その他）</option>
+        </select>
+			    
+        <p class="form-text">個人情報同意</p>
+        <div style="height: 150px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+            <p style="text-align: left;">
+            個人情報保護方針<br>
 【1】個人情報取り扱いに関する基本方針<br>
 株式会社Mill Career（以下「当社」という）は、以下のとおり個人情報保護方針を定め、個人情報保護の仕組みを構築し、全従業員に個人情報保護の重要性の認識と取組みを徹底させることにより、個人情報の保護を推進することを宣言いたします。<br>
 当社は利用目的を明確にした上で個人情報を取得し、目的の範囲内に限り、個人情報を利用いたします。また、利用目的の範囲を超えて個人情報の利用を行わないよう、社内の管理体制の整備および安全管理措置を講じます。<br>
@@ -1172,17 +1166,40 @@
 【12】個人情報の取扱いに関する相談や連絡先<br>
 名称 株式会社Mill Career 個人情報対応窓口 連絡先 info@millcareer.com<br>
 最終改訂 2023 年 04 月 1 日<br>
-                </p>
-            </div>
-            <p>
-                <input type="checkbox" name="agreement" id="form_answer19" value="同意する" required="required">
-                <label for="form_answer19">同意する</label>
             </p>
+        </div>
+        <p>
+            <input type="checkbox" name="agreement" id="form_answer19" value="同意する" required="required">
+            <label for="form_answer19">同意する</label>
+        </p>
+
+        <div class="form-group">
+            <p class="form-text">INTERN QUEST参加予約</p>
+            <div style="margin-bottom: 10px;">
+                <p>下記から希望する日程を<span style="color: #fcac04; font-weight: bold;">2つ</span>選択してください</p>
+                
+                <!-- イベント選択エリア -->
+                <div id="event-selection-area">
+                    <!-- 選択済みイベント表示 -->
+                    <div id="selected-events-list" style="margin-bottom: 10px;"></div>
+                    
+                    <!-- 選択肢リスト -->
+                    <div id="event-options-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;"></div>
+                    
+                    <!-- 選択数表示 -->
+                    <p id="selection_count" style="color: #fcac04; font-size: 14px;">選択数: 0/2</p>
+                </div>
+                
+                <!-- 隠しフィールド -->
+                <input type="hidden" id="form_answer22" name="event_choice1" value="">
+                <input type="hidden" id="form_answer23" name="event_choice2" value="">
+            </div>
+        </div>
 	    
 	    <br>    
-            <div class="btn-block">
-                <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
-            </div>
+        <div class="btn-block">
+            <button class="btn" onclick="onSubmit()" style="background-color:#fcac04;">送信</button>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -1192,79 +1209,5 @@
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="liff.js"></script>
     <script src="index.js"></script>
-    <script>
-    // パスワード検証機能
-    const passwordInput = document.getElementById('form_answer20');
-    const confirmPasswordInput = document.getElementById('form_answer21');
-
-    // パスワード検証関数
-    function validatePassword() {
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        
-        // エラーメッセージ要素の作成・取得
-        let passwordError = document.getElementById('password-error');
-        if (!passwordError) {
-            passwordError = document.createElement('p');
-            passwordError.id = 'password-error';
-            passwordError.style.color = 'red';
-            passwordError.style.fontSize = '14px';
-            passwordInput.parentNode.appendChild(passwordError);
-        }
-        
-        let confirmError = document.getElementById('confirm-password-error');
-        if (!confirmError) {
-            confirmError = document.createElement('p');
-            confirmError.id = 'confirm-password-error';
-            confirmError.style.color = 'red';
-            confirmError.style.fontSize = '14px';
-            confirmPasswordInput.parentNode.appendChild(confirmError);
-        }
-        
-        // エラーメッセージのリセット
-        passwordError.textContent = '';
-        confirmError.textContent = '';
-        
-        // パスワードの長さのバリデーション
-        if (password.length < 8) {
-            passwordError.textContent = 'パスワードは8文字以上で入力してください';
-            return false;
-        }
-        
-        // パスワードに英字と数字が含まれているかのバリデーション
-        const hasLetter = /[a-zA-Z]/.test(password);
-        const hasNumber = /[0-9]/.test(password);
-        
-        if (!hasLetter || !hasNumber) {
-            passwordError.textContent = 'パスワードは英字と数字を含む必要があります';
-            return false;
-        }
-        
-        // パスワードの一致確認
-        if (password !== confirmPassword && confirmPassword.length > 0) {
-            confirmError.textContent = 'パスワードが一致しません';
-            return false;
-        }
-        
-        return true;
-    }
-
-    // イベントリスナーの追加
-    passwordInput.addEventListener('input', validatePassword);
-    confirmPasswordInput.addEventListener('input', validatePassword);
-
-    // 送信ボタンのクリックイベントハンドラ
-    document.querySelector('.btn').addEventListener('click', function(event) {
-        if (!validatePassword()) {
-            event.preventDefault();
-        }
-    });
-    
-    // 初期表示設定
-    document.addEventListener('DOMContentLoaded', function() {
-        // フォームを表示
-        document.getElementById('register-form').style.display = 'block';
-    });
-    </script>
 </body>
 </html>
