@@ -99,6 +99,8 @@ function onSubmit() {
   const department     = document.getElementById('form_answer17')?.value || '';
   const academicType   = document.getElementById('form_answer18')?.value || '';
   const agreement      = document.getElementById('form_answer19')?.checked === true;
+  const reservation1   = document.getElementById('form_answer22')?.value || '';
+  const reservation2   = document.getElementById('form_answer23')?.value || '';
 
   // バリデーション
   if (!mailadress || !password) { alert('メールアドレス・パスワードは必須です'); return false; }
@@ -108,7 +110,7 @@ function onSubmit() {
   // rawMessage作成
   const fields = [mailadress, phoneNumber, lastName, firstName, lastNameRead, firstNameRead,
                   birthYear+'-'+birthMonth+'-'+birthDay, universityName, clubActivity, grade,
-                  gender, birthPlace, position, faculty, department, academicType, "同意する"];
+                  gender, birthPlace, position, faculty, department, academicType, reservation1, reservation2, "同意する"];
   let msg = '【送信内容】';
   fields.forEach(v=> msg += '\n'+v);
 
@@ -117,7 +119,7 @@ function onSubmit() {
     .then(profile => {
       const answers = { mailadress, password, phoneNumber, lastName, firstName, lastNameRead, firstNameRead,
                         birthYear: Number(birthYear), birthMonth: Number(birthMonth), birthDay: Number(birthDay),
-                        universityName, clubActivity, grade, gender, birthPlace, position, faculty, department, academicType};
+                        universityName, clubActivity, grade, gender, birthPlace, position, faculty, department, academicType, reservation1, reservation2 };
       return fetch(`${API_ENDPOINT}/api/register`, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ userId:profile.userId, displayName:profile.displayName, answers })
