@@ -191,121 +191,92 @@ function initializeEventSelection(eventOptions) {
     optionItem.style.borderBottom = '1px solid #eee';
     optionItem.textContent = eventOption;
     
-    // "日程が合わない"オプションは特別な処理
-    if (eventOption === "日程が合わない") {
-      optionItem.addEventListener('click', function() {
-        // すべての選択をクリア
-        selectedEvents = ["日程が合わない"];
-        updateSelectedEvents();
-        choice1Input.value = "日程が合わない";
-        choice2Input.value = "日程が合わない";
-      });
-    } else {
-      // 通常のイベントオプションのクリック処理
-      optionItem.addEventListener('click', function() {
-        if (selectedEvents.includes("日程が合わない")) {
-          // "日程が合わない"が選択されている場合、それをクリアして新しい選択を追加
-          selectedEvents = [];
-        }
-        
-        const eventIndex = selectedEvents.indexOf(eventOption);
-        if (eventIndex === -1) {
-          // 選択されていない場合は追加（最大2つまで）
-          if (selectedEvents.length < 2) {
-            selectedEvents.push(eventOption);
-          } else {
-            alert('最大2つまで選択できます。別の日程を選択するには、まず選択済みの日程をクリックして解除してください。');
-          }
+    // すべてのイベントオプションで同じクリックハンドラを使用
+    optionItem.addEventListener('click', function() {
+      const eventIndex = selectedEvents.indexOf(eventOption);
+      
+      if (eventIndex === -1) {
+        // 選択されていない場合は追加（最大2つまで）
+        if (selectedEvents.length < 2) {
+          // 「日程が合わない」と通常の日程を組み合わせ可能に
+          selectedEvents.push(eventOption);
         } else {
-          // すでに選択されている場合は解除
-          selectedEvents.splice(eventIndex, 1);
+          alert('最大2つまで選択できます。別の選択をするには、まず選択済みの項目をクリックして解除してください。');
         }
-        
-        // 選択状態を更新
-        updateSelectedEvents();
-        
-        // hidden入力に値を設定
-        choice1Input.value = selectedEvents[0] || "";
-        choice2Input.value = selectedEvents[1] || "";
-      });
-    }
+      } else {
+        // すでに選択されている場合は解除
+        selectedEvents.splice(eventIndex, 1);
+      }
+      
+      // 選択状態を更新
+      updateSelectedEvents();
+      
+      // hidden入力に値を設定
+      updateHiddenInputs();
+    });
     
     optionsList.appendChild(optionItem);
   });
+  
+  // hidden入力を更新する関数
+  function updateHiddenInputs() {
+    // 選択がない場合は空にする
+    if (selectedEvents.length === 0) {
+      choice1Input.value = "";
+      choice2Input.value = "";
+      return;
+    }
+    
+    // 「日程が合わない」が含まれる場合は常に1番目に設定
+    if (selectedEvents.includes("日程が合わない")) {
+      const otherEvent = selectedEvents.find(event => event !== "日程が合わない") || "";
+      choice1Input.value = "日程が合わない";
+      choice2Input.value = otherEvent;
+    } else {
+      // 通常の日程のみの場合
+      choice1Input.value = selectedEvents[0] || "";
+      choice2Input.value = selectedEvents[1] || "";
+    }
+  }
   
   // 選択状態を更新する関数
   function updateSelectedEvents() {
     // 選択リストをクリア
     selectedList.innerHTML = '';
     
-    if (selectedEvents.includes("日程が合わない")) {
-      // "日程が合わない"が選択されている場合
+    // 選択された各イベントを表示
+    selectedEvents.forEach(event => {
       const selectedItem = document.createElement('div');
       selectedItem.style.padding = '8px 12px';
       selectedItem.style.backgroundColor = '#fcac04';
       selectedItem.style.color = 'white';
       selectedItem.style.borderRadius = '4px';
       selectedItem.style.marginBottom = '5px';
-      selectedItem.textContent = "日程が合わない";
+      selectedItem.textContent = event;
       
+      // クリックでこの選択を解除
       selectedItem.addEventListener('click', function() {
-        selectedEvents = [];
-        updateSelectedEvents();
-        choice1Input.value = "";
-        choice2Input.value = "";
+        const index = selectedEvents.indexOf(event);
+        if (index !== -1) {
+          selectedEvents.splice(index, 1);
+          updateSelectedEvents();
+          updateHiddenInputs();
+        }
       });
       
       selectedList.appendChild(selectedItem);
-      selectionCount.textContent = `選択: "日程が合わない"`;
-      
-      // オプションリストの項目を無効化
-      Array.from(optionsList.children).forEach(option => {
-        if (option.textContent !== "日程が合わない") {
-          option.style.opacity = "0.5";
-          option.style.backgroundColor = "#f5f5f5";
-        } else {
-          option.style.backgroundColor = "#fcac04";
-          option.style.color = "white";
-        }
-      });
-    } else {
-      // 通常の選択処理
-      selectedEvents.forEach(event => {
-        const selectedItem = document.createElement('div');
-        selectedItem.style.padding = '8px 12px';
-        selectedItem.style.backgroundColor = '#fcac04';
-        selectedItem.style.color = 'white';
-        selectedItem.style.borderRadius = '4px';
-        selectedItem.style.marginBottom = '5px';
-        selectedItem.textContent = event;
-        
-        // クリックでこの選択を解除
-        selectedItem.addEventListener('click', function() {
-          const index = selectedEvents.indexOf(event);
-          if (index !== -1) {
-            selectedEvents.splice(index, 1);
-            updateSelectedEvents();
-            
-            // hidden入力値を更新
-            choice1Input.value = selectedEvents[0] || "";
-            choice2Input.value = selectedEvents[1] || "";
-          }
-        });
-        
-        selectedList.appendChild(selectedItem);
-      });
-      
-      // 選択数を表示
-      selectionCount.textContent = `選択数: ${selectedEvents.length}/2`;
-      
-      // オプションリストの項目のスタイルを更新
-      Array.from(optionsList.children).forEach(option => {
-        const isSelected = selectedEvents.includes(option.textContent);
-        option.style.opacity = "1";
-        option.style.backgroundColor = isSelected ? "#fcac04" : "transparent";
-        option.style.color = isSelected ? "white" : "inherit";
-      });
-    }
+    });
+    
+    // 選択数を表示
+    selectionCount.textContent = `選択数: ${selectedEvents.length}/2`;
+    
+    // オプションリストの項目のスタイルを更新
+    Array.from(optionsList.children).forEach(option => {
+      const isSelected = selectedEvents.includes(option.textContent);
+      option.style.opacity = "1";
+      option.style.backgroundColor = isSelected ? "#fcac04" : "transparent";
+      option.style.color = isSelected ? "white" : "inherit";
+    });
   }
   
   // 初期状態で選択数を表示
