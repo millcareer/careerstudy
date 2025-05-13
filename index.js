@@ -343,6 +343,7 @@ function validatePassword() {
 // フォーム送信処理
 function onSubmit() {
   createLoadingIndicator();
+  showLoading('送信中...'); // ここでローディング表示を開始
   
   // 各フォーム値取得
   const mailadress     = document.getElementById('form_answer01')?.value.trim() || '';
@@ -370,11 +371,27 @@ function onSubmit() {
   const reservation2   = document.getElementById('form_answer23')?.value || '';
 
   // バリデーション
-  if (!mailadress || !password) { alert('メールアドレス・パスワードは必須です'); return false; }
-  if (password !== confirmPass) { alert('パスワードが一致しません'); return false; }
-  if (!agreement) { alert('個人情報同意が必要です'); return false; }
-  if (!validatePassword()) { return false; }
+  if (!mailadress || !password) { 
+    hideLoading(); // エラー時にローディングを非表示
+    alert('メールアドレス・パスワードは必須です'); 
+    return false; 
+  }
+  if (password !== confirmPass) { 
+    hideLoading(); // エラー時にローディングを非表示
+    alert('パスワードが一致しません'); 
+    return false; 
+  }
+  if (!agreement) { 
+    hideLoading(); // エラー時にローディングを非表示
+    alert('個人情報同意が必要です'); 
+    return false; 
+  }
+  if (!validatePassword()) { 
+    hideLoading(); // エラー時にローディングを非表示
+    return false; 
+  }
   if (!reservation1 || !reservation2) {
+    hideLoading(); // エラー時にローディングを非表示
     alert('イベントを2つ選択してください');
     return false;
   }
