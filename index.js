@@ -374,6 +374,10 @@ function onSubmit() {
   if (password !== confirmPass) { alert('パスワードが一致しません'); return false; }
   if (!agreement) { alert('個人情報同意が必要です'); return false; }
   if (!validatePassword()) { return false; }
+  if (!reservation1 || !reservation2) {
+    alert('イベントを2つ選択してください');
+    return false;
+  }
 
   // rawMessage作成
   const fields = [mailadress, phoneNumber, lastName, firstName, lastNameRead, firstNameRead,
