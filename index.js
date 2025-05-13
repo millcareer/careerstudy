@@ -390,9 +390,12 @@ function onSubmit() {
     hideLoading(); // エラー時にローディングを非表示
     return false; 
   }
-  if (!reservation1 || !reservation2) {
+  // イベント選択のバリデーション - "日程が合わない"のみの場合は許可
+  if ((!reservation1 && !reservation2) || 
+      (reservation1 !== "日程が合わない" && !reservation2) || 
+      (!reservation1 && reservation2)) {
     hideLoading(); // エラー時にローディングを非表示
-    alert('イベントを2つ選択してください');
+    alert('イベントを2つ選択するか、"日程が合わない"を選択してください');
     return false;
   }
 
