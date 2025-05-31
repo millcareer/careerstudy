@@ -14,7 +14,7 @@
 
 // index.js
 // GASのエンドポイントURL
-const EVENT_API_URL = 'https://script.google.com/macros/s/AKfycbyIj0Yda9kTn3qeVjM4vHTzZyC_ynS5z23xyfg8xP14_RxTdSvM9w09V60q24lpYPX24w/exec';
+const EVENT_API_URL = 'https://script.google.com/macros/s/AKfycbxLqd8hE-hbU_1ezOaKZjZrpsYtZVE4tZcjc855Cr-LaE-GAZME9trg8dnO-4r9c0bSBg/exec';
 const API_ENDPOINT = 'https://backend-service-694729750061.asia-northeast1.run.app';
 
 // ページ読み込み時の処理
