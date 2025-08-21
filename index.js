@@ -17,7 +17,7 @@
 // const EVENT_API_URL = 'https://script.google.com/macros/s/AKfycbxLqd8hE-hbU_1ezOaKZjZrpsYtZVE4tZcjc855Cr-LaE-GAZME9trg8dnO-4r9c0bSBg/exec'; ←一時的に不使用にする、後で戻す
 
 // 一時使用のGASエンドポイント　後で戻す
-const EVENT_API_URL = 'https://script.google.com/macros/s/AKfycbzH_6G27mwUGkz9WzuYuhKBmljUQw11SnARetZeryl1pPWOgM0g0a5vuxDmqwJ3QdFy8A/exec';
+const EVENT_API_URL = 'https://script.google.com/macros/s/AKfycbx_uEMi2DkZzn6ZOgASVBOrMwoewVVdNvtKcHrOYNed1x2RYb5hap7qgnbuNCSKMUhWCw/exec';
 const API_ENDPOINT = 'https://backend-service-694729750061.asia-northeast1.run.app';
 
 // ページ読み込み時の処理
