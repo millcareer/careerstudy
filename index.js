@@ -119,7 +119,7 @@ async function fetchEventOptions() {
     optionsList.innerHTML = '<div style="padding: 15px; text-align: center;">イベント日程を読み込み中...</div>';
     
     // イベントデータを取得（パラメータ追加：type=events）
-    const response = await fetch(`${EVENT_API_URL}?type=events`);
+    const response = await fetch(`${EVENT_API_URL}?from=liff`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
